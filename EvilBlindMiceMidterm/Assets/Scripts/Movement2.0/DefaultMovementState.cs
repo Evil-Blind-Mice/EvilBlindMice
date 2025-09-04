@@ -119,18 +119,15 @@ public class DefaultMovementState : MovementState
 
         if (!IsGrounded() && wallRunCountdown <= 0)
         {
-            if(Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right), wallRunDistance, groundLayers)
-                && _input.moveInputVector.x > 0)
+            RaycastHit hit;
+            if ((Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers) && _input.moveInputVector.x > 0)
+                || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers) && _input.moveInputVector.x < 0))
             {
-                playerMovement.ChangeToState(wallRunState);
-            }
-            else if (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right), wallRunDistance, groundLayers)
-                && _input.moveInputVector.x < 0)
-            {
-                playerMovement.ChangeToState(wallRunState);
+                if(Vector3.Angle(hit.normal, -playerMovement.gravityDirection) >= 55)
+                    playerMovement.ChangeToState(wallRunState);
             }
         }
-        Debug.DrawRay(body.transform.position, Vector3.Normalize(body.transform.right + body.transform.forward) * wallRunDistance, Color.blue);
-        Debug.DrawRay(body.transform.position, Vector3.Normalize(-body.transform.right + body.transform.forward) * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position, Vector3.Normalize(body.transform.right + body.transform.forward - body.transform.up) * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position, Vector3.Normalize(-body.transform.right + body.transform.forward - body.transform.up) * wallRunDistance, Color.blue);
     }
 }

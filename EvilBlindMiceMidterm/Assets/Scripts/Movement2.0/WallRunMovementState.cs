@@ -26,13 +26,15 @@ public class WallRunMovementState : MovementState
         startingRotation = body.transform.rotation.z;
 
         // lean so that bottom of player is closer to wall
-        if(Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right), wallRunDistance, groundLayers))
+        RaycastHit hit;
+        if(Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers))
         { // raycast that triggered was to the right of the player
             body.transform.localEulerAngles += new Vector3(0, 0, tiltDegree);
             wallIsRight = true;
         }
         else
         { // raycast that triggered was to the left of the player
+            Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers);
             body.transform.localEulerAngles -= new Vector3(0, 0, tiltDegree);
             wallIsRight = false;
         }
