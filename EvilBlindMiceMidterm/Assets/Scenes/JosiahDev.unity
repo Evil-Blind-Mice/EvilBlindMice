@@ -606,7 +606,7 @@ Transform:
   m_GameObject: {fileID: 1164886435}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -625,7 +625,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07e1db2918cab8747afa6d0c72158890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  showDebug: 1
   controller: {fileID: 1164886436}
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  groundedDistance: 1.1
   speed: 10
   sprintMod: 2
   jumpSpeed: 10
