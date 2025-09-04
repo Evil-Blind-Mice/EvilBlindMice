@@ -145,7 +145,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8677464}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5df04f79bf41bce42bed1f4ec38e9ba2, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -509,6 +509,7 @@ GameObject:
   - component: {fileID: 1164886438}
   - component: {fileID: 1164886437}
   - component: {fileID: 1164886444}
+  - component: {fileID: 1164886445}
   - component: {fileID: 1164886443}
   - component: {fileID: 1164886442}
   m_Layer: 3
@@ -604,8 +605,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   body: {fileID: 1164886442}
   gravity: 35
-  maxTilt: 45
   tiltSpeed: 45
+  wallRunDistance: 0
   gravityDirection: {x: 0, y: 0, z: 0}
   uprightRotation: 0
   defaultMoveState: {fileID: 1164886444}
@@ -617,7 +618,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1164886435}
   serializedVersion: 5
-  m_Mass: 50
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -643,7 +644,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1164886435}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5df04f79bf41bce42bed1f4ec38e9ba2, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -671,11 +672,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39e4d82231a6f1d4faa6e1f6c5b3d51a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
+  wallRunState: {fileID: 1164886445}
   defaultSpeed: 10
   sprintSpeed: 15
   jumpForce: 10
   jumpMax: 1
   groundedDistance: 1.1
+  wallRunDistance: 1
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 1
+--- !u!114 &1164886445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164886435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfe6cef82cc1d94429e5fe9d3519b80d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallRunMovementState
+  defaultMovementState: {fileID: 1164886444}
+  speed: 15
+  jumpForce: 10
+  wallRunDistance: 2
+  tiltDegree: 15
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
@@ -705,7 +728,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1346507978}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5df04f79bf41bce42bed1f4ec38e9ba2, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
