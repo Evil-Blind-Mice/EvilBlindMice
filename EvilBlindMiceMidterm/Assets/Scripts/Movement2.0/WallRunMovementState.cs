@@ -42,55 +42,60 @@ public class WallRunMovementState : MovementState
 
     public override void OnUpdate(MoveInputStruct _input)
     {
-        StateCheck(_input);
-
         playerVelocity = Vector3.zero;
 
         playerVelocity += (body.transform.forward * speed);
 
-        if (_input.jumpPressedThisFrame) Jump();
-
         body.linearVelocity = playerVelocity;
+
+        StateCheck(_input);
     }
 
     public override void OnExit()
     {
-        body.transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, startingRotation);
+        body.transform.localEulerAngles = new Vector3(0, body.transform.localEulerAngles.y, startingRotation);
     }
 
 
 
     // Unique Functions
 
-    void Jump()
-    {
-        playerVelocity += body.transform.up * jumpForce;
-    }
-
     void StateCheck(MoveInputStruct _input)
     {
-        RaycastHit hit;
+        // if the player jumps off of the wall
+        if (_input.jumpPressedThisFrame)
+        {
+            body.linearVelocity = Vector3.Normalize(body.transform.up + body.transform.right * (wallIsRight ? -1 : 1 )) * jumpForce;
+            playerMovement.ChangeToState(defaultMovementState);
+            return;
+        }
+
+        // if the player is no longer close to the wall
         if (wallIsRight)
         {
-            if(!Physics.Raycast(body.transform.position, Vector3.Normalize(-body.transform.up + body.transform.right), out hit, wallRunDistance, groundLayers))
+            if(!Physics.Raycast(body.transform.position, Vector3.Normalize(-body.transform.up + body.transform.right), wallRunDistance, groundLayers))
             {
                 playerMovement.ChangeToState(defaultMovementState);
+                return;
             }
             Debug.DrawRay(body.transform.position, Vector3.Normalize(body.transform.right - body.transform.up) * wallRunDistance, Color.blue);
-
-            if(_input.moveInputVector.x <= 0 || _input.moveInputVector.y <= 0)
-                playerMovement.ChangeToState(defaultMovementState);
         }
         else
         {
             if (!Physics.Raycast(body.transform.position, Vector3.Normalize(-body.transform.up - body.transform.right), wallRunDistance, groundLayers))
             {
                 playerMovement.ChangeToState(defaultMovementState);
+                return;
             }
             Debug.DrawRay(body.transform.position, Vector3.Normalize(-body.transform.right - body.transform.up) * wallRunDistance, Color.blue);
-
-            if (_input.moveInputVector.x >= 0 || _input.moveInputVector.y <= 0)
-                playerMovement.ChangeToState(defaultMovementState);
         }
+
+        // if the player stops moving forward
+        if (_input.moveInputVector.y <= 0)
+        {
+            playerMovement.ChangeToState(defaultMovementState);
+            return;
+        }
+
     }
 }

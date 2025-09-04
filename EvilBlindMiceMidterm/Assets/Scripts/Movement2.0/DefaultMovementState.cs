@@ -11,14 +11,19 @@ public class DefaultMovementState : MovementState
     [SerializeField] int sprintSpeed = 15;
     [SerializeField] int jumpForce = 10;
     [SerializeField] int jumpMax = 1;
+    [SerializeField] int externalForceResistance;
+    [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 1.1f;
     [SerializeField] float wallRunDistance = 1f;
     [SerializeField] LayerMask groundLayers;
+    [SerializeField] float wallRunCooldown;
 
     Vector3 playerVelocity;
+    Vector3 externalForceVelocity;
     int speed;
     int jumpCount;
     float currentGravityVelocity;
+    float wallRunCountdown;
 
 
 
@@ -27,43 +32,64 @@ public class DefaultMovementState : MovementState
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
         base.OnEnter(_playerMovement, _body);
+        externalForceVelocity = body.linearVelocity;
         currentGravityVelocity = 0;
+        jumpCount = jumpMax;
+        wallRunCountdown = wallRunCooldown;
     }
 
     public override void OnUpdate(MoveInputStruct _input)
     {
-        playerVelocity = Vector3.zero;
-
+        // check for sprint
         if (_input.sprintPressed) speed = sprintSpeed;
         else speed = defaultSpeed;
 
-        Vector3 moveDirection = (_input.moveInputVector.x * body.transform.right) +
-            (_input.moveInputVector.y * body.transform.forward);
+        // calculate playerVelocity
+        playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed
+            + (_input.moveInputVector.y * body.transform.forward) * speed;
 
+
+        // handle gravity and jumping
         if (IsGrounded())
-        {
+        { // on the ground
             jumpCount = 0;
             currentGravityVelocity = 0;
         }
         else
-        {
+        { // off of the ground
             currentGravityVelocity += playerMovement.gravity * Time.deltaTime;
         }
-
-        playerVelocity += (moveDirection * speed);
-
+        
+        // handle jumping
         if (_input.jumpPressedThisFrame) Jump();
 
-        playerVelocity += playerMovement.gravityDirection * currentGravityVelocity;
 
-        body.linearVelocity = playerVelocity;
+        // handle external forces
 
+        // reduce external forces by the resistance percentage of their value
+        externalForceVelocity = new Vector3(
+            externalForceVelocity.x - (externalForceVelocity.x * Time.deltaTime * externalForceResistance),
+            externalForceVelocity.y - (externalForceVelocity.y * Time.deltaTime * externalForceResistance),
+            externalForceVelocity.z - (externalForceVelocity.z * Time.deltaTime * externalForceResistance)
+            );
+
+        // if the external force is small enough, round to zero
+        if (Mathf.Abs(externalForceVelocity.x) < externalForceThreshold) externalForceVelocity.x = 0;
+        if (Mathf.Abs(externalForceVelocity.y) < externalForceThreshold) externalForceVelocity.y = 0;
+        if (Mathf.Abs(externalForceVelocity.z) < externalForceThreshold) externalForceVelocity.z = 0;
+
+
+        // apply all forces (playerVelocity, external forces, and gravity)
+        body.linearVelocity = playerVelocity + externalForceVelocity + playerMovement.gravityDirection * currentGravityVelocity;
+
+
+        // check for change of state conditions
         StateCheck(_input);
     }
 
     public override void OnExit()
     {
-
+        externalForceVelocity = Vector3.zero;
     }
 
 
@@ -89,7 +115,9 @@ public class DefaultMovementState : MovementState
 
     void StateCheck(MoveInputStruct _input)
     {
-        if(!IsGrounded())
+        wallRunCountdown -= Time.deltaTime;
+
+        if (!IsGrounded() && wallRunCountdown <= 0)
         {
             if(Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right), wallRunDistance, groundLayers)
                 && _input.moveInputVector.x > 0)
