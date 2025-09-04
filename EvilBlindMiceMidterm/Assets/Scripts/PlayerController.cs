@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class playerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
