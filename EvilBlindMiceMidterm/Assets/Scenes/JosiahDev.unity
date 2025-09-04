@@ -223,12 +223,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8677464}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.75, y: 2.5, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.5, y: -0.97543, z: -2.93567}
   m_LocalScale: {x: 1, y: 5, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1515596319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &224555236
 GameObject:
@@ -536,7 +536,7 @@ CharacterController:
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
+  m_SlopeLimit: 0
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -625,18 +625,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07e1db2918cab8747afa6d0c72158890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  ignoreLayer:
-    serializedVersion: 2
-    m_Bits: 8
   controller: {fileID: 1164886436}
   speed: 10
   sprintMod: 2
   jumpSpeed: 10
   jumpMax: 1
   gravity: 35
-  shootDamage: 1
-  shootRate: 0.1
-  shootDist: 20
+  maxTilt: 45
+  tiltSpeed: 45
 --- !u!1 &1346507978
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,12 +737,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1346507978}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.5, y: 2.5, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 10.75, y: -0.97543, z: -2.93567}
   m_LocalScale: {x: 1, y: 5, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1515596319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1515596318
 GameObject:
@@ -776,7 +772,9 @@ Transform:
   m_LocalPosition: {x: -6.25, y: 3.47543, z: 2.93567}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8677468}
+  - {fileID: 1346507982}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1998339158
@@ -913,6 +911,4 @@ SceneRoots:
   - {fileID: 1998339160}
   - {fileID: 1164886439}
   - {fileID: 224555240}
-  - {fileID: 8677468}
-  - {fileID: 1346507982}
   - {fileID: 1515596319}

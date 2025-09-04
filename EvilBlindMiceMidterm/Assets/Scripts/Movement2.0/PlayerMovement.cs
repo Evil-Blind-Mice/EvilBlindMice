@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
+    [SerializeField] int maxTilt; // suggested 45 degrees
+    [SerializeField] int tiltSpeed;
 
     Vector3 moveDirection;
     Vector3 playerVelocity;
@@ -17,21 +19,18 @@ public class PlayerMovement : MonoBehaviour
 
     bool isSprinting;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
-        movement();
+        Movement();
     }
 
-    void movement()
+    void Movement()
     {
-        sprint();
+        Sprint();
+
+        moveDirection = (Input.GetAxis("Horizontal") * transform.right) +
+                  (Input.GetAxis("Vertical") * transform.forward);
 
         if (controller.isGrounded)
         {
@@ -41,19 +40,19 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             playerVelocity.y -= gravity * Time.deltaTime;
-        }
 
-        moveDirection = (Input.GetAxis("Horizontal") * transform.right) +
-                  (Input.GetAxis("Vertical") * transform.forward);
+            // If the player is moving left or right, lean away from that direction to make wall running possible
+            Tilt();
+        }
 
         controller.Move(moveDirection * speed * Time.deltaTime);
 
-        jump();
+        Jump();
 
         controller.Move(playerVelocity * Time.deltaTime);
     }
 
-    void jump()
+    void Jump()
     {
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
@@ -62,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void sprint()
+    void Sprint()
     {
         if (Input.GetButtonDown("Sprint"))
         {
@@ -74,5 +73,13 @@ public class PlayerMovement : MonoBehaviour
             speed /= sprintMod;
             isSprinting = false;
         }
+    }
+
+    void Tilt()
+    {
+        float rotz = Input.GetAxisRaw("Horizontal") * tiltSpeed * Time.deltaTime;
+        rotz = Mathf.Clamp(rotz, -maxTilt, maxTilt);
+        //transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, rotz);
+        transform.Rotate(Vector3.forward * rotz);
     }
 }
