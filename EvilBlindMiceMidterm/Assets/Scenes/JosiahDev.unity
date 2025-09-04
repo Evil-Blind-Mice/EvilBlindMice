@@ -508,6 +508,7 @@ GameObject:
   - component: {fileID: 1164886441}
   - component: {fileID: 1164886438}
   - component: {fileID: 1164886437}
+  - component: {fileID: 1164886444}
   - component: {fileID: 1164886443}
   - component: {fileID: 1164886442}
   m_Layer: 3
@@ -601,19 +602,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07e1db2918cab8747afa6d0c72158890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  showDebug: 1
   body: {fileID: 1164886442}
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 1
-  groundedDistance: 1.1
-  speed: 10
-  sprintMod: 2
-  jumpSpeed: 10
-  jumpMax: 1
   gravity: 35
   maxTilt: 45
   tiltSpeed: 45
+  gravityDirection: {x: 0, y: 0, z: 0}
+  uprightRotation: 0
+  defaultMoveState: {fileID: 1164886444}
 --- !u!54 &1164886442
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -664,6 +659,26 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1164886444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164886435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39e4d82231a6f1d4faa6e1f6c5b3d51a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
+  defaultSpeed: 10
+  sprintSpeed: 15
+  jumpForce: 10
+  jumpMax: 1
+  groundedDistance: 1.1
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &1346507978
 GameObject:
   m_ObjectHideFlags: 0
