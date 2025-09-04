@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] bool showDebug;
-    [SerializeField] CharacterController controller;
+    [SerializeField] Rigidbody body;
 
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float groundedDistance;
@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 gravityDirection;
 
     int jumpCount;
+    float currentGravityVelocity;
 
     bool isSprinting;
 
@@ -39,26 +40,33 @@ public class PlayerMovement : MonoBehaviour
 
     void Movement()
     {
+        playerVelocity = Vector3.zero;
         Sprint();
 
         moveDirection = (Input.GetAxis("Horizontal") * transform.right) +
                   (Input.GetAxis("Vertical") * transform.forward);
 
+        Debug.Log(IsGrounded());
+
         if (IsGrounded())
         {
             jumpCount = 0;
-            playerVelocity = Vector3.zero;
+            currentGravityVelocity = 0;
         }
         else
         {
-            playerVelocity += gravityDirection * gravity * Time.deltaTime;
+            currentGravityVelocity += gravity * Time.deltaTime;
         }
 
-        controller.Move(moveDirection * speed * Time.deltaTime);
+        // controller.Move(moveDirection * speed * Time.deltaTime);
+        playerVelocity += (moveDirection * speed);
 
         Jump();
 
-        controller.Move(playerVelocity * Time.deltaTime);
+        //controller.Move(playerVelocity * Time.deltaTime);
+        playerVelocity += gravityDirection * currentGravityVelocity;
+
+        body.linearVelocity = playerVelocity;
     }
 
     void Jump()
@@ -66,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
             jumpCount++;
-            playerVelocity = -gravityDirection * jumpSpeed;
+            currentGravityVelocity = -jumpSpeed;
         }
     }
 
@@ -94,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
 
     bool IsGrounded()
     {
-        if (Physics.Raycast(transform.position, -transform.up, groundedDistance, groundLayers))
+        if (Physics.Raycast(transform.position, -transform.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
             return true;
         else 
             return false;
