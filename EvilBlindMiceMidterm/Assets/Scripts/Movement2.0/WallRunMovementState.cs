@@ -15,6 +15,7 @@ public class WallRunMovementState : MovementState
     Vector3 playerVelocity;
     float startingRotation;
     bool wallIsRight;
+    Vector3 wallNormal;
 
 
 
@@ -29,15 +30,18 @@ public class WallRunMovementState : MovementState
         RaycastHit hit;
         if(Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers))
         { // raycast that triggered was to the right of the player
-            body.transform.localEulerAngles += new Vector3(0, 0, tiltDegree);
+            body.transform.localEulerAngles += new Vector3(0, 0,
+                90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
             wallIsRight = true;
         }
         else
         { // raycast that triggered was to the left of the player
             Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers);
-            body.transform.localEulerAngles -= new Vector3(0, 0, tiltDegree);
+            body.transform.localEulerAngles -= new Vector3(0, 0, 
+                90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
             wallIsRight = false;
         }
+        wallNormal = hit.normal;
 
         // get the wall's normal to figure out which direction the player should move
     }
@@ -67,7 +71,7 @@ public class WallRunMovementState : MovementState
         // if the player jumps off of the wall
         if (_input.jumpPressedThisFrame)
         {
-            body.linearVelocity = Vector3.Normalize(body.transform.up + body.transform.right * (wallIsRight ? -1 : 1 )) * jumpForce;
+            body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * jumpForce;
             playerMovement.ChangeToState(defaultMovementState);
             return;
         }

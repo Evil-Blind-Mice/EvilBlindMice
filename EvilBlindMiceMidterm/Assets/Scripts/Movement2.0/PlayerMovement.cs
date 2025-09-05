@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
 
     public int gravity;
     [SerializeField] int tiltSpeed;
-    [SerializeField] int wallRunDistance;
     [HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
 

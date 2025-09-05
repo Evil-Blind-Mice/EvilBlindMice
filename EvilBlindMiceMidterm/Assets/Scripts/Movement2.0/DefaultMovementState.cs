@@ -123,7 +123,8 @@ public class DefaultMovementState : MovementState
             if ((Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers) && _input.moveInputVector.x > 0)
                 || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers) && _input.moveInputVector.x < 0))
             {
-                if(Vector3.Angle(hit.normal, -playerMovement.gravityDirection) >= 55)
+                float normalAngle = Vector3.Angle(hit.normal, -playerMovement.gravityDirection);
+                if (normalAngle >= 55 && normalAngle <= 95)
                     playerMovement.ChangeToState(wallRunState);
             }
         }
