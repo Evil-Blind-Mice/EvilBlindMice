@@ -1306,7 +1306,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   body: {fileID: 1164886442}
-  gravity: 50
+  gravityAcceleration: 50
+  maxGravity: 50
   tiltSpeed: 45
   gravityDirection: {x: 0, y: 0, z: 0}
   uprightRotation: 0
@@ -1319,7 +1320,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1164886435}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 50
   m_LinearDamping: 0
   m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}

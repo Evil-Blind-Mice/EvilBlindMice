@@ -60,7 +60,8 @@ public class DefaultMovementState : MovementState
         { // off of the ground
 
             // add gravity/second to velocity
-            currentGravityVelocity += playerMovement.gravity * Time.deltaTime;
+            currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
+            if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
             // if the player reorients mid-air, they go back to world space up
             if (_input.shiftPressed)
