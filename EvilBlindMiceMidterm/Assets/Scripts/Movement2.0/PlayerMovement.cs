@@ -6,9 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody body;
 
-    public int gravityAcceleration;
-    public int maxGravity;
-    [SerializeField] int tiltSpeed;
+    public int gravityAcceleration = 50;
+    public int maxGravity = 50;
     [HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
 

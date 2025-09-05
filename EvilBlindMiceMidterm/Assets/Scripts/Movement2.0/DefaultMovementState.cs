@@ -7,20 +7,18 @@ public class DefaultMovementState : MovementState
 
     [SerializeField] MovementState wallRunState;
 
-    [SerializeField] int defaultSpeed = 10;
-    [SerializeField] int sprintSpeed = 15;
-    [SerializeField] int jumpForce = 10;
+    [SerializeField] int speed = 15;
+    [SerializeField] int jumpForce = 15;
     [SerializeField] int jumpMax = 1;
-    [SerializeField] int externalForceResistance;
+    [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 1.1f;
-    [SerializeField] float wallRunDistance = 1f;
+    [SerializeField] float wallRunDistance = 1.25f;
     [SerializeField] LayerMask groundLayers;
-    [SerializeField] float wallRunCooldown;
+    [SerializeField] float wallRunCooldown = 0.25f;
 
     Vector3 playerVelocity;
     Vector3 externalForceVelocity;
-    int speed;
     int jumpCount;
     float currentGravityVelocity;
     float wallRunCountdown;
@@ -41,9 +39,6 @@ public class DefaultMovementState : MovementState
 
     public override void OnUpdate(MoveInputStruct _input)
     {
-        // check for sprint
-        if (_input.shiftPressed) speed = sprintSpeed;
-        else speed = defaultSpeed;
 
         // calculate playerVelocity
         playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed

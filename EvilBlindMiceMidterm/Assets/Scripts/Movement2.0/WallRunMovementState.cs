@@ -7,9 +7,9 @@ public class WallRunMovementState : MovementState
     [SerializeField] MovementState defaultMovementState;
 
     [SerializeField] int speed = 15;
-    [SerializeField] int jumpForce = 10;
-    [SerializeField] float wallRunDistance = 1f;
-    [SerializeField] int tiltDegree = 15;
+    [SerializeField] int jumpForce = 30;
+    [SerializeField] float wallRunDistance = 2f;
+    [SerializeField] int tiltDegree = 30;
     [SerializeField] LayerMask groundLayers;
 
     Vector3 playerVelocity;
@@ -59,6 +59,8 @@ public class WallRunMovementState : MovementState
     {
 
     }
+
+
 
     // Unique Functions
 
