@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
 
             if (dmg != null)
             {
-                dmg.takeDamage(shootDamage);
+                dmg.TakeDamage(shootDamage);
             }
         }
     }
