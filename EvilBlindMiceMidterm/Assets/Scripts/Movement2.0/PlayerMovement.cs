@@ -40,17 +40,22 @@ public class PlayerMovement : MonoBehaviour
         moveState = _newState;
         moveState.OnEnter(this, body);
     }
+    public void RotateUprightWithGravity()
+    {
+        Quaternion lookRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(body.transform.forward, gravityDirection), -gravityDirection);
+        body.transform.rotation = lookRotation;
+    }
 }
 
 public struct MoveInputStruct
 {
-    public bool sprintPressed;
+    public bool shiftPressed;
     public Vector2 moveInputVector;
     public bool jumpPressedThisFrame;
 
     public MoveInputStruct(bool _sprintPressed, Vector2 _moveInputVector, bool _jumpPressedThisFrame)
     {
-        sprintPressed = _sprintPressed;
+        shiftPressed = _sprintPressed;
         moveInputVector = _moveInputVector;
         jumpPressedThisFrame = _jumpPressedThisFrame;
     }

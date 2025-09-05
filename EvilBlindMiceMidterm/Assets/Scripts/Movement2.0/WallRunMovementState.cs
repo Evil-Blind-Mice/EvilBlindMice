@@ -13,7 +13,6 @@ public class WallRunMovementState : MovementState
     [SerializeField] LayerMask groundLayers;
 
     Vector3 playerVelocity;
-    float startingRotation;
     bool wallIsRight;
     Vector3 wallNormal;
 
@@ -24,7 +23,6 @@ public class WallRunMovementState : MovementState
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
         base.OnEnter(_playerMovement, _body);
-        startingRotation = body.transform.rotation.z;
 
         // lean so that bottom of player is closer to wall
         RaycastHit hit;
@@ -59,10 +57,8 @@ public class WallRunMovementState : MovementState
 
     public override void OnExit()
     {
-        body.transform.localEulerAngles = new Vector3(0, body.transform.localEulerAngles.y, startingRotation);
+
     }
-
-
 
     // Unique Functions
 
@@ -72,6 +68,14 @@ public class WallRunMovementState : MovementState
         if (_input.jumpPressedThisFrame)
         {
             body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * jumpForce;
+            playerMovement.ChangeToState(defaultMovementState);
+            return;
+        }
+
+        // if the player presses shift to change gravity
+        if (_input.shiftPressed)
+        {
+            playerMovement.gravityDirection = -wallNormal;
             playerMovement.ChangeToState(defaultMovementState);
             return;
         }

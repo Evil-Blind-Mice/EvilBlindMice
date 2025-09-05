@@ -32,6 +32,7 @@ public class DefaultMovementState : MovementState
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
         base.OnEnter(_playerMovement, _body);
+        playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
         currentGravityVelocity = 0;
         jumpCount = jumpMax;
@@ -41,7 +42,7 @@ public class DefaultMovementState : MovementState
     public override void OnUpdate(MoveInputStruct _input)
     {
         // check for sprint
-        if (_input.sprintPressed) speed = sprintSpeed;
+        if (_input.shiftPressed) speed = sprintSpeed;
         else speed = defaultSpeed;
 
         // calculate playerVelocity
@@ -57,7 +58,16 @@ public class DefaultMovementState : MovementState
         }
         else
         { // off of the ground
+
+            // add gravity/second to velocity
             currentGravityVelocity += playerMovement.gravity * Time.deltaTime;
+
+            // if the player reorients mid-air, they go back to world space up
+            if (_input.shiftPressed)
+            {
+                playerMovement.gravityDirection = -Vector3.up;
+                playerMovement.RotateUprightWithGravity();
+            }
         }
         
         // handle jumping
