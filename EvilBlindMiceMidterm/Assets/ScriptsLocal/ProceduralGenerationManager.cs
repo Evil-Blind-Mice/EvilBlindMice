@@ -86,7 +86,7 @@ public class ProceduralGenerationManager : MonoBehaviour
         GameObject tempChunk = currentChunk.GetComponentInChildren<Chunk>().childChunkList[currentChunk.GetComponentInChildren<Chunk>().GetNextIndexFromPath(nextPathChoice)];
         List<int> unusedPathIndecies;
         unusedPathIndecies = currentChunk.GetComponentInChildren<Chunk>().GetOppositeIndeciesFromPath(nextPathChoice);
-        List<GameObject> tempList = new List<GameObject>();
+        List<GameObject> tempList;
 
         //Creating variables to reduce variables created through loop
         Quaternion nextChunkRotation;
@@ -110,6 +110,7 @@ public class ProceduralGenerationManager : MonoBehaviour
             }
         }
 
+        currentChunk = tempChunk;
         Destroy(tempList[0]);
 
         //Generate new objects
@@ -127,8 +128,6 @@ public class ProceduralGenerationManager : MonoBehaviour
                 generationList[chunksLevelsToGenerate].Add(nextChunkObject);
             }
         }
-
-        currentChunk = tempChunk;
     }
 
     //Check for checkpoint flag, then run next generation

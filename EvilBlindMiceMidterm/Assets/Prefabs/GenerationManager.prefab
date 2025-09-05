@@ -48,7 +48,10 @@ MonoBehaviour:
   prefabChunks:
   - {fileID: 6744687728859806560, guid: d3ba24c29c86eaa409f13465a2bc9d22, type: 3}
   - {fileID: 4113391028015115096, guid: 55643a9ebb0c52b47b324cff7aaf662f, type: 3}
-  startingPosition: {x: 0, y: 0, z: 0}
+  - {fileID: 6633068555621888376, guid: 2d52e5b0f9033594991a59ae4585ce3d, type: 3}
+  - {fileID: 3563026866682210308, guid: f8aa5bc5f159dbf408b1d82e79f6b8cc, type: 3}
+  - {fileID: 4125763818362485781, guid: 0f939092eaff2bd47a2c02b2c1ee8920, type: 3}
+  startingPosition: {x: -5, y: 0, z: 0}
   nextCheckpointFlagged: 0
-  nextPathChoice: 0
+  nextPathChoice: 3
   chunksLevelsToGenerate: 2

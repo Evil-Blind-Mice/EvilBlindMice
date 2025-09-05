@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 689087065123196664}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.5, y: -0.5, z: 0}
+  m_LocalPosition: {x: 15, y: -0.5, z: 0}
   m_LocalScale: {x: 30, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -139,7 +139,7 @@ Transform:
   m_GameObject: {fileID: 1721398601298330636}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 12.5, y: 5, z: 5.5}
+  m_LocalPosition: {x: 15, y: 5, z: 5.5}
   m_LocalScale: {x: 30, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -250,7 +250,7 @@ Transform:
   m_GameObject: {fileID: 4383406514887670548}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.5, y: 10.5, z: 0}
+  m_LocalPosition: {x: 15, y: 10.5, z: 0}
   m_LocalScale: {x: 30, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -359,8 +359,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7958040980308104796}
   - {fileID: 1527213463459171071}
@@ -398,7 +398,7 @@ Transform:
   m_GameObject: {fileID: 7730731675942565136}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 12.5, y: 5, z: -5.5}
+  m_LocalPosition: {x: 15, y: 5, z: -5.5}
   m_LocalScale: {x: 30, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -507,7 +507,7 @@ Transform:
   m_GameObject: {fileID: 8889508838277506576}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 28.89922, y: 0, z: 2.00677}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -547,7 +547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3026909541215948735, guid: e5704387bf15bf346ab4dfcd7e085781, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.5
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3026909541215948735, guid: e5704387bf15bf346ab4dfcd7e085781, type: 3}
       propertyPath: m_LocalPosition.y
