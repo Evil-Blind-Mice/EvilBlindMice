@@ -24,7 +24,9 @@ public class DefaultMovementState : MovementState
     float currentGravityVelocity;
     float wallRunCountdown;
 
+    //Nicholas's aditional variable
     [SerializeField] float forwardMoveSpeed;
+    [HideInInspector] public int cancelPlayerMovement = 1;
 
 
 
@@ -49,7 +51,7 @@ public class DefaultMovementState : MovementState
     {
 
         // calculate playerVelocity
-        playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed;
+        playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed * cancelPlayerMovement;
         Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
 
         // handle gravity and jumping
