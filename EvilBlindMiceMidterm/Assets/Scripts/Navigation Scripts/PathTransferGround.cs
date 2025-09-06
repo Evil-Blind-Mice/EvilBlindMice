@@ -17,7 +17,7 @@ public class PathTransferGround : MonoBehaviour
     void Update()
     {
 
-        if (isInBounds && !hasChosenPath)
+        if (isInBounds && !hasChosenPath && !player.GetComponent<DefaultMovementState>().isOnCieling)
         {
             if (Input.GetButtonDown("ChangeDirectionRight") && !hasChosenPath
                 && chunkComponent.possiblePaths.Contains(PossiblePaths.LSRPaths.right))

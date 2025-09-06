@@ -31,6 +31,7 @@ public class DefaultMovementState : MovementState
     [SerializeField] float groundedDistance = 1.1f;
     [HideInInspector] public bool isOnWall = false;
     [HideInInspector] public bool isOnRightWall = false;
+    [HideInInspector] public bool isOnCieling = false;
 
 
 
