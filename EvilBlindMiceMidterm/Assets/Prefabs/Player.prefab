@@ -150,9 +150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a564b18ad9b6d574f9ceb0d3a274c2ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  sens: 300
-  lockVertMax: -90
-  lockVertMin: 90
+  sens: 5
+  lockVertMaxX: 0
+  lockVertMinX: 0
+  lockVertMaxY: 0
+  lockVertMinY: 0
   invertY: 0
 --- !u!1 &4051878489175559200
 GameObject:
@@ -172,7 +174,7 @@ GameObject:
   - component: {fileID: 176451124706143969}
   m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -291,6 +293,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   wallRunCooldown: 0.25
+  playerVelocity: {x: 0, y: 0, z: 0}
+  externalForceVelocity: {x: 0, y: 0, z: 0}
+  forwardMoveSpeed: 0
+  currentFacingDirection: 0
 --- !u!114 &2679000485577532463
 MonoBehaviour:
   m_ObjectHideFlags: 0

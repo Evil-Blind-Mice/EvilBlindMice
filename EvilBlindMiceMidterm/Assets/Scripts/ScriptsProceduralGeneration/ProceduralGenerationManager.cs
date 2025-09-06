@@ -141,27 +141,27 @@ public class ProceduralGenerationManager : MonoBehaviour
     }
 
     //Create quaternions based on direction
-    Quaternion PrefabDirection(ConnectionDirection connectionDirection)
+    Quaternion PrefabDirection(FacingDirection connectionDirection)
     {
-        if (connectionDirection == ConnectionDirection.North)
+        if (connectionDirection == FacingDirection.North)
         {
             return Quaternion.Euler(0, 270, 0);
         }
-        else if (connectionDirection == ConnectionDirection.East)
+        else if (connectionDirection == FacingDirection.East)
         {
             return Quaternion.Euler(0, 0, 0);
         }
-        else if (connectionDirection == ConnectionDirection.South)
+        else if (connectionDirection == FacingDirection.South)
         {
             return Quaternion.Euler(0, 90, 0);
         }
-        else if (connectionDirection == ConnectionDirection.West)
+        else if (connectionDirection == FacingDirection.West)
         {
             return Quaternion.Euler(0, 180, 0);
         }
         else
         {
-            return Quaternion.Euler(90, 90, 90);
+            return Quaternion.identity;
         }
     }
 

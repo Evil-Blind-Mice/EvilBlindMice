@@ -4,7 +4,7 @@ public class WallRunMovementState : MovementState
 {
     // Variables
 
-    [SerializeField] MovementState defaultMovementState;
+    [SerializeField] public MovementState defaultMovementState;
 
     [SerializeField] int speed = 15;
     [SerializeField] int jumpForce = 30;

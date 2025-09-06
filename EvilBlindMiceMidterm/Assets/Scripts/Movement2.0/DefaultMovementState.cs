@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class DefaultMovementState : MovementState
 {
@@ -17,13 +18,20 @@ public class DefaultMovementState : MovementState
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
 
-    Vector3 playerVelocity;
+    public Vector3 playerVelocity;
     Vector3 externalForceVelocity;
     int jumpCount;
     float currentGravityVelocity;
     float wallRunCountdown;
 
+    [SerializeField] float forwardMoveSpeed;
 
+
+
+    void Update()
+    {
+        forwardMoveSpeed = forwardMoveSpeed + forwardMoveSpeed * Time.deltaTime * 0.001f;
+    }
 
     // Overridden Functions
 
@@ -31,7 +39,7 @@ public class DefaultMovementState : MovementState
     {
         base.OnEnter(_playerMovement, _body);
         playerMovement.RotateUprightWithGravity();
-        externalForceVelocity = body.linearVelocity;
+        externalForceVelocity = new Vector3(0, body.linearVelocity.y, 0);
         currentGravityVelocity = 0;
         jumpCount = jumpMax;
         wallRunCountdown = wallRunCooldown;
@@ -41,9 +49,8 @@ public class DefaultMovementState : MovementState
     {
 
         // calculate playerVelocity
-        playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed
-            + (_input.moveInputVector.y * body.transform.forward) * speed;
-
+        playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed;
+        Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
 
         // handle gravity and jumping
         if (IsGrounded())
@@ -86,8 +93,7 @@ public class DefaultMovementState : MovementState
 
 
         // apply all forces (playerVelocity, external forces, and gravity)
-        body.linearVelocity = playerVelocity + externalForceVelocity + playerMovement.gravityDirection * currentGravityVelocity;
-
+        body.linearVelocity = forwardVelocity + playerVelocity + externalForceVelocity + playerMovement.gravityDirection * currentGravityVelocity;
 
         // check for change of state conditions
         StateCheck(_input);

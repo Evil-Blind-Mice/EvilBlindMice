@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class NESWDirections
 {
-    public enum ConnectionDirection
+    public enum FacingDirection
     {
         North, East, South, West
     }
