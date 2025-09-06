@@ -31,6 +31,19 @@ public class PathTransferWall : MonoBehaviour
                    player.transform.rotation.eulerAngles.x, player.transform.rotation.eulerAngles.y + 90, player.transform.rotation.eulerAngles.z);
                 player.GetComponent<PlayerMovement>().gravityDirection = -player.transform.up;
             }
+
+            if (player.transform.eulerAngles.z == -30 || player.transform.eulerAngles.z == 330)
+            {
+                player.transform.localRotation = Quaternion.Euler(
+                   player.transform.rotation.eulerAngles.x, player.transform.rotation.eulerAngles.y - 90, player.transform.rotation.eulerAngles.z);
+                player.GetComponent<PlayerMovement>().gravityDirection = -player.transform.up;
+            }
+            else if (player.transform.eulerAngles.z == 30 || player.transform.eulerAngles.z == -210)
+            {
+                player.transform.localRotation = Quaternion.Euler(
+                   player.transform.rotation.eulerAngles.x, player.transform.rotation.eulerAngles.y + 90, player.transform.rotation.eulerAngles.z);
+                player.GetComponent<PlayerMovement>().gravityDirection = -player.transform.up;
+            }
         }
     }
 }
