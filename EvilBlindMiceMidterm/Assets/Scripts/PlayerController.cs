@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
 
     public void Heal(int _amount)
     {
-        health += _amount;
+        health = Mathf.Clamp(health + _amount, 0, originalHealth);
         UpdatePlayerUI();
         StartCoroutine(FlashHeal());
     }
