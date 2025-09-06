@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
+    public GameObject playerHealingFlash;
 
     public GameObject player;
     public PlayerController playerScript;
@@ -68,9 +69,9 @@ public class GameManager : MonoBehaviour
         menuActive = null;
     }
 
-    public void UpdateGameGoal(int amount)
+    public void UpdateGameGoal(int _amount)
     {
-        gameGoalCount += amount;
+        gameGoalCount += _amount;
 
         if (gameGoalCount <= 0)
         {
@@ -81,7 +82,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void youLose()
+    public void YouLose()
     {
         StatePause();
         menuActive = menuLose;

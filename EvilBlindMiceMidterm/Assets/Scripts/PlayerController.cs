@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-public class PlayerController : MonoBehaviour, IDamage
+public class PlayerController : MonoBehaviour, IDamage, IHeal
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
@@ -109,17 +109,24 @@ public class PlayerController : MonoBehaviour, IDamage
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int _amount)
     {
-        health -= amount;
+        health -= _amount;
         UpdatePlayerUI();
         StartCoroutine(FlashDamage());
 
         if (health <= 0)
         {
             // Hey I'm dead!
-            GameManager.instance.youLose();
+            GameManager.instance.YouLose();
         }
+    }
+
+    public void Heal(int _amount)
+    {
+        health += _amount;
+        UpdatePlayerUI();
+        StartCoroutine(FlashHeal());
     }
 
     public void UpdatePlayerUI()
@@ -132,5 +139,12 @@ public class PlayerController : MonoBehaviour, IDamage
         GameManager.instance.playerDamageFlash.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.playerDamageFlash.SetActive(false);
+    }
+
+    IEnumerator FlashHeal()
+    {
+        GameManager.instance.playerHealingFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.playerHealingFlash.SetActive(false);
     }
 }

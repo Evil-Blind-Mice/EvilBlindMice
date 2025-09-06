@@ -37,12 +37,12 @@ public class Damage : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider _other)
     {
-        if (other.isTrigger)
+        if (_other.isTrigger)
             return;
 
-        IDamage dmg = other.GetComponent<IDamage>();
+        IDamage dmg = _other.GetComponent<IDamage>();
 
         if (dmg != null && (type == DamageType.moving || type == DamageType.stationary || type == DamageType.homing))
         {
@@ -55,12 +55,12 @@ public class Damage : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider _other)
     {
-        if (other.isTrigger)
+        if (_other.isTrigger)
             return;
 
-        IDamage dmg = other.GetComponent<IDamage>();
+        IDamage dmg = _other.GetComponent<IDamage>();
 
         if (dmg != null && type == DamageType.DOT)
         {
@@ -71,10 +71,10 @@ public class Damage : MonoBehaviour
         }
     }
 
-    IEnumerator DamageOther(IDamage damage)
+    IEnumerator DamageOther(IDamage _damage)
     {
         isDamaging = true;
-        damage.TakeDamage(damageAmount);
+        _damage.TakeDamage(damageAmount);
         yield return new WaitForSeconds(damageRate);
         isDamaging = false;
     }

@@ -58,15 +58,15 @@ public class EnemyAI : MonoBehaviour, IDamage
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider _other)
     {
-        if (other.CompareTag("Player"))
+        if (_other.CompareTag("Player"))
             playerInTrigger = true;
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider _other)
     {
-        if (other.CompareTag("Player"))
+        if (_other.CompareTag("Player"))
             playerInTrigger = false;
     }
 
@@ -76,11 +76,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         Instantiate(bullet, shootPosition.position, transform.rotation);
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int _amount)
     {
         if (health > 0)
         {
-            health -= amount;
+            health -= _amount;
             StartCoroutine(FlashRed());
         }
 
