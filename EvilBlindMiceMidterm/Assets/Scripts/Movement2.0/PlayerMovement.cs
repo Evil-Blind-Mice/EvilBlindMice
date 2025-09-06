@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         ChangeToState(defaultMoveState, true);
-        gravityDirection = -transform.up;
+        gravityDirection = -Vector3.up;
     }
 
     void Update()
@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
         moveState = _newState;
         moveState.OnEnter(this, body);
     }
+
     public void RotateUprightWithGravity()
     {
         Quaternion lookRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(body.transform.forward, gravityDirection), -gravityDirection);

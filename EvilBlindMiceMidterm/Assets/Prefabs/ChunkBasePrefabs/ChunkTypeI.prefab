@@ -97,7 +97,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689087065123196664}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 88ecd1cb171c9f143809345488dd6a1a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 7390568562010070886}
   m_Layer: 0
   m_Name: Cieling
-  m_TagString: Untagged
+  m_TagString: Ceiling
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

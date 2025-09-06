@@ -13,26 +13,30 @@ public class DefaultMovementState : MovementState
     [SerializeField] int jumpMax = 1;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
-    [SerializeField] float groundedDistance = 1.1f;
     [SerializeField] float wallRunDistance = 1.25f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
 
     public Vector3 playerVelocity;
-    Vector3 externalForceVelocity;
+    [HideInInspector] public Vector3 externalForceVelocity;
     int jumpCount;
-    float currentGravityVelocity;
+    [HideInInspector] public float currentGravityVelocity;
     float wallRunCountdown;
 
     //Nicholas's aditional variable
-    [SerializeField] float forwardMoveSpeed;
+    public float forwardMoveSpeed = 5f;
+    [SerializeField] float forwardMoveSpeedMax = 30f;
+    [SerializeField] float jumpDelay = 0.25f;
     [HideInInspector] public int cancelPlayerMovement = 1;
+    [SerializeField] float groundedDistance = 1.1f;
+    [HideInInspector] public bool isOnWall = false;
+    [HideInInspector] public bool isOnRightWall = false;
 
 
 
     void Update()
     {
-        forwardMoveSpeed = forwardMoveSpeed + forwardMoveSpeed * Time.deltaTime * 0.001f;
+        forwardMoveSpeed = Mathf.Clamp(forwardMoveSpeed + forwardMoveSpeed * Time.deltaTime * 0.0001f, 0, forwardMoveSpeedMax);
     }
 
     // Overridden Functions
@@ -51,8 +55,8 @@ public class DefaultMovementState : MovementState
     {
 
         // calculate playerVelocity
-        playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed * cancelPlayerMovement;
-        Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
+            playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed * cancelPlayerMovement;
+            Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
 
         // handle gravity and jumping
         if (IsGrounded())
@@ -64,14 +68,15 @@ public class DefaultMovementState : MovementState
         { // off of the ground
 
             // add gravity/second to velocity
-            currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
-            if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
-
-            // if the player reorients mid-air, they go back to world space up
-            if (_input.shiftPressed)
+            if (!isOnWall)
             {
-                playerMovement.gravityDirection = -Vector3.up;
-                playerMovement.RotateUprightWithGravity();
+                currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
+                if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
+            }
+
+            if (isOnWall)
+            {
+                jumpCount = 0;
             }
         }
         
@@ -112,7 +117,7 @@ public class DefaultMovementState : MovementState
 
     bool IsGrounded()
     {
-        if (Physics.Raycast(transform.position, -transform.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
+        if (Physics.Raycast(transform.position, -Vector3.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
             return true;
         else
             return false;
@@ -120,10 +125,25 @@ public class DefaultMovementState : MovementState
 
     void Jump()
     {
-        if (jumpCount < jumpMax)
+        if (!isOnWall)
         {
-            jumpCount++;
-            currentGravityVelocity = -jumpForce;
+            if (jumpCount < jumpMax)
+            {
+                jumpCount++;
+                currentGravityVelocity = -jumpForce;
+            }
+        }
+        else
+        {
+            if (jumpCount < 1)
+            {
+                isOnWall = false;
+                int directionSwitch = (isOnRightWall) ? -1 : 1;
+                jumpCount++;
+                body.linearVelocity += (playerMovement.transform.right * directionSwitch * jumpForce);
+                playerMovement.gravityDirection = -Vector3.up;
+                playerMovement.ChangeToState(this);
+            }
         }
     }
 
@@ -131,14 +151,14 @@ public class DefaultMovementState : MovementState
     {
         wallRunCountdown -= Time.deltaTime;
 
-        if (!IsGrounded() && wallRunCountdown <= 0)
+        if ((!IsGrounded() && wallRunCountdown <= 0))
         {
             RaycastHit hit;
-            if ((Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers) && _input.moveInputVector.x > 0)
-                || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers) && _input.moveInputVector.x < 0))
+            if ((Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers))
+                || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers)))
             {
-                float normalAngle = Vector3.Angle(hit.normal, -playerMovement.gravityDirection);
-                if (normalAngle >= 55 && normalAngle <= 95)
+                float playerAngle = playerMovement.transform.rotation.z;
+                if (playerAngle == 0 || playerAngle == 90 || playerAngle == 180 || playerAngle == 270)
                     playerMovement.ChangeToState(wallRunState);
             }
         }
