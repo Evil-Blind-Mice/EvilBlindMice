@@ -5,10 +5,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    [SerializeField] GameObject menuActive;
+    [SerializeField] public GameObject menuActive;
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject menuOptions;
+    [SerializeField] GameObject menuUpgrades;
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
@@ -88,4 +90,30 @@ public class GameManager : MonoBehaviour
         menuActive = menuLose;
         menuActive.SetActive(true);
     }
+    public void StateOptions()
+    {
+        Time.timeScale = 0;
+        menuActive = menuOptions;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        menuActive.SetActive(true);
+    }
+    public void StateUpgrades()
+    {
+        Time.timeScale = 0;
+        menuActive = menuUpgrades;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        menuActive.SetActive(true);
+    }
+
+    public void Back()
+    {
+        Time.timeScale = 0;
+        menuActive = menuPause;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        menuActive.SetActive(true);
+    }
+
 }
