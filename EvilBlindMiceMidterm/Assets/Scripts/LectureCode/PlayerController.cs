@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     [SerializeField] CharacterController controller;
 
     [SerializeField] int health;
-    [SerializeField] int speed;
+    public int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
