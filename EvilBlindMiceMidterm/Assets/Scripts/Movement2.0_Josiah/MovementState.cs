@@ -1,16 +1,16 @@
 using UnityEngine;
-public abstract class NicholasMovementState : MonoBehaviour
+public abstract class MovementState : MonoBehaviour
 {
     // Variables
 
-    protected NicholasPlayerMovement playerMovement;
+    protected PlayerMovement playerMovement;
     protected Rigidbody body;
 
 
 
     // Functions
 
-    public virtual void OnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
+    public virtual void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
         playerMovement = _playerMovement;
         body = _body;

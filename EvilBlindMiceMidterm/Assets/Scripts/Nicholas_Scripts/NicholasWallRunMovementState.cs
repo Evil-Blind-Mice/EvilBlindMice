@@ -20,9 +20,9 @@ public class NicholasWallRunMovementState : NicholasMovementState
 
     // Overridden Functions
 
-    public override void OnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
+    public override void NicholasOnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
     {
-        base.OnEnter(_playerMovement, _body);
+        base.NicholasOnEnter(_playerMovement, _body);
 
         // lean so that bottom of player is closer to wall
         RaycastHit hit;
@@ -52,14 +52,14 @@ public class NicholasWallRunMovementState : NicholasMovementState
         // get the wall's normal to figure out which direction the player should move
     }
 
-    public override void OnUpdate(MoveInputStruct _input)
+    public override void NicholasOnUpdate(NicholasMoveInputStruct _input)
     {
-        StateCheck(_input);
+        NicholasStateCheck(_input);
         defaultMovementState.forwardMoveSpeed += (defaultMovementState.forwardMoveSpeed * Time.deltaTime * 0.0001f);
         body.linearVelocity = body.transform.forward * defaultMovementState.forwardMoveSpeed;
     }
 
-    public override void OnExit()
+    public override void NicholasOnExit()
     {
 
     }
@@ -68,16 +68,16 @@ public class NicholasWallRunMovementState : NicholasMovementState
 
     // Unique Functions
 
-    void StateCheck(MoveInputStruct _input)
+    void NicholasStateCheck(NicholasMoveInputStruct _input)
     {
         // if the player jumps off of the wall
         if (_input.jumpPressedThisFrame)
         {
             playerMovement.gravityDirection = -Vector3.up;
             playerMovement.maxGravity = origionalMaxGravity;
-            playerMovement.RotateUprightWithGravity();
+            playerMovement.NicholasRotateUprightWithGravity();
             body.linearVelocity = Vector3.Normalize(wallNormal + Vector3.up) * jumpForce;
-            playerMovement.ChangeToState(defaultMovementState);
+            playerMovement.NicholasChangeToState(defaultMovementState);
             return;
         }
 
@@ -87,7 +87,7 @@ public class NicholasWallRunMovementState : NicholasMovementState
             defaultMovementState.isOnWall = true;
             playerMovement.maxGravity = origionalMaxGravity;
             playerMovement.gravityDirection = -wallNormal;
-            playerMovement.ChangeToState(defaultMovementState);
+            playerMovement.NicholasChangeToState(defaultMovementState);
             return;
         }
 
@@ -96,8 +96,8 @@ public class NicholasWallRunMovementState : NicholasMovementState
         {
             playerMovement.gravityDirection = -Vector3.up;
             playerMovement.maxGravity = origionalMaxGravity;
-            playerMovement.RotateUprightWithGravity();
-            playerMovement.ChangeToState(defaultMovementState);
+            playerMovement.NicholasRotateUprightWithGravity();
+            playerMovement.NicholasChangeToState(defaultMovementState);
         }
 
 

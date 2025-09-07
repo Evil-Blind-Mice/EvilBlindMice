@@ -10,13 +10,13 @@ public abstract class NicholasMovementState : MonoBehaviour
 
     // Functions
 
-    public virtual void OnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
+    public virtual void NicholasOnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
     {
         playerMovement = _playerMovement;
         body = _body;
     }
     
-    public abstract void OnUpdate(MoveInputStruct _input);
+    public abstract void NicholasOnUpdate(NicholasMoveInputStruct _input);
    
-    public abstract void OnExit();
+    public abstract void NicholasOnExit();
 }

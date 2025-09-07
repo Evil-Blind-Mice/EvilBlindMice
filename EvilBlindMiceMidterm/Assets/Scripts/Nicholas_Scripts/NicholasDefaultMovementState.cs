@@ -41,10 +41,10 @@ public class NicholasDefaultMovementState : NicholasMovementState
 
     // Overridden Functions
 
-    public override void OnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
+    public override void NicholasOnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
     {
-        base.OnEnter(_playerMovement, _body);
-        playerMovement.RotateUprightWithGravity();
+        base.NicholasOnEnter(_playerMovement, _body);
+        playerMovement.NicholasRotateUprightWithGravity();
         externalForceVelocity = new Vector3(0, body.linearVelocity.y, 0);
         currentGravityVelocity = 0;
         jumpCount = jumpMax;
@@ -52,7 +52,7 @@ public class NicholasDefaultMovementState : NicholasMovementState
         wallRunState.isWallRunning = false;
     }
 
-    public override void OnUpdate(MoveInputStruct _input)
+    public override void NicholasOnUpdate(NicholasMoveInputStruct _input)
     {
 
         // calculate playerVelocity
@@ -104,10 +104,10 @@ public class NicholasDefaultMovementState : NicholasMovementState
         body.linearVelocity = forwardVelocity + playerVelocity + externalForceVelocity + playerMovement.gravityDirection * currentGravityVelocity;
 
         // check for change of state conditions
-        StateCheck(_input);
+        NicholasStateCheck(_input);
     }
 
-    public override void OnExit()
+    public override void NicholasOnExit()
     {
 
     }
@@ -143,12 +143,12 @@ public class NicholasDefaultMovementState : NicholasMovementState
                 jumpCount++;
                 body.linearVelocity += playerMovement.transform.right * directionSwitch * jumpForce;
                 playerMovement.gravityDirection = -Vector3.up;
-                playerMovement.ChangeToState(this);
+                playerMovement.NicholasChangeToState(this);
             }
         }
     }
 
-    void StateCheck(MoveInputStruct _input)
+    void NicholasStateCheck(NicholasMoveInputStruct _input)
     {
         wallRunCountdown -= Time.deltaTime;
 
@@ -160,7 +160,7 @@ public class NicholasDefaultMovementState : NicholasMovementState
             {
                 float playerAngle = playerMovement.transform.rotation.z;
                 if (playerAngle == 0)
-                    playerMovement.ChangeToState(wallRunState);
+                    playerMovement.NicholasChangeToState(wallRunState);
             }
         }
         Debug.DrawRay(body.transform.position, Vector3.Normalize(body.transform.right + body.transform.forward - body.transform.up) * wallRunDistance, Color.blue);
