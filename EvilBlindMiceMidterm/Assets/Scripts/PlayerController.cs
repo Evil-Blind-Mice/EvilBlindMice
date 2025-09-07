@@ -1,6 +1,7 @@
+using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class playerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
@@ -17,6 +18,11 @@ public class playerController : MonoBehaviour
 
     Vector3 moveDir;
     Vector3 playerVel;
+
+    [SerializeField] float autoForward;
+    float yZero = 0.0f;
+    float zZero = 0.0f;
+    Vector3 MoveForward;
 
     float shootTimer;
 
@@ -54,8 +60,7 @@ public class playerController : MonoBehaviour
             playerVel.y -= gravity * Time.deltaTime;
         }
 
-        moveDir = (Input.GetAxis("Horizontal") * transform.right) +
-                  (Input.GetAxis("Vertical") * transform.forward);
+        moveDir = (Input.GetAxis("Horizontal") * transform.right);
 
         controller.Move(moveDir * speed * Time.deltaTime);
 
@@ -65,6 +70,10 @@ public class playerController : MonoBehaviour
 
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
             shoot();
+
+        autoForward = autoForward + (autoForward * .01f);
+        MoveForward = new Vector3(autoForward, yZero, zZero);
+        controller.Move(MoveForward);
     }
 
     void jump()
