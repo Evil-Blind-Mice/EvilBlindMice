@@ -131,15 +131,22 @@ MonoBehaviour:
   jumpMax: 1
   externalForceResistance: 2
   externalForceThreshold: 1
-  groundedDistance: 1.1
-  wallRunDistance: 2.25
+  wallRunDistance: 1.2
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
   wallRunCooldown: 0.25
-  playerVelocity: {x: 0, y: 0, z: 0}
-  forwardMoveSpeed: 0
+  forwardMoveSpeedMax: 30
+  jumpDelay: 0.25
+  groundedDistance: 1.1
+  currentGravityVelocity: 0
+  externalForceVelocity: {x: 0, y: 0, z: 0}
   cancelPlayerMovement: 1
+  isOnWall: 0
+  isOnRightWall: 0
+  isOnCieling: 0
+  playerVelocity: {x: 0, y: 0, z: 0}
+  forwardMoveSpeed: 10
 --- !u!114 &2679000485577532463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,13 +160,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallRunMovementState
   defaultMovementState: {fileID: 1150595771540814783}
-  speed: 15
   jumpForce: 30
-  wallRunDistance: 2.25
+  wallRunDistance: 1.2
   tiltDegree: 30
+  distanceFromGround: 1.2
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
+  isWallRunning: 0
 --- !u!136 &6183747674694631673
 CapsuleCollider:
   m_ObjectHideFlags: 0

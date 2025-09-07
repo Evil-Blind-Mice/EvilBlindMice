@@ -151,8 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   sens: 5
-  lockVertMaxX: 0
-  lockVertMinX: 0
-  lockVertMaxY: 0
-  lockVertMinY: 0
+  lockVertMaxX: 80
+  lockVertMinX: -80
+  lockVertMaxY: 60
+  lockVertMinY: -60
   invertY: 0

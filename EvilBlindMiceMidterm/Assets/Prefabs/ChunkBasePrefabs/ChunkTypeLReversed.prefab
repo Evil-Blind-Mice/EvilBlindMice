@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 8748931350156871816}
   m_Layer: 0
   m_Name: ChunkTypeLReversed
-  m_TagString: Untagged
+  m_TagString: Chunks
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
