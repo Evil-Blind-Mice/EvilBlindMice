@@ -137,7 +137,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1150595771540814783, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
       propertyPath: forwardMoveSpeed
-      value: 15
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1150595771540814783, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
+      propertyPath: forwardMoveSpeedMax
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 2679000485577532463, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
       propertyPath: tiltDegree

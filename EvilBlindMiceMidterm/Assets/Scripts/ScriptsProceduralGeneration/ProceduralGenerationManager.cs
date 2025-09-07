@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static ProceduralConnectionPoint;
 using static NESWDirections;
-using static Chunk;
 using static PossiblePaths;
-using Unity.VisualScripting;
 
 public class ProceduralGenerationManager : MonoBehaviour
 {
@@ -42,6 +39,16 @@ public class ProceduralGenerationManager : MonoBehaviour
     void Start()
     {
         GenerateInitialChunks();
+    }
+
+    //Check for checkpoint flag, then run next generation
+    void Update()
+    {
+        if (nextCheckpointFlagged)
+        {
+            NextGeneration();
+            nextCheckpointFlagged = false;
+        }
     }
 
     //Function to generate the level
@@ -130,14 +137,27 @@ public class ProceduralGenerationManager : MonoBehaviour
         }
     }
 
-    //Check for checkpoint flag, then run next generation
-    void Update()
+    //Function to handle destroying paths
+    void DestroyPaths(GameObject baseObject)
     {
-        if (nextCheckpointFlagged)
+        if (baseObject == null)
         {
-            NextGeneration();
-            nextCheckpointFlagged = false;
+            return;
         }
+
+        List<GameObject> childList = baseObject.GetComponentInChildren<Chunk>().childChunkList;
+
+        for (int i = childList.Count - 1; i >= 0; i--)
+        {
+            DestroyPaths(childList[i]);
+        }
+
+        for (int i = 0; i < generationList.Count; i++)
+        {
+            generationList[i].Remove(baseObject);
+        }
+
+        Destroy(baseObject);
     }
 
     //Create quaternions based on direction
@@ -163,28 +183,5 @@ public class ProceduralGenerationManager : MonoBehaviour
         {
             return Quaternion.identity;
         }
-    }
-
-    //Function to handle destroying paths
-    void DestroyPaths(GameObject baseObject)
-    {
-        if (baseObject == null)
-        {
-            return;
-        }
-
-        List<GameObject> childList = baseObject.GetComponentInChildren<Chunk>().childChunkList;
-
-        for (int i = childList.Count - 1; i >= 0; i--)
-        {
-            DestroyPaths(childList[i]);
-        }
-
-        for (int i = 0; i < generationList.Count; i++)
-        {
-            generationList[i].Remove(baseObject);
-        }
-
-        Destroy(baseObject);
     }
 }

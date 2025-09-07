@@ -1,13 +1,13 @@
 using System.Timers;
+using Unity.VisualScripting;
 using UnityEngine;
 using static NESWDirections;
 using static PossiblePaths;
 
 public class ProceduralConnectionPoint : MonoBehaviour
 {
-    public Vector3 connectionPoint;
-
-    //Enumuration for the 4 directions
+    [HideInInspector] public Vector3 connectionPoint;
+    public float timeToWait = 1.0f;
     public FacingDirection direction;
 
     public LSRPaths choicePath;
@@ -19,8 +19,6 @@ public class ProceduralConnectionPoint : MonoBehaviour
 
     float timer1 = 0.0f;
     float timer2 = 0.0f;
-
-    public float timeToWait = 1.0f;
 
 
 

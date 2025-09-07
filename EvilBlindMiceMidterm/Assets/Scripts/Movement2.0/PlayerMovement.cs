@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
 
-    [SerializeField] MovementState defaultMoveState;
+    [SerializeField] DefaultMovementState defaultMoveState;
     MovementState moveState;
 
     private void Start()

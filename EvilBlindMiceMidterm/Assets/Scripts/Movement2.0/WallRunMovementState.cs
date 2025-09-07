@@ -4,7 +4,7 @@ public class WallRunMovementState : MovementState
 {
     // Variables
 
-    [SerializeField] public MovementState defaultMovementState;
+    [SerializeField] public DefaultMovementState defaultMovementState;
 
     [SerializeField] int jumpForce = 30;
     [SerializeField] float wallRunDistance = 2f;
@@ -14,6 +14,7 @@ public class WallRunMovementState : MovementState
 
     Vector3 wallNormal;
     int origionalMaxGravity;
+    [HideInInspector] public bool isWallRunning = false;
 
 
 
@@ -33,6 +34,7 @@ public class WallRunMovementState : MovementState
             playerMovement.maxGravity = 0;
             body.linearVelocity = Vector3.zero;
             body.linearVelocity = body.transform.forward * playerMovement.GetComponent<DefaultMovementState>().forwardMoveSpeed;
+            isWallRunning = true;
         }
         else
         { // raycast that triggered was to the left of the player
@@ -43,6 +45,7 @@ public class WallRunMovementState : MovementState
             playerMovement.maxGravity = 0;
             body.linearVelocity = Vector3.zero;
             body.linearVelocity = body.transform.forward * playerMovement.GetComponent<DefaultMovementState>().forwardMoveSpeed;
+            isWallRunning = true;
         }
         wallNormal = hit.normal;
 
@@ -52,8 +55,8 @@ public class WallRunMovementState : MovementState
     public override void OnUpdate(MoveInputStruct _input)
     {
         StateCheck(_input);
-        playerMovement.GetComponent<DefaultMovementState>().forwardMoveSpeed += (playerMovement.GetComponent<DefaultMovementState>().forwardMoveSpeed * Time.deltaTime * 0.0001f);
-        body.linearVelocity = body.transform.forward * playerMovement.GetComponent<DefaultMovementState>().forwardMoveSpeed;
+        defaultMovementState.forwardMoveSpeed += (defaultMovementState.forwardMoveSpeed * Time.deltaTime * 0.0001f);
+        body.linearVelocity = body.transform.forward * defaultMovementState.forwardMoveSpeed;
     }
 
     public override void OnExit()
@@ -81,25 +84,12 @@ public class WallRunMovementState : MovementState
         // if the player presses shift to change gravity
         if (_input.shiftPressed)
         {
-            playerMovement.GetComponent<DefaultMovementState>().isOnWall = true;
+            defaultMovementState.isOnWall = true;
             playerMovement.maxGravity = origionalMaxGravity;
             playerMovement.gravityDirection = -wallNormal;
             playerMovement.ChangeToState(defaultMovementState);
             return;
         }
-
-        //Marking for removal
-        // if the player is no longer close to the wall
-        //if (wallIsRight)
-        //{
-        //    if(!Physics.Raycast(body.transform.position, -wallNormal, wallRunDistance, groundLayers))
-        //    {
-        //        playerMovement.maxGravity = origionalMaxGravity;
-        //        playerMovement.ChangeToState(defaultMovementState);
-        //        return;
-        //    }
-        //    Debug.DrawRay(body.transform.position, -wallNormal * wallRunDistance, Color.blue);
-        //}
 
         //if the player is close to the ground
         if (body.transform.position.y < distanceFromGround)

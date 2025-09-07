@@ -6,7 +6,7 @@ public class DefaultMovementState : MovementState
 {
     // Variables
 
-    [SerializeField] MovementState wallRunState;
+    [SerializeField] WallRunMovementState wallRunState;
 
     [SerializeField] int speed = 15;
     [SerializeField] int jumpForce = 15;
@@ -16,25 +16,24 @@ public class DefaultMovementState : MovementState
     [SerializeField] float wallRunDistance = 1.25f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
-
-    public Vector3 playerVelocity;
-    [HideInInspector] public Vector3 externalForceVelocity;
-    int jumpCount;
-    [HideInInspector] public float currentGravityVelocity;
-    float wallRunCountdown;
-
-    //Nicholas's aditional variable
-    public float forwardMoveSpeed = 5f;
     [SerializeField] float forwardMoveSpeedMax = 30f;
     [SerializeField] float jumpDelay = 0.25f;
-    [HideInInspector] public int cancelPlayerMovement = 1;
     [SerializeField] float groundedDistance = 1.1f;
+
+    [HideInInspector] public float currentGravityVelocity;
+    [HideInInspector] public Vector3 externalForceVelocity;
+    [HideInInspector] public int cancelPlayerMovement = 1;
     [HideInInspector] public bool isOnWall = false;
     [HideInInspector] public bool isOnRightWall = false;
     [HideInInspector] public bool isOnCieling = false;
 
+    public Vector3 playerVelocity;
+    public float forwardMoveSpeed = 5f;
 
+    int jumpCount;
+    float wallRunCountdown;
 
+    
     void Update()
     {
         forwardMoveSpeed = Mathf.Clamp(forwardMoveSpeed + forwardMoveSpeed * Time.deltaTime * 0.0001f, 0, forwardMoveSpeedMax);
@@ -50,13 +49,14 @@ public class DefaultMovementState : MovementState
         currentGravityVelocity = 0;
         jumpCount = jumpMax;
         wallRunCountdown = wallRunCooldown;
+        wallRunState.isWallRunning = false;
     }
 
     public override void OnUpdate(MoveInputStruct _input)
     {
 
         // calculate playerVelocity
-            playerVelocity = (_input.moveInputVector.x * body.transform.right) * speed * cancelPlayerMovement;
+            playerVelocity =  speed * cancelPlayerMovement * (body.transform.right * _input.moveInputVector.x);
             Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
 
         // handle gravity and jumping
@@ -109,7 +109,7 @@ public class DefaultMovementState : MovementState
 
     public override void OnExit()
     {
-        externalForceVelocity = Vector3.zero;
+
     }
 
 
@@ -141,7 +141,7 @@ public class DefaultMovementState : MovementState
                 isOnWall = false;
                 int directionSwitch = (isOnRightWall) ? -1 : 1;
                 jumpCount++;
-                body.linearVelocity += (playerMovement.transform.right * directionSwitch * jumpForce);
+                body.linearVelocity += playerMovement.transform.right * directionSwitch * jumpForce;
                 playerMovement.gravityDirection = -Vector3.up;
                 playerMovement.ChangeToState(this);
             }
@@ -159,7 +159,7 @@ public class DefaultMovementState : MovementState
                 || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers)))
             {
                 float playerAngle = playerMovement.transform.rotation.z;
-                if (playerAngle == 0 || playerAngle == 90 || playerAngle == 180 || playerAngle == 270)
+                if (playerAngle == 0)
                     playerMovement.ChangeToState(wallRunState);
             }
         }
