@@ -16,45 +16,45 @@ public class NicholasPlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        ChangeToState(defaultMoveState, true);
         gravityDirection = -Vector3.up;
+        NicholasChangeToState(defaultMoveState, true);
     }
 
     void Update()
     {
-        moveState.OnUpdate(GetMoveInput());
+        moveState.NicholasOnUpdate(NicholasGetMoveInput());
     }
 
-    MoveInputStruct GetMoveInput()
+    NicholasMoveInputStruct NicholasGetMoveInput()
     {
-        return new MoveInputStruct(
+        return new NicholasMoveInputStruct(
             Input.GetButton("Sprint"),
             new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")),
             Input.GetButtonDown("Jump")
             );
     }
 
-    public void ChangeToState(NicholasMovementState _newState, bool _initializing = false)
+    public void NicholasChangeToState(NicholasMovementState _newState, bool _initializing = false)
     {
-        if(!_initializing) moveState.OnExit();
+        if(!_initializing) moveState.NicholasOnExit();
         moveState = _newState;
-        moveState.OnEnter(this, body);
+        moveState.NicholasOnEnter(this, body);
     }
 
-    public void RotateUprightWithGravity()
+    public void NicholasRotateUprightWithGravity()
     {
         Quaternion lookRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(body.transform.forward, gravityDirection), -gravityDirection);
         body.transform.rotation = lookRotation;
     }
 }
 
-public struct MoveInputStruct
+public struct NicholasMoveInputStruct
 {
     public bool shiftPressed;
     public Vector2 moveInputVector;
     public bool jumpPressedThisFrame;
 
-    public MoveInputStruct(bool _sprintPressed, Vector2 _moveInputVector, bool _jumpPressedThisFrame)
+    public NicholasMoveInputStruct(bool _sprintPressed, Vector2 _moveInputVector, bool _jumpPressedThisFrame)
     {
         shiftPressed = _sprintPressed;
         moveInputVector = _moveInputVector;

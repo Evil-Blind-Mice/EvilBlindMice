@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class NicholasWallRunMovementState : NicholasMovementState
+public class WallRunMovementState : MovementState
 {
     // Variables
 
-    [SerializeField] public NicholasDefaultMovementState defaultMovementState;
+    [SerializeField] public DefaultMovementState defaultMovementState;
 
     [SerializeField] int jumpForce = 30;
     [SerializeField] float wallRunDistance = 2f;
@@ -20,7 +20,7 @@ public class NicholasWallRunMovementState : NicholasMovementState
 
     // Overridden Functions
 
-    public override void OnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
+    public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
         base.OnEnter(_playerMovement, _body);
 

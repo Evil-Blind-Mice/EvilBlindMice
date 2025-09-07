@@ -150,9 +150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a564b18ad9b6d574f9ceb0d3a274c2ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  sens: 5
-  lockVertMaxX: 80
-  lockVertMinX: -80
-  lockVertMaxY: 60
-  lockVertMinY: -60
+  sensitivity: 300
+  lockVerticalMax: 80
+  lockVerticalMin: -70
+  lockHorizontalMax: 60
+  lockHorizontalMin: -60
   invertY: 0
