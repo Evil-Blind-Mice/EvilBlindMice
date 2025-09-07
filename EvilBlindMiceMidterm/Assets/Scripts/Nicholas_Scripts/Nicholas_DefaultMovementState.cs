@@ -2,11 +2,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public class DefaultMovementState : MovementState
+public class NicholasDefaultMovementState : NicholasMovementState
 {
     // Variables
 
-    [SerializeField] WallRunMovementState wallRunState;
+    [SerializeField] NicholasWallRunMovementState wallRunState;
 
     [SerializeField] int speed = 15;
     [SerializeField] int jumpForce = 15;
@@ -41,7 +41,7 @@ public class DefaultMovementState : MovementState
 
     // Overridden Functions
 
-    public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
+    public override void OnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
     {
         base.OnEnter(_playerMovement, _body);
         playerMovement.RotateUprightWithGravity();

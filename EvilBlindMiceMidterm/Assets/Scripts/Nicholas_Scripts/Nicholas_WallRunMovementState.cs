@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class WallRunMovementState : MovementState
+public class NicholasWallRunMovementState : NicholasMovementState
 {
     // Variables
 
-    [SerializeField] public DefaultMovementState defaultMovementState;
+    [SerializeField] public NicholasDefaultMovementState defaultMovementState;
 
     [SerializeField] int jumpForce = 30;
     [SerializeField] float wallRunDistance = 2f;
@@ -20,7 +20,7 @@ public class WallRunMovementState : MovementState
 
     // Overridden Functions
 
-    public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
+    public override void OnEnter(NicholasPlayerMovement _playerMovement, Rigidbody _body)
     {
         base.OnEnter(_playerMovement, _body);
 
@@ -33,7 +33,7 @@ public class WallRunMovementState : MovementState
             origionalMaxGravity = playerMovement.maxGravity;
             playerMovement.maxGravity = 0;
             body.linearVelocity = Vector3.zero;
-            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<DefaultMovementState>().forwardMoveSpeed;
+            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<NicholasDefaultMovementState>().forwardMoveSpeed;
             isWallRunning = true;
         }
         else
@@ -44,7 +44,7 @@ public class WallRunMovementState : MovementState
             origionalMaxGravity = playerMovement.maxGravity;
             playerMovement.maxGravity = 0;
             body.linearVelocity = Vector3.zero;
-            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<DefaultMovementState>().forwardMoveSpeed;
+            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<NicholasDefaultMovementState>().forwardMoveSpeed;
             isWallRunning = true;
         }
         wallNormal = hit.normal;

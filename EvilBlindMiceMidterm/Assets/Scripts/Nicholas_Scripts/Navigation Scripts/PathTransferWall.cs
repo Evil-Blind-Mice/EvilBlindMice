@@ -4,14 +4,14 @@ using UnityEngine;
 public class PathTransferWall : MonoBehaviour
 {
     GameObject player;
-    PlayerMovement playerMovement;
-    WallRunMovementState wallRunMoveState;
+    NicholasPlayerMovement playerMovement;
+    NicholasWallRunMovementState wallRunMoveState;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        playerMovement = player.GetComponent<PlayerMovement>();
-        wallRunMoveState = player.GetComponent<WallRunMovementState>();
+        playerMovement = player.GetComponent<NicholasPlayerMovement>();
+        wallRunMoveState = player.GetComponent<NicholasWallRunMovementState>();
     }
 
     void OnTriggerEnter(Collider other)

@@ -17,7 +17,7 @@ public class PathTransferGround : MonoBehaviour
     void Update()
     {
 
-        if (isInBounds && !hasChosenPath && !player.GetComponent<DefaultMovementState>().isOnCieling)
+        if (isInBounds && !hasChosenPath && !player.GetComponent<NicholasDefaultMovementState>().isOnCieling)
         {
             if (Input.GetButtonDown("ChangeDirectionRight") && !hasChosenPath
                 && chunkComponent.possiblePaths.Contains(PossiblePaths.LSRPaths.right))
@@ -33,9 +33,9 @@ public class PathTransferGround : MonoBehaviour
             }
         }
 
-        if (hasChosenPath && player.GetComponent<DefaultMovementState>().cancelPlayerMovement != 0 && canAlterPlayer)
+        if (hasChosenPath && player.GetComponent<NicholasDefaultMovementState>().cancelPlayerMovement != 0 && canAlterPlayer)
         {
-            player.GetComponent<DefaultMovementState>().cancelPlayerMovement = 0;
+            player.GetComponent<NicholasDefaultMovementState>().cancelPlayerMovement = 0;
         }
     }
     
@@ -59,7 +59,7 @@ public class PathTransferGround : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canAlterPlayer = false;
-            player.GetComponent<DefaultMovementState>().cancelPlayerMovement = 1;
+            player.GetComponent<NicholasDefaultMovementState>().cancelPlayerMovement = 1;
         }
     }
 

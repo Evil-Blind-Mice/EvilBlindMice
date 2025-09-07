@@ -2,7 +2,7 @@ using NUnit.Framework.Api;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class NicholasPlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody body;
 
@@ -11,8 +11,8 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
 
-    [SerializeField] DefaultMovementState defaultMoveState;
-    MovementState moveState;
+    [SerializeField] NicholasDefaultMovementState defaultMoveState;
+    NicholasMovementState moveState;
 
     private void Start()
     {
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
             );
     }
 
-    public void ChangeToState(MovementState _newState, bool _initializing = false)
+    public void ChangeToState(NicholasMovementState _newState, bool _initializing = false)
     {
         if(!_initializing) moveState.OnExit();
         moveState = _newState;
