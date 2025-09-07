@@ -1,10 +1,11 @@
 using UnityEngine;
-
-public class playerController : MonoBehaviour
+using System.Collections;
+public class PlayerController : MonoBehaviour, IDamage, IHeal
 {
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
 
+    [SerializeField] int health;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
@@ -13,70 +14,70 @@ public class playerController : MonoBehaviour
 
     [SerializeField] int shootDamage;
     [SerializeField] float shootRate;
-    [SerializeField] int shootDist;
+    [SerializeField] int shootDistance;
 
-    Vector3 moveDir;
-    Vector3 playerVel;
+    Vector3 moveDirection;
+    Vector3 playerVelocity;
 
     float shootTimer;
 
     int jumpCount;
+    int originalHealth;
 
     bool isSprinting;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        originalHealth = health;
+        UpdatePlayerUI();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDist, Color.red);
-
-        movement();
-        sprint();
-
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.red);
+        Movement();
+        Sprint();
     }
 
-    void movement()
+    void Movement()
     {
         shootTimer += Time.deltaTime;
 
         if (controller.isGrounded)
         {
             jumpCount = 0;
-            playerVel = Vector3.zero;
+            playerVelocity = Vector3.zero;
         }
         else
         {
-            playerVel.y -= gravity * Time.deltaTime;
+            playerVelocity.y -= gravity * Time.deltaTime;
         }
 
-        moveDir = (Input.GetAxis("Horizontal") * transform.right) +
+        moveDirection = (Input.GetAxis("Horizontal") * transform.right) +
                   (Input.GetAxis("Vertical") * transform.forward);
 
-        controller.Move(moveDir * speed * Time.deltaTime);
+        controller.Move(moveDirection * speed * Time.deltaTime);
 
-        jump();
+        Jump();
 
-        controller.Move(playerVel * Time.deltaTime);
+        controller.Move(playerVelocity * Time.deltaTime);
 
         if (Input.GetButton("Fire1") && shootTimer >= shootRate)
-            shoot();
+            Shoot();
     }
 
-    void jump()
+    void Jump()
     {
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
             jumpCount++;
-            playerVel.y = jumpSpeed;
+            playerVelocity.y = jumpSpeed;
         }
     }
 
-    void sprint()
+    void Sprint()
     {
         if (Input.GetButtonDown("Sprint"))
         {
@@ -90,12 +91,12 @@ public class playerController : MonoBehaviour
         }
     }
 
-    void shoot()
+    void Shoot()
     {
         shootTimer = 0;
 
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreLayer))
         {
             Debug.Log(hit.collider.name);
 
@@ -103,8 +104,47 @@ public class playerController : MonoBehaviour
 
             if (dmg != null)
             {
-                dmg.takeDamage(shootDamage);
+                dmg.TakeDamage(shootDamage);
             }
         }
+    }
+
+    public void TakeDamage(int _amount)
+    {
+        health -= _amount;
+        UpdatePlayerUI();
+        StartCoroutine(FlashDamage());
+
+        if (health <= 0)
+        {
+            // Hey I'm dead!
+            GameManager.instance.YouLose();
+        }
+    }
+
+    public void Heal(int _amount)
+    {
+        health = Mathf.Clamp(health + _amount, 0, originalHealth);
+        UpdatePlayerUI();
+        StartCoroutine(FlashHeal());
+    }
+
+    public void UpdatePlayerUI()
+    {
+        GameManager.instance.playerHealthBar.fillAmount = (float)health / originalHealth;
+    }
+
+    IEnumerator FlashDamage()
+    {
+        GameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.playerDamageFlash.SetActive(false);
+    }
+
+    IEnumerator FlashHeal()
+    {
+        GameManager.instance.playerHealingFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.playerHealingFlash.SetActive(false);
     }
 }
