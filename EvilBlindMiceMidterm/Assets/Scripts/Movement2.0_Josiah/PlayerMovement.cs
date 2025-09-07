@@ -2,7 +2,7 @@ using NUnit.Framework.Api;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class NicholasPlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody body;
 
@@ -11,13 +11,13 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
 
-    [SerializeField] MovementState defaultMoveState;
-    MovementState moveState;
+    [SerializeField] NicholasDefaultMovementState defaultMoveState;
+    NicholasMovementState moveState;
 
     private void Start()
     {
         ChangeToState(defaultMoveState, true);
-        gravityDirection = -transform.up;
+        gravityDirection = -Vector3.up;
     }
 
     void Update()
@@ -34,12 +34,13 @@ public class PlayerMovement : MonoBehaviour
             );
     }
 
-    public void ChangeToState(MovementState _newState, bool _initializing = false)
+    public void ChangeToState(NicholasMovementState _newState, bool _initializing = false)
     {
         if(!_initializing) moveState.OnExit();
         moveState = _newState;
         moveState.OnEnter(this, body);
     }
+
     public void RotateUprightWithGravity()
     {
         Quaternion lookRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(body.transform.forward, gravityDirection), -gravityDirection);
