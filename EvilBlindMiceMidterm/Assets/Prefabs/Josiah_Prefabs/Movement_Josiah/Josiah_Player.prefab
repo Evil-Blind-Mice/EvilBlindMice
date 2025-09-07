@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3310816127394724214}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -151,8 +151,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   sensitivity: 300
-  lockVerticalMaximum: -90
-  lockVerticalMinimum: 90
+  lockVerticalMax: 0
+  lockVerticalMin: 0
+  lockHorizontalMax: 0
+  lockHorizontalMin: 0
   invertY: 0
 --- !u!1 &4051878489175559200
 GameObject:
@@ -171,7 +173,7 @@ GameObject:
   - component: {fileID: 6183747674694631673}
   - component: {fileID: 176451124706143969}
   m_Layer: 3
-  m_Name: Player
+  m_Name: Josiah_Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,12 +287,22 @@ MonoBehaviour:
   jumpMax: 1
   externalForceResistance: 2
   externalForceThreshold: 1
-  groundedDistance: 1.1
   wallRunDistance: 1.25
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
   wallRunCooldown: 0.25
+  forwardMoveSpeedMax: 30
+  jumpDelay: 0.25
+  groundedDistance: 1.1
+  currentGravityVelocity: 0
+  externalForceVelocity: {x: 0, y: 0, z: 0}
+  cancelPlayerMovement: 1
+  isOnWall: 0
+  isOnRightWall: 0
+  isOnCieling: 0
+  playerVelocity: {x: 0, y: 0, z: 0}
+  forwardMoveSpeed: 5
 --- !u!114 &2679000485577532463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,13 +316,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallRunMovementState
   defaultMovementState: {fileID: 1150595771540814783}
-  speed: 15
   jumpForce: 30
   wallRunDistance: 2
   tiltDegree: 30
+  distanceFromGround: 1.2
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
+  isWallRunning: 0
 --- !u!136 &6183747674694631673
 CapsuleCollider:
   m_ObjectHideFlags: 0
