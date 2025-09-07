@@ -25,8 +25,8 @@ public class UIFunctions : MonoBehaviour
     }
     public void Options()
     {
-        GameManager.instance.menuActive.SetActive(false);
-        GameManager.instance.StateOptions();
+        RonnieGameManager.instance.menuActive.SetActive(false);
+        RonnieGameManager.instance.StateOptions();
     }
     public void Upgrades()
     {

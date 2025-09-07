@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class RonnieGameManager : MonoBehaviour
 {
-    public static GameManager instance
+    public static RonnieGameManager instance
     {
         get; private set;
     }
@@ -79,6 +79,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuActive.SetActive(true);
     }
+
 
     //public void updateGameGoal(int _amount)
     //{
