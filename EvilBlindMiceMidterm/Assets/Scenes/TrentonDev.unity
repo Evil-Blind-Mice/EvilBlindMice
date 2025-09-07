@@ -2272,7 +2272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d97c55481ead54c983c9ce851dc64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
-  healAmount: 1
+  healAmount: 5
 --- !u!1 &1332377148
 GameObject:
   m_ObjectHideFlags: 0
