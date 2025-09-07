@@ -4,17 +4,17 @@ public class WallRunMovementState : MovementState
 {
     // Variables
 
-    [SerializeField] MovementState defaultMovementState;
+    [SerializeField] public DefaultMovementState defaultMovementState;
 
-    [SerializeField] int speed = 15;
     [SerializeField] int jumpForce = 30;
     [SerializeField] float wallRunDistance = 2f;
     [SerializeField] int tiltDegree = 30;
+    [SerializeField] float distanceFromGround = 1.2f;
     [SerializeField] LayerMask groundLayers;
 
-    Vector3 playerVelocity;
-    bool wallIsRight;
     Vector3 wallNormal;
+    int origionalMaxGravity;
+    [HideInInspector] public bool isWallRunning = false;
 
 
 
@@ -30,14 +30,22 @@ public class WallRunMovementState : MovementState
         { // raycast that triggered was to the right of the player
             body.transform.localEulerAngles += new Vector3(0, 0,
                 90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
-            wallIsRight = true;
+            origionalMaxGravity = playerMovement.maxGravity;
+            playerMovement.maxGravity = 0;
+            body.linearVelocity = Vector3.zero;
+            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<NicholasDefaultMovementState>().forwardMoveSpeed;
+            isWallRunning = true;
         }
         else
         { // raycast that triggered was to the left of the player
             Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers);
             body.transform.localEulerAngles -= new Vector3(0, 0, 
                 90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
-            wallIsRight = false;
+            origionalMaxGravity = playerMovement.maxGravity;
+            playerMovement.maxGravity = 0;
+            body.linearVelocity = Vector3.zero;
+            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<NicholasDefaultMovementState>().forwardMoveSpeed;
+            isWallRunning = true;
         }
         wallNormal = hit.normal;
 
@@ -46,13 +54,9 @@ public class WallRunMovementState : MovementState
 
     public override void OnUpdate(MoveInputStruct _input)
     {
-        playerVelocity = Vector3.zero;
-
-        playerVelocity += (body.transform.forward * speed);
-
-        body.linearVelocity = playerVelocity;
-
         StateCheck(_input);
+        defaultMovementState.forwardMoveSpeed += (defaultMovementState.forwardMoveSpeed * Time.deltaTime * 0.0001f);
+        body.linearVelocity = body.transform.forward * defaultMovementState.forwardMoveSpeed;
     }
 
     public override void OnExit()
@@ -69,7 +73,10 @@ public class WallRunMovementState : MovementState
         // if the player jumps off of the wall
         if (_input.jumpPressedThisFrame)
         {
-            body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * jumpForce;
+            playerMovement.gravityDirection = -Vector3.up;
+            playerMovement.maxGravity = origionalMaxGravity;
+            playerMovement.RotateUprightWithGravity();
+            body.linearVelocity = Vector3.Normalize(wallNormal + Vector3.up) * jumpForce;
             playerMovement.ChangeToState(defaultMovementState);
             return;
         }
@@ -77,37 +84,23 @@ public class WallRunMovementState : MovementState
         // if the player presses shift to change gravity
         if (_input.shiftPressed)
         {
+            defaultMovementState.isOnWall = true;
+            playerMovement.maxGravity = origionalMaxGravity;
             playerMovement.gravityDirection = -wallNormal;
             playerMovement.ChangeToState(defaultMovementState);
             return;
         }
 
-        // if the player is no longer close to the wall
-        if (wallIsRight)
+        //if the player is close to the ground
+        if (body.transform.position.y < distanceFromGround)
         {
-            if(!Physics.Raycast(body.transform.position, Vector3.Normalize(-body.transform.up + body.transform.right), wallRunDistance, groundLayers))
-            {
-                playerMovement.ChangeToState(defaultMovementState);
-                return;
-            }
-            Debug.DrawRay(body.transform.position, Vector3.Normalize(body.transform.right - body.transform.up) * wallRunDistance, Color.blue);
-        }
-        else
-        {
-            if (!Physics.Raycast(body.transform.position, Vector3.Normalize(-body.transform.up - body.transform.right), wallRunDistance, groundLayers))
-            {
-                playerMovement.ChangeToState(defaultMovementState);
-                return;
-            }
-            Debug.DrawRay(body.transform.position, Vector3.Normalize(-body.transform.right - body.transform.up) * wallRunDistance, Color.blue);
+            playerMovement.gravityDirection = -Vector3.up;
+            playerMovement.maxGravity = origionalMaxGravity;
+            playerMovement.RotateUprightWithGravity();
+            playerMovement.ChangeToState(defaultMovementState);
         }
 
-        // if the player stops moving forward
-        if (_input.moveInputVector.y <= 0)
-        {
-            playerMovement.ChangeToState(defaultMovementState);
-            return;
-        }
+
 
     }
 }

@@ -5,8 +5,8 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] CharacterController controller;
 
-    [SerializeField] int health;
-    [SerializeField] int speed;
+    [SerializeField] public int health;
+    [SerializeField] public int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
 
     int jumpCount;
     int originalHealth;
+
+    [HideInInspector]  public int hasTripped = 0;
 
     bool isSprinting;
 
@@ -131,7 +133,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
 
     public void UpdatePlayerUI()
     {
-        GameManager.instance.playerHealthBar.fillAmount = (float)health / originalHealth;
+        GameManager.instance.playerHealthBar.fillAmount = (float)health / (float)originalHealth;
     }
 
     IEnumerator FlashDamage()

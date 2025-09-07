@@ -3,10 +3,12 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] int sensitivity;
-    [SerializeField] int lockVerticalMaximum, lockVerticalMinimum;
+    [SerializeField] int lockVerticalMax, lockVerticalMin;
+    [SerializeField] int lockHorizontalMax, lockHorizontalMin;
     [SerializeField] bool invertY;
 
     float rotateX;
+    float rotateY;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,13 +30,13 @@ public class CameraController : MonoBehaviour
         else
             rotateX -= mouseY;
 
+        rotateY += mouseX;
+
         // clamp the camera on the x-axis
-        rotateX = Mathf.Clamp(rotateX, lockVerticalMaximum, lockVerticalMinimum);
+        rotateX = Mathf.Clamp(rotateX, lockVerticalMin, lockVerticalMax);
+        rotateY = Mathf.Clamp(rotateY, lockHorizontalMin, lockHorizontalMax);
 
-        // rotate the camera to look up and down
-        transform.localRotation = Quaternion.Euler(rotateX, 0, 0);
-
-        // rotate the player to look left and right
-        transform.parent.Rotate(Vector3.up * mouseX);
+        // rotate the camera to look up and down left and right
+        transform.localRotation = Quaternion.Euler(rotateX, rotateY, 0);
     }
 }
