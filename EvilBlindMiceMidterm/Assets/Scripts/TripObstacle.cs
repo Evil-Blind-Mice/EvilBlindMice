@@ -1,26 +1,36 @@
 using UnityEngine;
+using System.Collections;
 public class TripObstacle : MonoBehaviour
 {
     [SerializeField] bool tripObstacle;
 
     public GameObject player;
     public PlayerController playerController;
-
-    void Awake()
-    {       
+    void Start()
+    {
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<PlayerController>();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && tripObstacle)
+        if (other.CompareTag("Player"))
         {
-            if (tripObstacle)
+            playerController.hasTripped++;
+            //StartCoroutine(revertAfterSeconds(2f));
+            playerController.speed = playerController.speed / 2; //second or two and if hits two before time is up then dies
+            if (playerController.hasTripped > 1)
             {
-                playerController.speed = playerController.speed / 2; //second or two and if hits two before time is up then dies
-                Destroy(gameObject);
+                playerController.speed = 0;
+                
             }
+            Destroy(gameObject);
         }
     }
+    //IEnumerator revertAfterSeconds(float seconds)
+    //{
+    //    yield return new WaitForSeconds(seconds);
+    //    playerController.speed = playerController.speed * 2;
+    //}
+
 }
