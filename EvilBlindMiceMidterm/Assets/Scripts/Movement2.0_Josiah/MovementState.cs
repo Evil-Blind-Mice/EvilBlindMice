@@ -26,12 +26,12 @@ public abstract class MovementState : MonoBehaviour
         isCurrentState = false;
     }
 
-    public virtual void OnIntersectionEnter()
+    public virtual void OnIntersectionEnter(Intersection _intersection)
     {
         insideIntersection = true;
     }
 
-    public virtual void OnIntersectionExit()
+    public virtual void OnIntersectionExit(Intersection _intersection)
     {
         insideIntersection = false;
     }
@@ -40,13 +40,13 @@ public abstract class MovementState : MonoBehaviour
     {
         if (!isCurrentState) return;
         if (other.gameObject.tag == "Intersection")
-            OnIntersectionEnter();
+            OnIntersectionEnter(other.GetComponent<Intersection>());
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!isCurrentState) return;
         if (other.gameObject.tag == "Intersection")
-            OnIntersectionExit();
+            OnIntersectionExit(other.GetComponent<Intersection>());
     }
 }
