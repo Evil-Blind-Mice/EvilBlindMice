@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class WallRunMovementState : MovementState
@@ -20,6 +19,8 @@ public class WallRunMovementState : MovementState
     Vector3 wallNormal;
 
     int speed;
+
+
 
     // Overridden Functions
 
@@ -47,8 +48,6 @@ public class WallRunMovementState : MovementState
 
         playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f)));
         wallNormal = hit.normal;
-
-        // get the wall's normal to figure out which direction the player should move
     }
 
     public override void OnExit()
@@ -66,29 +65,42 @@ public class WallRunMovementState : MovementState
         StateCheck(_input);
     }
 
-    public override void OnIntersectionEnter()
+    public override void OnIntersectionEnter(Intersection _intersection)
     {
-        base.OnIntersectionEnter();
-
-        speed = intersectionSpeed;
+        base.OnIntersectionEnter(_intersection);
 
         Vector3 leanOutToward = body.transform.forward;
 
+
         if (wallIsRight)
         {
-            playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+            if (_intersection.DirectionAvailable(playerMovement.gravityReference.right))
+            {
+                speed = intersectionSpeed;
+                playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
+            }
+
         }
         else
         {
-            playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+            if (_intersection.DirectionAvailable(-playerMovement.gravityReference.right))
+            {
+                speed = intersectionSpeed;
+                playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
+            }
+            else
+            {
+                playerMovement.ChangeToState(defaultMovementState);
+            }
         }
 
-        playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
     }
 
-    public override void OnIntersectionExit()
+    public override void OnIntersectionExit(Intersection _intersection)
     {
-        base.OnIntersectionExit();
+        base.OnIntersectionExit(_intersection);
 
         speed = normalSpeed;
 

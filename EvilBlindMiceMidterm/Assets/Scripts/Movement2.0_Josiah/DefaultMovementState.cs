@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -101,19 +103,16 @@ public class DefaultMovementState : MovementState
         externalForceVelocity = Vector3.zero;
     }
 
-    public override void OnIntersectionEnter()
+    public override void OnIntersectionEnter(Intersection _intersection)
     {
-        base.OnIntersectionEnter();
-        if (!IsGrounded())
+        base.OnIntersectionEnter(_intersection);
+
+        if (_intersection.DirectionAvailable(-playerMovement.gravityReference.up))
         {
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
-        else
-        {
-            insideIntersection = true;
-        }
-        
+
     }
 
 
