@@ -7,6 +7,7 @@ TagManager:
   - Chunks
   - Ceiling
   - Floor
+  - Intersection
   layers:
   - Default
   - TransparentFX

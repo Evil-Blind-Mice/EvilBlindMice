@@ -19,4 +19,12 @@ public abstract class MovementState : MonoBehaviour
     public abstract void OnUpdate(MoveInputStruct _input);
 
     public abstract void OnExit();
+
+    public abstract void OnIntersection();
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Intersection")
+            OnIntersection();
+    }
 }

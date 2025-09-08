@@ -35,7 +35,7 @@ public class WallRunMovementState : MovementState
             Physics.Raycast(body.transform.position, -body.transform.right, out hit, wallRunDistance, groundLayers);
             wallIsRight = false;
         }
-        StartCoroutine(playerMovement.RotateSmooth(Quaternion.LookRotation(body.transform.forward, Vector3.Slerp(-playerMovement.gravityDirection, hit.normal, tiltDegree / 90f))));
+        StartCoroutine(playerMovement.RotateSmooth(Quaternion.LookRotation(body.transform.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f))));
         wallNormal = hit.normal;
 
         // get the wall's normal to figure out which direction the player should move
@@ -57,6 +57,11 @@ public class WallRunMovementState : MovementState
 
     }
 
+    public override void OnIntersection()
+    {
+        
+    }
+
 
 
     // Unique Functions
@@ -74,7 +79,7 @@ public class WallRunMovementState : MovementState
         // if the player presses shift to change gravity
         if (_input.shiftPressed)
         {
-            playerMovement.gravityDirection = -wallNormal;
+            playerMovement.SetGravityDirection(transform.forward, wallNormal);
             playerMovement.ChangeToState(defaultMovementState);
             return;
         }
