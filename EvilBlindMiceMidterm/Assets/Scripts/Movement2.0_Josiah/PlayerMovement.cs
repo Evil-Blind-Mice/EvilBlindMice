@@ -4,11 +4,12 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Rigidbody body;
+    public Transform gravityReference;
 
     public int gravityAcceleration = 50;
     public int maxGravity = 50;
     public float rotationSpeed;
-    [HideInInspector] public Vector3 gravityDirection;
+    //[HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
     [HideInInspector] public bool isUpright;
 
@@ -20,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         ChangeToState(defaultMoveState, true);
-        gravityDirection = -transform.up;
+        SetGravityDirection(body.transform.forward, Vector3.up);
     }
 
     void Update()
@@ -47,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     public void RotateUprightWithGravity()
     {
         if (activeRotation != null) StopCoroutine(activeRotation);
-        Quaternion lookRotation = Quaternion.LookRotation(body.transform.forward, -gravityDirection);
+        Quaternion lookRotation = Quaternion.LookRotation(gravityReference.forward, gravityReference.up);
         activeRotation = StartCoroutine(RotateSmooth(lookRotation));
     }
 
@@ -71,6 +72,11 @@ public class PlayerMovement : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         isUpright = true;
+    }
+
+    public void SetGravityDirection(Vector3 _forwardDirection, Vector3 _upDirection)
+    {
+        gravityReference.rotation = Quaternion.LookRotation(_forwardDirection, _upDirection);
     }
 }
 
