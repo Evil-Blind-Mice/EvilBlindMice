@@ -47,12 +47,18 @@ public class PlayerMovement : MonoBehaviour
 
     public void RotateUprightWithGravity()
     {
-        if (activeRotation != null) StopCoroutine(activeRotation);
+        
         Quaternion lookRotation = Quaternion.LookRotation(gravityReference.forward, gravityReference.up);
-        activeRotation = StartCoroutine(RotateSmooth(lookRotation));
+        RotateSmooth(lookRotation);
     }
 
-    public IEnumerator RotateSmooth(Quaternion _lookRotation)
+    public void RotateSmooth(Quaternion _lookRotation) 
+    {
+        if (activeRotation != null) StopCoroutine(activeRotation);
+        activeRotation = StartCoroutine(RotateSmoothCoroutine(_lookRotation));
+    }
+
+    IEnumerator RotateSmoothCoroutine(Quaternion _lookRotation)
     {
         isUpright = false;
         float timeCount = 0f;

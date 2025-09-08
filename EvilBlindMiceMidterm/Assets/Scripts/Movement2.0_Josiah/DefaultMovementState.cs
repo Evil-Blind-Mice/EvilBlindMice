@@ -25,7 +25,6 @@ public class DefaultMovementState : MovementState
     float wallRunCountdown;
 
 
-
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
@@ -98,19 +97,24 @@ public class DefaultMovementState : MovementState
 
     public override void OnExit()
     {
+        base.OnExit();
         externalForceVelocity = Vector3.zero;
     }
 
-    public override void OnIntersection()
+    public override void OnIntersectionEnter()
     {
+        base.OnIntersectionEnter();
         if (!IsGrounded())
         {
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
+        else
+        {
+            insideIntersection = true;
+        }
         
     }
-
 
 
     // Unique Functions
