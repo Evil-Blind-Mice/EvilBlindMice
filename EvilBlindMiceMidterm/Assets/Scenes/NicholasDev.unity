@@ -127,6 +127,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 253367152567654433, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
+      propertyPath: wallRunDistance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 253367152567654433, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
+      propertyPath: forwardMoveSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 253367152567654433, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
+      propertyPath: groundedDistance
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 253367152567654433, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
+      propertyPath: groundLayers.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 920506332891170603, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
       propertyPath: m_Name
       value: Nicholas_Player
@@ -137,7 +153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3174698344333174621, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3174698344333174621, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -173,11 +189,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5032811007473936285, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
       propertyPath: maxGravity
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5032811007473936285, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
       propertyPath: gravityAcceleration
-      value: 0
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6930695961613534837, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
+      propertyPath: distanceFromGround
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6930695961613534837, guid: 80f33f90de0cd1847981918a32d4259f, type: 3}
+      propertyPath: groundLayers.m_Bits
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

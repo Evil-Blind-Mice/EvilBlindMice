@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Timeline;
+using UnityEngine.Windows;
 
 public class NicholasDefaultMovementState : NicholasMovementState
 {
@@ -15,7 +16,8 @@ public class NicholasDefaultMovementState : NicholasMovementState
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float wallRunDistance = 1.25f;
     [SerializeField] LayerMask groundLayers;
-    [SerializeField] float wallRunCooldown = 0.25f;
+    [SerializeField] LayerMask wallLayers;
+    [SerializeField] float wallRunCooldown = 0.5f;
     [SerializeField] float forwardMoveSpeedMax = 30f;
     [SerializeField] float jumpDelay = 0.25f;
     [SerializeField] float groundedDistance = 1.1f;
@@ -23,9 +25,12 @@ public class NicholasDefaultMovementState : NicholasMovementState
     [HideInInspector] public float currentGravityVelocity;
     [HideInInspector] public Vector3 externalForceVelocity;
     [HideInInspector] public int cancelPlayerMovement = 1;
+    [HideInInspector] public int cancelBodyMovement = 1;
     [HideInInspector] public bool isOnWall = false;
     [HideInInspector] public bool isOnRightWall = false;
     [HideInInspector] public bool isOnCieling = false;
+    [HideInInspector] public bool isCancelingOneMoveDirection = false;
+    [HideInInspector] public int directionToCancel = 0;
 
     public Vector3 playerVelocity;
     public float forwardMoveSpeed = 5f;
@@ -54,10 +59,21 @@ public class NicholasDefaultMovementState : NicholasMovementState
 
     public override void NicholasOnUpdate(NicholasMoveInputStruct _input)
     {
-
+        float moveInput = _input.moveInputVector.x;
+        if (isCancelingOneMoveDirection)
+        {
+            if (directionToCancel == 1 && moveInput > 0)
+            {
+                moveInput = 0;
+            }
+            else if (directionToCancel == -1 && moveInput < 0)
+            {
+                moveInput = 0;
+            }
+        }
         // calculate playerVelocity
-            playerVelocity =  speed * cancelPlayerMovement * (body.transform.right * _input.moveInputVector.x);
-            Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
+        playerVelocity =  speed * cancelPlayerMovement * (body.transform.right * moveInput);
+        Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
 
         // handle gravity and jumping
         if (IsGrounded())
@@ -69,16 +85,8 @@ public class NicholasDefaultMovementState : NicholasMovementState
         { // off of the ground
 
             // add gravity/second to velocity
-            if (!isOnWall)
-            {
                 currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
                 if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
-            }
-
-            if (isOnWall)
-            {
-                jumpCount = 0;
-            }
         }
         
         // handle jumping
@@ -101,7 +109,7 @@ public class NicholasDefaultMovementState : NicholasMovementState
 
 
         // apply all forces (playerVelocity, external forces, and gravity)
-        body.linearVelocity = forwardVelocity + playerVelocity + externalForceVelocity + playerMovement.gravityDirection * currentGravityVelocity;
+        body.linearVelocity = (forwardVelocity + playerVelocity + externalForceVelocity + playerMovement.gravityDirection * currentGravityVelocity) * cancelBodyMovement;
 
         // check for change of state conditions
         NicholasStateCheck(_input);
@@ -118,10 +126,20 @@ public class NicholasDefaultMovementState : NicholasMovementState
 
     bool IsGrounded()
     {
-        if (Physics.Raycast(transform.position, -Vector3.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
-            return true;
+        if (!isOnWall)
+        {
+            if (Physics.Raycast(transform.position, -Vector3.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
+                return true;
+            else
+                return false;
+        }
         else
-            return false;
+        {
+            if (Physics.Raycast(transform.position, -body.transform.up, groundedDistance, wallLayers) && currentGravityVelocity >= 0)
+                return true;
+            else
+                return false;
+        }
     }
 
     void Jump()
@@ -155,8 +173,8 @@ public class NicholasDefaultMovementState : NicholasMovementState
         if ((!IsGrounded() && wallRunCountdown <= 0))
         {
             RaycastHit hit;
-            if ((Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers))
-                || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers)))
+            if ((Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, wallLayers))
+                || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, wallLayers)))
             {
                 float playerAngle = playerMovement.transform.rotation.z;
                 if (playerAngle == 0)

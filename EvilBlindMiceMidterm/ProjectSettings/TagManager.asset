@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Chunks
   - Ceiling
+  - Floor
   layers:
   - Default
   - TransparentFX
