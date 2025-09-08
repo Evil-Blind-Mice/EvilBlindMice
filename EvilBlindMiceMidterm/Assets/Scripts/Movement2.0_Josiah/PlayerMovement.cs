@@ -57,9 +57,7 @@ public class PlayerMovement : MonoBehaviour
         float timeCount = 0f;
         float slerpProgress = 0f;
         Quaternion startRotation = body.transform.rotation;
-        float totalRotDegrees = Mathf.Abs(_lookRotation.eulerAngles.x - startRotation.eulerAngles.x)
-                + Mathf.Abs(_lookRotation.eulerAngles.y - startRotation.eulerAngles.y)
-                + Mathf.Abs(_lookRotation.eulerAngles.z - startRotation.eulerAngles.z);
+        float totalRotDegrees = Quaternion.Angle(_lookRotation, startRotation);
 
         while (slerpProgress < 1)
         {

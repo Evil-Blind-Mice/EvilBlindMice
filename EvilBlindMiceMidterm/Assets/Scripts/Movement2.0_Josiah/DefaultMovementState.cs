@@ -12,7 +12,7 @@ public class DefaultMovementState : MovementState
     [SerializeField] int jumpMax = 1;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
-    [SerializeField] float groundedDistance = 1.1f;
+    [SerializeField] float groundedDistance = 0.1f;
     [SerializeField] float wallRunDistance = 0.6f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
