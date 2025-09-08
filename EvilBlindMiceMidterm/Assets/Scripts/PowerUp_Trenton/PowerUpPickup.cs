@@ -7,7 +7,7 @@ public class PowerUpPickup : MonoBehaviour
     private void OnTriggerEnter(Collider _other)
     {
         if (!_other.CompareTag("Player")) return;
-        var player = _other.GetComponent<PlayerController>();
+        PlayerController player = _other.GetComponent<PlayerController>();
         if (!player) return;
 
         player.Heal(healAmount);
