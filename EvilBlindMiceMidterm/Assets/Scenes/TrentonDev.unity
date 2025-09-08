@@ -2390,7 +2390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5294230997523480506, guid: 00a7dc02250ae764f8d356b7a20fc23f, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6219833535098842810, guid: 00a7dc02250ae764f8d356b7a20fc23f, type: 3}
       propertyPath: slowScale

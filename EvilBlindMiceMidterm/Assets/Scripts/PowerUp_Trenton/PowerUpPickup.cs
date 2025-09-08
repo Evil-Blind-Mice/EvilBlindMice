@@ -19,7 +19,7 @@ public class PowerUpPickup : MonoBehaviour
     [SerializeField] float slowDurationSeconds;
 
     static float activeSlowScale = 1f;
-    static float slowEndAtRealtime = 0f;
+    static float slowRemain = 0f;
     static Coroutine slowRoutine;
     static MonoBehaviour runner;
 
@@ -67,7 +67,7 @@ public class PowerUpPickup : MonoBehaviour
         _scale = Mathf.Clamp(_scale, 0.01f, 1f);
 
         activeSlowScale = Mathf.Min(activeSlowScale, _scale);
-        slowEndAtRealtime = Mathf.Max(slowEndAtRealtime, Time.realtimeSinceStartup + _duration);
+        slowRemain = Mathf.Max(slowRemain, _duration);
 
         Time.timeScale = paused ? 0f : activeSlowScale;
 
@@ -77,7 +77,7 @@ public class PowerUpPickup : MonoBehaviour
 
     static IEnumerator SlowMotionRoutine()
     {
-        while (Time.realtimeSinceStartup < slowEndAtRealtime)
+        while (slowRemain > 0f)
         {
             bool paused = (GameManager.instance != null && GameManager.instance.isPaused);
             float target = paused ? 0f : activeSlowScale;
@@ -85,12 +85,15 @@ public class PowerUpPickup : MonoBehaviour
             if (!Mathf.Approximately(Time.timeScale, target))
                 Time.timeScale = target;
 
+            if (!paused)
+                slowRemain -= Time.unscaledDeltaTime;
+
             yield return null;
         }
 
         activeSlowScale = 1f;
 
-        bool stillPaused = GameManager.instance != null && GameManager.instance.isPaused;
+        bool stillPaused = (GameManager.instance != null && GameManager.instance.isPaused);
         Time.timeScale = stillPaused ? 0f : 1f;
 
         slowRoutine = null;
