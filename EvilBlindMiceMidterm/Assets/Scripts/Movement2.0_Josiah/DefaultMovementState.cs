@@ -25,7 +25,6 @@ public class DefaultMovementState : MovementState
     float wallRunCountdown;
 
 
-
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
@@ -61,7 +60,7 @@ public class DefaultMovementState : MovementState
             // if the player reorients mid-air, they go back to world space up
             if (_input.shiftPressed && playerMovement.isUpright)
             {
-                playerMovement.gravityDirection = -Vector3.up;
+                playerMovement.SetGravityDirection(body.transform.forward, Vector3.up);
                 playerMovement.RotateUprightWithGravity();
             }
         }
@@ -89,7 +88,7 @@ public class DefaultMovementState : MovementState
         body.linearVelocity = 
             leftRightVelocity // velocity determined by player input
             + externalForceVelocity // velocity from previous states or knockback
-            + playerMovement.gravityDirection * currentGravityVelocity // velocity from jumping or gravity
+            - playerMovement.gravityReference.up * currentGravityVelocity // velocity from jumping or gravity
             + transform.forward * speed; // constant forward velocity
 
         // check for change of state conditions
@@ -98,9 +97,24 @@ public class DefaultMovementState : MovementState
 
     public override void OnExit()
     {
+        base.OnExit();
         externalForceVelocity = Vector3.zero;
     }
 
+    public override void OnIntersectionEnter()
+    {
+        base.OnIntersectionEnter();
+        if (!IsGrounded())
+        {
+            playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
+            playerMovement.RotateUprightWithGravity();
+        }
+        else
+        {
+            insideIntersection = true;
+        }
+        
+    }
 
 
     // Unique Functions
@@ -133,7 +147,7 @@ public class DefaultMovementState : MovementState
             if ((Physics.Raycast(body.transform.position + wallRunCastOffset, body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis > 0)
                 || (Physics.Raycast(body.transform.position + wallRunCastOffset, -body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis < 0))
             {
-                float normalAngle = Vector3.Angle(hit.normal, -playerMovement.gravityDirection);
+                float normalAngle = Vector3.Angle(hit.normal, playerMovement.gravityReference.up);
                 if (normalAngle >= 55 && normalAngle <= 95)
                     playerMovement.ChangeToState(wallRunState);
             }

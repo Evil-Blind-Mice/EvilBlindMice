@@ -1,3 +1,5 @@
+using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class WallRunMovementState : MovementState
@@ -6,7 +8,8 @@ public class WallRunMovementState : MovementState
 
     [SerializeField] MovementState defaultMovementState;
 
-    [SerializeField] int speed = 15;
+    [SerializeField] int normalSpeed = 15;
+    [SerializeField] int intersectionSpeed = 3;
     [SerializeField] int jumpForce = 30;
     [SerializeField] float wallRunDistance = 2f;
     [SerializeField] int tiltDegree = 30;
@@ -16,12 +19,15 @@ public class WallRunMovementState : MovementState
     [HideInInspector] public bool wallIsRight;
     Vector3 wallNormal;
 
-
+    int speed;
 
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
+
+        speed = normalSpeed;
+
         base.OnEnter(_playerMovement, _body);
 
         // lean so that bottom of player is closer to wall
@@ -30,31 +36,63 @@ public class WallRunMovementState : MovementState
         { // raycast that triggered was to the right of the player
             wallIsRight = true;
         }
-        else
+        else if(Physics.Raycast(body.transform.position, -body.transform.right, out hit, wallRunDistance, groundLayers))
         { // raycast that triggered was to the left of the player
-            Physics.Raycast(body.transform.position, -body.transform.right, out hit, wallRunDistance, groundLayers);
             wallIsRight = false;
         }
-        StartCoroutine(playerMovement.RotateSmooth(Quaternion.LookRotation(body.transform.forward, Vector3.Slerp(-playerMovement.gravityDirection, hit.normal, tiltDegree / 90f))));
+        else 
+        {
+            playerMovement.ChangeToState(defaultMovementState);
+        }
+
+        playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f)));
         wallNormal = hit.normal;
 
         // get the wall's normal to figure out which direction the player should move
     }
 
+    public override void OnExit()
+    {
+        base.OnExit();
+        speed = normalSpeed;
+    }
+
     public override void OnUpdate(MoveInputStruct _input)
     {
-        playerVelocity = Vector3.zero;
-
-        playerVelocity += (body.transform.forward * speed);
+        playerVelocity = body.transform.forward * speed;
 
         body.linearVelocity = playerVelocity;
 
         StateCheck(_input);
     }
 
-    public override void OnExit()
+    public override void OnIntersectionEnter()
     {
+        base.OnIntersectionEnter();
 
+        speed = intersectionSpeed;
+
+        Vector3 leanOutToward = body.transform.forward;
+
+        if (wallIsRight)
+        {
+            playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+        }
+        else
+        {
+            playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+        }
+
+        playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
+    }
+
+    public override void OnIntersectionExit()
+    {
+        base.OnIntersectionExit();
+
+        speed = normalSpeed;
+
+        playerMovement.ChangeToState(this);
     }
 
 
@@ -67,45 +105,31 @@ public class WallRunMovementState : MovementState
         if (_input.jumpPressedThisFrame)
         {
             body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * jumpForce;
-            playerMovement.ChangeToState(defaultMovementState);
-            return;
+            TriggerDefaultState();
         }
 
         // if the player presses shift to change gravity
         if (_input.shiftPressed)
         {
-            playerMovement.gravityDirection = -wallNormal;
-            playerMovement.ChangeToState(defaultMovementState);
-            return;
+            playerMovement.SetGravityDirection(transform.forward, wallNormal);
+            TriggerDefaultState();
         }
 
-        // if the player is no longer close to the wall
-        if (wallIsRight)
+        if (Physics.Raycast(body.transform.position, -playerMovement.gravityReference.up, wallRunDistance, groundLayers))
         {
-            if (!Physics.Raycast(body.transform.position, body.transform.right, wallRunDistance, groundLayers))
-            {
-                playerMovement.ChangeToState(defaultMovementState);
-                return;
-            }
-            Debug.DrawRay(body.transform.position, body.transform.right * wallRunDistance, Color.blue);
-        }
-        else
-        {
-            if (!Physics.Raycast(body.transform.position, -body.transform.right, wallRunDistance, groundLayers))
-            {
-                playerMovement.ChangeToState(defaultMovementState);
-                return;
-            }
-            Debug.DrawRay(body.transform.position, -body.transform.right * wallRunDistance, Color.blue);
+            TriggerDefaultState();
         }
 
-        // if the player stops moving forward
-        
-        /*if (_input.moveInputVector.y <= 0)
+        if (!Physics.CheckSphere(body.transform.position, wallRunDistance, groundLayers))
         {
-            playerMovement.ChangeToState(defaultMovementState);
-            return;
-        }*/
+            TriggerDefaultState();
+        }
 
+    }
+
+    void TriggerDefaultState()
+    {
+        playerMovement.ChangeToState(defaultMovementState);
+        return;
     }
 }
