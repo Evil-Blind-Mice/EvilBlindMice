@@ -16,6 +16,7 @@ public class DefaultMovementState : MovementState
     [SerializeField] float wallRunDistance = 0.6f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
+    [SerializeField] Vector3 wallRunCastOffset = new Vector3(0, 0.5f, 0);
 
     Vector3 leftRightVelocity;
     Vector3 externalForceVelocity;
@@ -58,7 +59,7 @@ public class DefaultMovementState : MovementState
             if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
             // if the player reorients mid-air, they go back to world space up
-            if (_input.shiftPressed)
+            if (_input.shiftPressed && playerMovement.isUpright)
             {
                 playerMovement.gravityDirection = -Vector3.up;
                 playerMovement.RotateUprightWithGravity();
@@ -106,6 +107,7 @@ public class DefaultMovementState : MovementState
 
     bool IsGrounded()
     {
+        Debug.DrawRay(transform.position, -transform.up * groundedDistance, Color.blue);
         if (Physics.Raycast(transform.position, -transform.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
             return true;
         else
@@ -128,15 +130,15 @@ public class DefaultMovementState : MovementState
         if (!IsGrounded() && wallRunCountdown <= 0)
         {
             RaycastHit hit;
-            if ((Physics.Raycast(body.transform.position, body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis > 0)
-                || (Physics.Raycast(body.transform.position, -body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis < 0))
+            if ((Physics.Raycast(body.transform.position + wallRunCastOffset, body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis > 0)
+                || (Physics.Raycast(body.transform.position + wallRunCastOffset, -body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis < 0))
             {
                 float normalAngle = Vector3.Angle(hit.normal, -playerMovement.gravityDirection);
                 if (normalAngle >= 55 && normalAngle <= 95)
                     playerMovement.ChangeToState(wallRunState);
             }
         }
-        Debug.DrawRay(body.transform.position, body.transform.right * wallRunDistance, Color.blue);
-        Debug.DrawRay(body.transform.position, -body.transform.right * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position + wallRunCastOffset, body.transform.right * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position + wallRunCastOffset, - body.transform.right * wallRunDistance, Color.blue);
     }
 }

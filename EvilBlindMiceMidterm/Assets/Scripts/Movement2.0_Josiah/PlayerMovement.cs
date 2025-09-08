@@ -7,12 +7,15 @@ public class PlayerMovement : MonoBehaviour
 
     public int gravityAcceleration = 50;
     public int maxGravity = 50;
-    public int rotationSpeed;
+    public float rotationSpeed;
     [HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
+    [HideInInspector] public bool isUpright;
 
     [SerializeField] MovementState defaultMoveState;
     MovementState moveState;
+
+    Coroutine activeRotation;
 
     private void Start()
     {
@@ -28,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     MoveInputStruct GetMoveInput()
     {
         return new MoveInputStruct(
-            Input.GetButton("Sprint"),
+            Input.GetButtonDown("Sprint"),
             Input.GetAxis("Horizontal"),
             Input.GetButtonDown("Jump")
             );
@@ -43,17 +46,33 @@ public class PlayerMovement : MonoBehaviour
 
     public void RotateUprightWithGravity()
     {
+        if (activeRotation != null) StopCoroutine(activeRotation);
         Quaternion lookRotation = Quaternion.LookRotation(body.transform.forward, -gravityDirection);
-        StartCoroutine(LerpRotation(lookRotation));
+        activeRotation = StartCoroutine(RotateSmooth(lookRotation));
     }
 
-    public IEnumerator LerpRotation(Quaternion _lookRotation)
+    public IEnumerator RotateSmooth(Quaternion _lookRotation)
     {
-        while(body.transform.rotation != _lookRotation)
+        isUpright = false;
+        float timeCount = 0f;
+        float slerpProgress = 0f;
+        Quaternion startRotation = body.transform.rotation;
+        float totalRotDegrees = Mathf.Abs(_lookRotation.eulerAngles.x - startRotation.eulerAngles.x)
+                + Mathf.Abs(_lookRotation.eulerAngles.y - startRotation.eulerAngles.y)
+                + Mathf.Abs(_lookRotation.eulerAngles.z - startRotation.eulerAngles.z);
+
+        while (slerpProgress < 1)
         {
-            body.transform.rotation = Quaternion.Lerp(body.transform.rotation, _lookRotation, rotationSpeed * Time.deltaTime);
+            timeCount += Time.deltaTime;
+
+            // rotate by rotationSpeed divided by the total number of degrees of rotation that will occur, multipled by time
+            slerpProgress = timeCount * (rotationSpeed / (totalRotDegrees / 10));
+            
+            body.transform.rotation = Quaternion.Slerp(startRotation, _lookRotation, slerpProgress);
+
             yield return new WaitForEndOfFrame();
         }
+        isUpright = true;
     }
 }
 

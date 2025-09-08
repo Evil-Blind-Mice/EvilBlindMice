@@ -13,7 +13,7 @@ public class WallRunMovementState : MovementState
     [SerializeField] LayerMask groundLayers;
 
     Vector3 playerVelocity;
-    bool wallIsRight;
+    [HideInInspector] public bool wallIsRight;
     Vector3 wallNormal;
 
 
@@ -28,17 +28,14 @@ public class WallRunMovementState : MovementState
         RaycastHit hit;
         if (Physics.Raycast(body.transform.position, body.transform.right, out hit, wallRunDistance, groundLayers))
         { // raycast that triggered was to the right of the player
-            body.transform.localEulerAngles += new Vector3(0, 0,
-                90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
             wallIsRight = true;
         }
         else
         { // raycast that triggered was to the left of the player
             Physics.Raycast(body.transform.position, -body.transform.right, out hit, wallRunDistance, groundLayers);
-            body.transform.localEulerAngles -= new Vector3(0, 0,
-                90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
             wallIsRight = false;
         }
+        StartCoroutine(playerMovement.RotateSmooth(Quaternion.LookRotation(body.transform.forward, Vector3.Slerp(-playerMovement.gravityDirection, hit.normal, tiltDegree / 90f))));
         wallNormal = hit.normal;
 
         // get the wall's normal to figure out which direction the player should move

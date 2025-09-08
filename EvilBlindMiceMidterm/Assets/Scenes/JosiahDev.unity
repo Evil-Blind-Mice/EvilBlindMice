@@ -910,7 +910,7 @@ GameObject:
   - component: {fileID: 568570577}
   - component: {fileID: 568570576}
   m_Layer: 0
-  m_Name: Wall
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1021,7 +1021,7 @@ GameObject:
   - component: {fileID: 620952967}
   - component: {fileID: 620952966}
   m_Layer: 0
-  m_Name: Wall (3)
+  m_Name: Wall Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1795,7 +1795,7 @@ GameObject:
   - component: {fileID: 1653566473}
   - component: {fileID: 1653566472}
   m_Layer: 0
-  m_Name: Wall (2)
+  m_Name: Ceiling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2179,8 +2179,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 176451124706143969, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 176451124706143969, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_CenterOfMass.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 176451124706143969, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2450229694274253919, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: wallRunDistance
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2974073406205286441, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: lockVerticalMax
@@ -2204,11 +2216,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2254,9 +2266,21 @@ PrefabInstance:
       propertyPath: wallRunCooldown
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6223467191315779203, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: wallRunDistance
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6223467191315779203, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: groundedDistance
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6223467191315779203, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: wallRunCastOffset.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7332603396200312981, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: rotationSpeed
-      value: 1
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2276,7 +2300,7 @@ GameObject:
   - component: {fileID: 2129203610}
   - component: {fileID: 2129203609}
   m_Layer: 0
-  m_Name: Wall (1)
+  m_Name: Wall Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
