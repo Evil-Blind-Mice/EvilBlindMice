@@ -15,8 +15,8 @@ public abstract class MovementState : MonoBehaviour
         playerMovement = _playerMovement;
         body = _body;
     }
-    
+
     public abstract void OnUpdate(MoveInputStruct _input);
-   
+
     public abstract void OnExit();
 }
