@@ -139,14 +139,18 @@ MonoBehaviour:
   wallRunDistance: 1.25
   groundLayers:
     serializedVersion: 2
-    m_Bits: 0
-  wallRunCooldown: 0.25
+    m_Bits: 1
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  wallRunCooldown: 0.5
   forwardMoveSpeedMax: 30
   jumpDelay: 0.25
-  groundedDistance: 1.1
+  groundedDistance: 1.4
   currentGravityVelocity: 0
   externalForceVelocity: {x: 0, y: 0, z: 0}
   cancelPlayerMovement: 1
+  cancelBodyMovement: 1
   isOnWall: 0
   isOnRightWall: 0
   isOnCieling: 0
@@ -189,7 +193,7 @@ MonoBehaviour:
   distanceFromGround: 1.2
   groundLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   isWallRunning: 0
 --- !u!54 &8172732696694041546
 Rigidbody:

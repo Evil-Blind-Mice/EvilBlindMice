@@ -1,7 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
-<<<<<<<< HEAD:EvilBlindMiceMidterm/Assets/Nicholas_Prefabs/Nicholas_Player.prefab
-========
 --- !u!1 &3310816127394724214
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3310816127394724214}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -153,10 +151,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   sensitivity: 300
-  lockVerticalMaximum: -90
-  lockVerticalMinimum: 90
+  lockVerticalMax: 0
+  lockVerticalMin: 0
+  lockHorizontalMax: 0
+  lockHorizontalMin: 0
   invertY: 0
->>>>>>>> origin/safety:EvilBlindMiceMidterm/Assets/Nicholas_Prefabs/Movement_Josiah/Player.prefab
 --- !u!1 &4051878489175559200
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,15 +165,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5147924381228052834}
-  - component: {fileID: 5197670026217781873}
+  - component: {fileID: 7332603396200312981}
   - component: {fileID: 8905537926717394238}
   - component: {fileID: 5300677949399238064}
-  - component: {fileID: 1150595771540814783}
-  - component: {fileID: 2679000485577532463}
   - component: {fileID: 6183747674694631673}
   - component: {fileID: 176451124706143969}
+  - component: {fileID: 6223467191315779203}
+  - component: {fileID: 2450229694274253919}
   m_Layer: 3
-  m_Name: Nicholas_Player
+  m_Name: Josiah_Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -196,7 +195,7 @@ Transform:
   - {fileID: 6922699567227572369}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5197670026217781873
+--- !u!114 &7332603396200312981
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -205,7 +204,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4051878489175559200}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e1db2918cab8747afa6d0c72158890, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ac55c4d4f7b3af4caa58f23fb842209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   body: {fileID: 176451124706143969}
@@ -213,7 +212,7 @@ MonoBehaviour:
   maxGravity: 50
   gravityDirection: {x: 0, y: 0, z: 0}
   uprightRotation: 0
-  defaultMoveState: {fileID: 1150595771540814783}
+  defaultMoveState: {fileID: 6223467191315779203}
 --- !u!33 &8905537926717394238
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -270,61 +269,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1150595771540814783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4051878489175559200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39e4d82231a6f1d4faa6e1f6c5b3d51a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
-  wallRunState: {fileID: 2679000485577532463}
-  speed: 15
-  jumpForce: 15
-  jumpMax: 1
-  externalForceResistance: 2
-  externalForceThreshold: 1
-  wallRunDistance: 1.2
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 1
-  wallRunCooldown: 0.25
-  forwardMoveSpeedMax: 30
-  jumpDelay: 0.25
-  groundedDistance: 1.1
-  currentGravityVelocity: 0
-  externalForceVelocity: {x: 0, y: 0, z: 0}
-  cancelPlayerMovement: 1
-  isOnWall: 0
-  isOnRightWall: 0
-  isOnCieling: 0
-  playerVelocity: {x: 0, y: 0, z: 0}
-  forwardMoveSpeed: 10
---- !u!114 &2679000485577532463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4051878489175559200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfe6cef82cc1d94429e5fe9d3519b80d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WallRunMovementState
-  defaultMovementState: {fileID: 1150595771540814783}
-  jumpForce: 30
-  wallRunDistance: 1.2
-  tiltDegree: 30
-  distanceFromGround: 1.2
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 1
-  isWallRunning: 0
 --- !u!136 &6183747674694631673
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -375,65 +319,58 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!1001 &6996866912342997279
-PrefabInstance:
+--- !u!114 &6223467191315779203
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 5147924381228052834}
-    m_Modifications:
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5542731416117985385, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-      propertyPath: m_Name
-      value: Main Camera
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
---- !u!4 &6922699567227572369 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 75298914818517390, guid: 97044fd1fd0e4ab418821dc4ef5d24ba, type: 3}
-  m_PrefabInstance: {fileID: 6996866912342997279}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051878489175559200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb78ca2f7753fe84c8e1a56e37569760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
+  wallRunState: {fileID: 2450229694274253919}
+  speed: 15
+  jumpForce: 15
+  jumpMax: 1
+  externalForceResistance: 2
+  externalForceThreshold: 1
+  wallRunDistance: 1.25
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  wallRunCooldown: 0.25
+  forwardMoveSpeedMax: 30
+  jumpDelay: 0.25
+  groundedDistance: 1.1
+  currentGravityVelocity: 0
+  externalForceVelocity: {x: 0, y: 0, z: 0}
+  cancelPlayerMovement: 1
+  isOnWall: 0
+  isOnRightWall: 0
+  isOnCieling: 0
+  playerVelocity: {x: 0, y: 0, z: 0}
+  forwardMoveSpeed: 5
+--- !u!114 &2450229694274253919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051878489175559200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9f751910667b9842b52f8f48d664957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallRunMovementState
+  defaultMovementState: {fileID: 6223467191315779203}
+  jumpForce: 30
+  wallRunDistance: 2
+  tiltDegree: 30
+  distanceFromGround: 1.2
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 1
+  isWallRunning: 0
