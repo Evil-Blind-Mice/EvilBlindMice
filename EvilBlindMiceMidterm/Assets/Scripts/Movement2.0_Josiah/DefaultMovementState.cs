@@ -1,43 +1,31 @@
+using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Timeline;
 
 public class DefaultMovementState : MovementState
 {
     // Variables
 
-    [SerializeField] WallRunMovementState wallRunState;
+    [SerializeField] MovementState wallRunState;
 
     [SerializeField] int speed = 15;
     [SerializeField] int jumpForce = 15;
     [SerializeField] int jumpMax = 1;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
-    [SerializeField] float wallRunDistance = 1.25f;
+    [SerializeField] float groundedDistance = 0.1f;
+    [SerializeField] float wallRunDistance = 0.6f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
-    [SerializeField] float forwardMoveSpeedMax = 30f;
-    [SerializeField] float jumpDelay = 0.25f;
-    [SerializeField] float groundedDistance = 1.1f;
+    [SerializeField] Vector3 wallRunCastOffset = new Vector3(0, 0.5f, 0);
 
-    [HideInInspector] public float currentGravityVelocity;
-    [HideInInspector] public Vector3 externalForceVelocity;
-    [HideInInspector] public int cancelPlayerMovement = 1;
-    [HideInInspector] public bool isOnWall = false;
-    [HideInInspector] public bool isOnRightWall = false;
-    [HideInInspector] public bool isOnCieling = false;
-
-    public Vector3 playerVelocity;
-    public float forwardMoveSpeed = 5f;
-
+    Vector3 leftRightVelocity;
+    Vector3 externalForceVelocity;
     int jumpCount;
+    float currentGravityVelocity;
     float wallRunCountdown;
 
-    
-    void Update()
-    {
-        forwardMoveSpeed = Mathf.Clamp(forwardMoveSpeed + forwardMoveSpeed * Time.deltaTime * 0.0001f, 0, forwardMoveSpeedMax);
-    }
 
     // Overridden Functions
 
@@ -45,19 +33,18 @@ public class DefaultMovementState : MovementState
     {
         base.OnEnter(_playerMovement, _body);
         playerMovement.RotateUprightWithGravity();
-        externalForceVelocity = new Vector3(0, body.linearVelocity.y, 0);
+        externalForceVelocity = body.linearVelocity;
         currentGravityVelocity = 0;
         jumpCount = jumpMax;
         wallRunCountdown = wallRunCooldown;
-        wallRunState.isWallRunning = false;
     }
 
     public override void OnUpdate(MoveInputStruct _input)
     {
 
         // calculate playerVelocity
-            playerVelocity =  speed * cancelPlayerMovement * (body.transform.right * _input.moveInputVector.x);
-            Vector3 forwardVelocity = body.transform.forward * forwardMoveSpeed;
+        leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
+
 
         // handle gravity and jumping
         if (IsGrounded())
@@ -69,18 +56,17 @@ public class DefaultMovementState : MovementState
         { // off of the ground
 
             // add gravity/second to velocity
-            if (!isOnWall)
-            {
-                currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
-                if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
-            }
+            currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
+            if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
-            if (isOnWall)
+            // if the player reorients mid-air, they go back to world space up
+            if (_input.shiftPressed && playerMovement.isUpright)
             {
-                jumpCount = 0;
+                playerMovement.SetGravityDirection(body.transform.forward, Vector3.up);
+                playerMovement.RotateUprightWithGravity();
             }
         }
-        
+
         // handle jumping
         if (_input.jumpPressedThisFrame) Jump();
 
@@ -101,7 +87,11 @@ public class DefaultMovementState : MovementState
 
 
         // apply all forces (playerVelocity, external forces, and gravity)
-        body.linearVelocity = forwardVelocity + playerVelocity + externalForceVelocity + playerMovement.gravityDirection * currentGravityVelocity;
+        body.linearVelocity = 
+            leftRightVelocity // velocity determined by player input
+            + externalForceVelocity // velocity from previous states or knockback
+            - playerMovement.gravityReference.up * currentGravityVelocity // velocity from jumping or gravity
+            + transform.forward * speed; // constant forward velocity
 
         // check for change of state conditions
         StateCheck(_input);
@@ -109,16 +99,29 @@ public class DefaultMovementState : MovementState
 
     public override void OnExit()
     {
-
+        base.OnExit();
+        externalForceVelocity = Vector3.zero;
     }
 
+    public override void OnIntersectionEnter(Intersection _intersection)
+    {
+        base.OnIntersectionEnter(_intersection);
+
+        if (_intersection.DirectionAvailable(-playerMovement.gravityReference.up))
+        {
+            playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
+            playerMovement.RotateUprightWithGravity();
+        }
+
+    }
 
 
     // Unique Functions
 
     bool IsGrounded()
     {
-        if (Physics.Raycast(transform.position, -Vector3.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
+        Debug.DrawRay(transform.position, -transform.up * groundedDistance, Color.blue);
+        if (Physics.Raycast(transform.position, -transform.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
             return true;
         else
             return false;
@@ -126,25 +129,10 @@ public class DefaultMovementState : MovementState
 
     void Jump()
     {
-        if (!isOnWall)
+        if (jumpCount < jumpMax)
         {
-            if (jumpCount < jumpMax)
-            {
-                jumpCount++;
-                currentGravityVelocity = -jumpForce;
-            }
-        }
-        else
-        {
-            if (jumpCount < 1)
-            {
-                isOnWall = false;
-                int directionSwitch = (isOnRightWall) ? -1 : 1;
-                jumpCount++;
-                body.linearVelocity += playerMovement.transform.right * directionSwitch * jumpForce;
-                playerMovement.gravityDirection = -Vector3.up;
-                playerMovement.ChangeToState(this);
-            }
+            jumpCount++;
+            currentGravityVelocity = -jumpForce;
         }
     }
 
@@ -152,18 +140,18 @@ public class DefaultMovementState : MovementState
     {
         wallRunCountdown -= Time.deltaTime;
 
-        if ((!IsGrounded() && wallRunCountdown <= 0))
+        if (!IsGrounded() && wallRunCountdown <= 0)
         {
             RaycastHit hit;
-            if ((Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers))
-                || (Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers)))
+            if ((Physics.Raycast(body.transform.position + wallRunCastOffset, body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis > 0)
+                || (Physics.Raycast(body.transform.position + wallRunCastOffset, -body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis < 0))
             {
-                float playerAngle = playerMovement.transform.rotation.z;
-                if (playerAngle == 0)
+                float normalAngle = Vector3.Angle(hit.normal, playerMovement.gravityReference.up);
+                if (normalAngle >= 55 && normalAngle <= 95)
                     playerMovement.ChangeToState(wallRunState);
             }
         }
-        Debug.DrawRay(body.transform.position, Vector3.Normalize(body.transform.right + body.transform.forward - body.transform.up) * wallRunDistance, Color.blue);
-        Debug.DrawRay(body.transform.position, Vector3.Normalize(-body.transform.right + body.transform.forward - body.transform.up) * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position + wallRunCastOffset, body.transform.right * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position + wallRunCastOffset, - body.transform.right * wallRunDistance, Color.blue);
     }
 }

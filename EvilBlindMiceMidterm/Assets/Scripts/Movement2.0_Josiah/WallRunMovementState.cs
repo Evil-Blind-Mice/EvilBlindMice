@@ -1,20 +1,24 @@
+using UnityEditor;
 using UnityEngine;
 
 public class WallRunMovementState : MovementState
 {
     // Variables
 
-    [SerializeField] public DefaultMovementState defaultMovementState;
+    [SerializeField] MovementState defaultMovementState;
 
+    [SerializeField] int normalSpeed = 15;
+    [SerializeField] int intersectionSpeed = 3;
     [SerializeField] int jumpForce = 30;
     [SerializeField] float wallRunDistance = 2f;
     [SerializeField] int tiltDegree = 30;
-    [SerializeField] float distanceFromGround = 1.2f;
     [SerializeField] LayerMask groundLayers;
 
+    Vector3 playerVelocity;
+    [HideInInspector] public bool wallIsRight;
     Vector3 wallNormal;
-    int origionalMaxGravity;
-    [HideInInspector] public bool isWallRunning = false;
+
+    int speed;
 
 
 
@@ -22,46 +26,85 @@ public class WallRunMovementState : MovementState
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
+
+        speed = normalSpeed;
+
         base.OnEnter(_playerMovement, _body);
 
         // lean so that bottom of player is closer to wall
         RaycastHit hit;
-        if(Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward + body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers))
+        if (Physics.Raycast(body.transform.position, body.transform.right, out hit, wallRunDistance, groundLayers))
         { // raycast that triggered was to the right of the player
-            body.transform.localEulerAngles += new Vector3(0, 0,
-                90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
-            origionalMaxGravity = playerMovement.maxGravity;
-            playerMovement.maxGravity = 0;
-            body.linearVelocity = Vector3.zero;
-            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<NicholasDefaultMovementState>().forwardMoveSpeed;
-            isWallRunning = true;
+            wallIsRight = true;
         }
-        else
+        else if(Physics.Raycast(body.transform.position, -body.transform.right, out hit, wallRunDistance, groundLayers))
         { // raycast that triggered was to the left of the player
-            Physics.Raycast(body.transform.position, Vector3.Normalize(body.transform.forward - body.transform.right - body.transform.up), out hit, wallRunDistance, groundLayers);
-            body.transform.localEulerAngles -= new Vector3(0, 0, 
-                90 - Vector3.Angle(hit.normal, playerMovement.gravityDirection) + tiltDegree);
-            origionalMaxGravity = playerMovement.maxGravity;
-            playerMovement.maxGravity = 0;
-            body.linearVelocity = Vector3.zero;
-            body.linearVelocity = body.transform.forward * playerMovement.GetComponent<NicholasDefaultMovementState>().forwardMoveSpeed;
-            isWallRunning = true;
+            wallIsRight = false;
         }
+        else 
+        {
+            playerMovement.ChangeToState(defaultMovementState);
+        }
+
+        playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f)));
         wallNormal = hit.normal;
-
-        // get the wall's normal to figure out which direction the player should move
-    }
-
-    public override void OnUpdate(MoveInputStruct _input)
-    {
-        StateCheck(_input);
-        defaultMovementState.forwardMoveSpeed += (defaultMovementState.forwardMoveSpeed * Time.deltaTime * 0.0001f);
-        body.linearVelocity = body.transform.forward * defaultMovementState.forwardMoveSpeed;
     }
 
     public override void OnExit()
     {
+        base.OnExit();
+        speed = normalSpeed;
+    }
 
+    public override void OnUpdate(MoveInputStruct _input)
+    {
+        playerVelocity = body.transform.forward * speed;
+
+        body.linearVelocity = playerVelocity;
+
+        StateCheck(_input);
+    }
+
+    public override void OnIntersectionEnter(Intersection _intersection)
+    {
+        base.OnIntersectionEnter(_intersection);
+
+        Vector3 leanOutToward = body.transform.forward;
+
+
+        if (wallIsRight)
+        {
+            if (_intersection.DirectionAvailable(playerMovement.gravityReference.right))
+            {
+                speed = intersectionSpeed;
+                playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
+            }
+
+        }
+        else
+        {
+            if (_intersection.DirectionAvailable(-playerMovement.gravityReference.right))
+            {
+                speed = intersectionSpeed;
+                playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
+            }
+            else
+            {
+                playerMovement.ChangeToState(defaultMovementState);
+            }
+        }
+
+    }
+
+    public override void OnIntersectionExit(Intersection _intersection)
+    {
+        base.OnIntersectionExit(_intersection);
+
+        speed = normalSpeed;
+
+        playerMovement.ChangeToState(this);
     }
 
 
@@ -73,34 +116,32 @@ public class WallRunMovementState : MovementState
         // if the player jumps off of the wall
         if (_input.jumpPressedThisFrame)
         {
-            playerMovement.gravityDirection = -Vector3.up;
-            playerMovement.maxGravity = origionalMaxGravity;
-            playerMovement.RotateUprightWithGravity();
-            body.linearVelocity = Vector3.Normalize(wallNormal + Vector3.up) * jumpForce;
-            playerMovement.ChangeToState(defaultMovementState);
-            return;
+            body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * jumpForce;
+            TriggerDefaultState();
         }
 
         // if the player presses shift to change gravity
         if (_input.shiftPressed)
         {
-            defaultMovementState.isOnWall = true;
-            playerMovement.maxGravity = origionalMaxGravity;
-            playerMovement.gravityDirection = -wallNormal;
-            playerMovement.ChangeToState(defaultMovementState);
-            return;
+            playerMovement.SetGravityDirection(transform.forward, wallNormal);
+            TriggerDefaultState();
         }
 
-        //if the player is close to the ground
-        if (body.transform.position.y < distanceFromGround)
+        if (Physics.Raycast(body.transform.position, -playerMovement.gravityReference.up, wallRunDistance, groundLayers))
         {
-            playerMovement.gravityDirection = -Vector3.up;
-            playerMovement.maxGravity = origionalMaxGravity;
-            playerMovement.RotateUprightWithGravity();
-            playerMovement.ChangeToState(defaultMovementState);
+            TriggerDefaultState();
         }
 
+        if (!Physics.CheckSphere(body.transform.position, wallRunDistance, groundLayers))
+        {
+            TriggerDefaultState();
+        }
 
+    }
 
+    void TriggerDefaultState()
+    {
+        playerMovement.ChangeToState(defaultMovementState);
+        return;
     }
 }
