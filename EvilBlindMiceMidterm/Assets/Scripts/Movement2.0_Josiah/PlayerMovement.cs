@@ -1,5 +1,4 @@
-using NUnit.Framework.Api;
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -8,16 +7,20 @@ public class PlayerMovement : MonoBehaviour
 
     public int gravityAcceleration = 50;
     public int maxGravity = 50;
+    public float rotationSpeed;
     [HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
+    [HideInInspector] public bool isUpright;
 
-    [SerializeField] DefaultMovementState defaultMoveState;
+    [SerializeField] MovementState defaultMoveState;
     MovementState moveState;
+
+    Coroutine activeRotation;
 
     private void Start()
     {
         ChangeToState(defaultMoveState, true);
-        gravityDirection = -Vector3.up;
+        gravityDirection = -transform.up;
     }
 
     void Update()
@@ -28,36 +31,59 @@ public class PlayerMovement : MonoBehaviour
     MoveInputStruct GetMoveInput()
     {
         return new MoveInputStruct(
-            Input.GetButton("Sprint"),
-            new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")),
+            Input.GetButtonDown("Sprint"),
+            Input.GetAxis("Horizontal"),
             Input.GetButtonDown("Jump")
             );
     }
 
     public void ChangeToState(MovementState _newState, bool _initializing = false)
     {
-        if(!_initializing) moveState.OnExit();
+        if (!_initializing) moveState.OnExit();
         moveState = _newState;
         moveState.OnEnter(this, body);
     }
 
     public void RotateUprightWithGravity()
     {
-        Quaternion lookRotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(body.transform.forward, gravityDirection), -gravityDirection);
-        body.transform.rotation = lookRotation;
+        if (activeRotation != null) StopCoroutine(activeRotation);
+        Quaternion lookRotation = Quaternion.LookRotation(body.transform.forward, -gravityDirection);
+        activeRotation = StartCoroutine(RotateSmooth(lookRotation));
+    }
+
+    public IEnumerator RotateSmooth(Quaternion _lookRotation)
+    {
+        isUpright = false;
+        float timeCount = 0f;
+        float slerpProgress = 0f;
+        Quaternion startRotation = body.transform.rotation;
+        float totalRotDegrees = Quaternion.Angle(_lookRotation, startRotation);
+
+        while (slerpProgress < 1)
+        {
+            timeCount += Time.deltaTime;
+
+            // rotate by rotationSpeed divided by the total number of degrees of rotation that will occur, multipled by time
+            slerpProgress = timeCount * (rotationSpeed / (totalRotDegrees / 10));
+            
+            body.transform.rotation = Quaternion.Slerp(startRotation, _lookRotation, slerpProgress);
+
+            yield return new WaitForEndOfFrame();
+        }
+        isUpright = true;
     }
 }
 
 public struct MoveInputStruct
 {
     public bool shiftPressed;
-    public Vector2 moveInputVector;
+    public float leftRightAxis;
     public bool jumpPressedThisFrame;
 
-    public MoveInputStruct(bool _sprintPressed, Vector2 _moveInputVector, bool _jumpPressedThisFrame)
+    public MoveInputStruct(bool _sprintPressed, float _leftRightAxis, bool _jumpPressedThisFrame)
     {
         shiftPressed = _sprintPressed;
-        moveInputVector = _moveInputVector;
+        leftRightAxis = _leftRightAxis;
         jumpPressedThisFrame = _jumpPressedThisFrame;
     }
 }
