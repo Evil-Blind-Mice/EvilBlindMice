@@ -7,7 +7,7 @@ TagManager:
   - Chunks
   - Ceiling
   - Floor
-  - Wall
+  - Intersection
   layers:
   - Default
   - TransparentFX
@@ -18,8 +18,8 @@ TagManager:
   - Enemy
   - EnemyBullet
   - PlayerBullet
-  - 
-  - 
+  - PlayerTriggers
+  - Power Ups
   - 
   - 
   - 

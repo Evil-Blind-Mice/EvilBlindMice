@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     [HideInInspector]  public int hasTripped = 0;
 
     bool isSprinting;
+    public bool isInvincible;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -113,6 +114,8 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
 
     public void TakeDamage(int _amount)
     {
+        if (isInvincible) return;
+
         health -= _amount;
         UpdatePlayerUI();
         StartCoroutine(FlashDamage());
