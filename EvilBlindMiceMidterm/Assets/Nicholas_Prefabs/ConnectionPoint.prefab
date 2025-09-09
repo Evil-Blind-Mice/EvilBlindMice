@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3026909541215948735}
+  - component: {fileID: 7581454236950521353}
+  - component: {fileID: 3750186645824362310}
   m_Layer: 0
   m_Name: ConnectionPoint
   m_TagString: Untagged
@@ -30,64 +32,31 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1812237020808991245}
-  - {fileID: 7912033457868355793}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4794809665204962331
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7912033457868355793}
-  - component: {fileID: 976431470307500169}
-  - component: {fileID: 5897597645450420792}
-  m_Layer: 0
-  m_Name: ProceduralConnectionPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7912033457868355793
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4794809665204962331}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3026909541215948735}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &976431470307500169
+--- !u!114 &7581454236950521353
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4794809665204962331}
+  m_GameObject: {fileID: 2465592534342501743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 246131737208a2046be8e4df650b1829, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d3b6a18fc7a5f4439f188d9d3fe99c5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProceduralConnectionPoint
-  connectionPoint: {x: 0, y: 0, z: 0}
-  direction: 0
-  choicePath: 3
---- !u!65 &5897597645450420792
+  m_EditorClassIdentifier: Assembly-CSharp::ChunkConnectionPoint
+  destroyDelay: 1
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+  position: {x: 0, y: 0, z: 0}
+  child: {fileID: 0}
+--- !u!65 &3750186645824362310
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4794809665204962331}
+  m_GameObject: {fileID: 2465592534342501743}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -96,7 +65,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -129,13 +98,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7434425698407112069}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3026909541215948735}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!33 &477322889953072256
 MeshFilter:
   m_ObjectHideFlags: 0
