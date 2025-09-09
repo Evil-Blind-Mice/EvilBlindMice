@@ -22,6 +22,7 @@ public class TripObstacle : MonoBehaviour
             if (playerController.hasTripped > 1)
             {
                 playerController.speed = 0;
+
             }
             Destroy(gameObject);
         }
