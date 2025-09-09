@@ -9,9 +9,9 @@ public class DefaultMovementState : MovementState
 
     [SerializeField] MovementState wallRunState;
 
-    [SerializeField] int speed = 15;
-    [SerializeField] int jumpForce = 15;
-    [SerializeField] int jumpMax = 1;
+    // [SerializeField] int speed = 15; replaced by player stats
+    // [SerializeField] int jumpForce = 15; replaced by player stats
+    // [SerializeField] int jumpMax = 1; replaced by player stats
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 0.1f;
@@ -35,7 +35,7 @@ public class DefaultMovementState : MovementState
         playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
         currentGravityVelocity = 0;
-        jumpCount = jumpMax;
+        jumpCount = 1;
         wallRunCountdown = wallRunCooldown;
     }
 
@@ -45,7 +45,7 @@ public class DefaultMovementState : MovementState
         if (currentIntersection != null) OnInsideIntersection();
 
         // calculate playerVelocity
-        leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
+        leftRightVelocity = _input.leftRightAxis * body.transform.right * PlayerStats.instance.GetSpeed();
 
 
         // handle gravity and jumping
@@ -93,7 +93,7 @@ public class DefaultMovementState : MovementState
             leftRightVelocity // velocity determined by player input
             + externalForceVelocity // velocity from previous states or knockback
             - playerMovement.gravityReference.up * currentGravityVelocity // velocity from jumping or gravity
-            + transform.forward * speed; // constant forward velocity
+            + transform.forward * PlayerStats.instance.GetSpeed(); // constant forward velocity
 
         // check for change of state conditions
         StateCheck(_input);
@@ -155,10 +155,10 @@ public class DefaultMovementState : MovementState
 
     void Jump()
     {
-        if (jumpCount < jumpMax)
+        if (jumpCount < PlayerStats.instance.GetJumpMax())
         {
             jumpCount++;
-            currentGravityVelocity = -jumpForce;
+            currentGravityVelocity = -PlayerStats.instance.GetJumpForce();
         }
     }
 

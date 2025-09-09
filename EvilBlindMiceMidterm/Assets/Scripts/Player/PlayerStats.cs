@@ -2,14 +2,20 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField] int initialRunSpeed;
-    [SerializeField] int initialJumpForce;
+    // VARIABLES
+
+    [SerializeField] int initialRunSpeed = 15;
+    [SerializeField] int initialJumpForce = 15;
     [SerializeField] int initialMaxHealth;
+    [SerializeField] int initialJumpMax = 1;
     int maxHealth;
     int currentHealth;
     float runSpeed;
     float jumpForce;
+    int jumpMax;
     public static PlayerStats instance;
+
+
 
     // UNITY
 
@@ -24,6 +30,7 @@ public class PlayerStats : MonoBehaviour
         ResetJumpForce();
         ResetMaxHealth();
         ResetHealthToFull();
+        ResetJumpMax();
     }
 
 
@@ -48,6 +55,11 @@ public class PlayerStats : MonoBehaviour
     public void ResetHealthToFull()
     {
         currentHealth = maxHealth;
+    }
+
+    public void ResetJumpMax()
+    {
+        jumpMax = initialJumpMax;
     }
 
 
@@ -78,6 +90,11 @@ public class PlayerStats : MonoBehaviour
         currentHealth += _modifier;
     }
 
+    public void AddJumpMax(int _modifier)
+    {
+        jumpMax += _modifier;
+    }
+
 
 
     // GETTERS
@@ -100,5 +117,10 @@ public class PlayerStats : MonoBehaviour
     public int GetMaxHealth()
     {
         return maxHealth;
+    }
+
+    public int GetJumpMax()
+    {
+        return jumpMax;
     }
 }
