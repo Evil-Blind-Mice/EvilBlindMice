@@ -4,23 +4,25 @@ using UnityEngine;
 using UnityEngine.AI;
 using static PlayerController;
 
-public class EnemyAI : MonoBehaviour, IDamage
+public class MeleeEnemyAI : MonoBehaviour, IDamage
 {
 
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
-    [SerializeField] Transform shootPosition;
+    [SerializeField] Transform hitPosition;
+    [SerializeField] Transform hitPosition2;
 
     [SerializeField] int shieldHealth;
     [SerializeField] int health;
     [SerializeField] int faceTargetSpeed;
 
-    [SerializeField] GameObject bullet;
-    [SerializeField] float shootRate;
+    [SerializeField] GameObject melee;
+    [SerializeField] float hitRate;
+
 
     Color originalColor;
 
-    float shootTimer;
+    float hitTimer;
 
     bool playerInTrigger;
 
@@ -44,7 +46,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             EnemyShield();
         }
 
-        shootTimer += Time.deltaTime;
+        hitTimer += Time.deltaTime;
         playerDirection = GameManager.instance.player.transform.position - transform.position;
 
         if (playerInTrigger)
@@ -56,9 +58,9 @@ public class EnemyAI : MonoBehaviour, IDamage
                 FaceTarget();
             }
 
-            if (shootTimer >= shootRate)
+            if (hitTimer >= hitRate)
             {
-                Shoot();
+                MeleeHit();
             }
         }
     }
@@ -81,11 +83,13 @@ public class EnemyAI : MonoBehaviour, IDamage
             playerInTrigger = false;
     }
 
-    void Shoot()
+    void MeleeHit()
     {
-        shootTimer = 0;
-        Instantiate(bullet, shootPosition.position, transform.rotation);
+        hitTimer = 0;
+        Instantiate(melee, hitPosition.position, transform.rotation);
+        Instantiate(melee, hitPosition2.position, transform.rotation);
     }
+
 
     public void TakeDamage(int _amount)
     {
