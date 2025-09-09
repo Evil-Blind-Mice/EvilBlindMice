@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 6219833535098842810}
   - component: {fileID: 4432723096081255369}
   - component: {fileID: 4996644002261386769}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Health Pack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d97c55481ead54c983c9ce851dc64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
+  type: 0
   healAmount: 5
+  slowScale: 0.05
+  slowDurationSeconds: 0
 --- !u!135 &4432723096081255369
 SphereCollider:
   m_ObjectHideFlags: 0
