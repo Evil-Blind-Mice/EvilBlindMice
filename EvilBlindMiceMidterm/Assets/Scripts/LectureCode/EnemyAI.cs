@@ -1,16 +1,19 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.AI;
 using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.AI;
+using static PlayerController;
 
 public class EnemyAI : MonoBehaviour, IDamage
 {
+
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPosition;
 
     [SerializeField] int health;
     [SerializeField] int faceTargetSpeed;
+
 
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
@@ -29,6 +32,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         originalColor = model.material.color;
         GameManager.instance.UpdateGameGoal(1);
     }
+
 
     // Update is called once per frame
     void Update()
@@ -90,7 +94,6 @@ public class EnemyAI : MonoBehaviour, IDamage
             Destroy(gameObject);
         }
     }
-
     IEnumerator FlashRed()
     {
         model.material.color = Color.red;

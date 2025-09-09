@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+
+
 public class PlayerController : MonoBehaviour, IDamage, IHeal
 {
     [SerializeField] LayerMask ignoreLayer;
@@ -25,7 +27,8 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     int jumpCount;
     int originalHealth;
 
-    [HideInInspector]  public int hasTripped = 0;
+
+    [HideInInspector] public int hasTripped = 0;
 
     bool isSprinting;
     public bool isInvincible;
@@ -40,7 +43,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.red);
+        //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.red);
         Movement();
         Sprint();
     }
@@ -60,7 +63,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
         }
 
         moveDirection = (Input.GetAxis("Horizontal") * transform.right) +
-                  (Input.GetAxis("Vertical") * transform.forward);
+                        (Input.GetAxis("Vertical") * transform.forward);
 
         controller.Move(moveDirection * (speed * speedBoostMultiplier) * Time.deltaTime);
 
@@ -139,7 +142,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
 
     public void UpdatePlayerUI()
     {
-        GameManager.instance.playerHealthBar.fillAmount = (float)health / (float)originalHealth;
+        //GameManager.instance.playerHealthBar.fillAmount = (float)health / (float)originalHealth;
     }
 
     IEnumerator FlashDamage()
