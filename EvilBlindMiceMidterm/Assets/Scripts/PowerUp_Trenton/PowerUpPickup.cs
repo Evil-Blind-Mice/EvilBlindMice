@@ -5,10 +5,10 @@ public class PowerUpPickup : MonoBehaviour
 {
     public enum PickUpType
     {
-        Heal, TimeSlow, Invincibility
+        Heal, TimeSlow, Invincibility, SpeedBoost
     }
 
-    [Header("PowerUp Type")]
+    [Header("Power Up Type")]
     [SerializeField] PickUpType type = PickUpType.Heal;
 
     [Header("Heal")]
@@ -21,12 +21,20 @@ public class PowerUpPickup : MonoBehaviour
     [Header("Invincibility")]
     [SerializeField] float invincibilityDurationSeconds;
 
+    [Header("Speed Boost")]
+    [SerializeField, Min(1)] int speedMultiplier;
+    [SerializeField] float speedDurationSeconds;
+
     static float activeSlowScale = 1f;
     static float slowRemain = 0f;
     static Coroutine slowRoutine;
 
     static float invincibilityRemain = 0f;
     static Coroutine invincibilityRoutine;
+
+    static int activeSpeedMultiplier = 1;
+    static float speedRemain = 0f;
+    static Coroutine speedRoutine;
 
     static MonoBehaviour runner;
 
@@ -50,6 +58,10 @@ public class PowerUpPickup : MonoBehaviour
 
             case PickUpType.Invincibility:
                 ApplyInvincibility(invincibilityDurationSeconds);
+                break;
+
+            case PickUpType.SpeedBoost:
+                ApplySpeedBoost(speedMultiplier, speedDurationSeconds);
                 break;
         }
 
@@ -156,5 +168,52 @@ public class PowerUpPickup : MonoBehaviour
         if (GameManager.instance == null) return;
         if (GameManager.instance.playerScript == null) return;
         GameManager.instance.playerScript.isInvincible = _on;
+    }
+
+    // -*-*-*-*-*-*-*- Speed Boost -*-*-*-*-*-*-*-
+
+    static void ApplySpeedBoost(int _multiplier, float _duration)
+    {
+        _multiplier = Mathf.Max(1, _multiplier);
+        _duration = Mathf.Max(0f, _duration);
+
+        if (_multiplier > activeSpeedMultiplier)
+        {
+            activeSpeedMultiplier = _multiplier;
+            SetSpeedBoostOnPlayer(activeSpeedMultiplier);
+            speedRemain = Mathf.Max(speedRemain, _duration);
+        }
+        else if (Mathf.Approximately(_multiplier, activeSpeedMultiplier))
+        {
+            speedRemain = Mathf.Max(speedRemain, _duration);
+        }
+        else
+        {
+            return;
+        }
+
+        if (speedRoutine == null)
+            speedRoutine = GetRunner().StartCoroutine(SpeedBoostRoutine());
+    }
+
+    static IEnumerator SpeedBoostRoutine()
+    {
+        while (speedRemain > 0f)
+        {
+            TickUnpaused(ref speedRemain);
+            yield return null;
+        }
+
+        activeSpeedMultiplier = 1;
+        SetSpeedBoostOnPlayer(activeSpeedMultiplier);
+        speedRoutine = null;
+    }
+
+    static void SetSpeedBoostOnPlayer(int _multiplier)
+    {
+        if (GameManager.instance == null) return;
+        if (GameManager.instance.playerScript == null) return;
+
+        GameManager.instance.playerScript.SetSpeedBoostMultiplier(_multiplier);
     }
 }

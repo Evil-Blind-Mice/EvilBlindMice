@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     [SerializeField] public int health;
     [SerializeField] public int speed;
     [SerializeField] int sprintMod;
+    [SerializeField] int speedBoostMultiplier = 1;
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
         moveDirection = (Input.GetAxis("Horizontal") * transform.right) +
                   (Input.GetAxis("Vertical") * transform.forward);
 
-        controller.Move(moveDirection * speed * Time.deltaTime);
+        controller.Move(moveDirection * (speed * speedBoostMultiplier) * Time.deltaTime);
 
         Jump();
 
@@ -133,6 +134,8 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
         UpdatePlayerUI();
         StartCoroutine(FlashHeal());
     }
+
+    public void SetSpeedBoostMultiplier(int _multiplier) { speedBoostMultiplier = _multiplier; }
 
     public void UpdatePlayerUI()
     {
