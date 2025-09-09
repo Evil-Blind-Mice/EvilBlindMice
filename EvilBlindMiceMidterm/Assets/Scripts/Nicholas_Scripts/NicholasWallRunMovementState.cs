@@ -87,7 +87,6 @@ public class NicholasWallRunMovementState : NicholasMovementState
             defaultMovementState.isOnWall = true;
             playerMovement.maxGravity = origionalMaxGravity;
             playerMovement.gravityDirection = -wallNormal;
-            body.transform.position += wallNormal * 2;
             playerMovement.NicholasChangeToState(defaultMovementState);
             return;
         }

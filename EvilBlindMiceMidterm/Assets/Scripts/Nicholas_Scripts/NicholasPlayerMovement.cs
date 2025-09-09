@@ -12,7 +12,7 @@ public class NicholasPlayerMovement : MonoBehaviour
     [HideInInspector] public float uprightRotation;
 
     [SerializeField] NicholasDefaultMovementState defaultMoveState;
-    NicholasMovementState moveState;
+    [HideInInspector] public NicholasMovementState moveState;
 
     private void Start()
     {
