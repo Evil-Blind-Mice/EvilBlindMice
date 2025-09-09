@@ -7,6 +7,7 @@ public abstract class MovementState : MonoBehaviour
     protected Rigidbody body;
     protected bool isCurrentState = false;
     protected bool insideIntersection = false;
+    protected Intersection currentIntersection;
 
 
 
@@ -29,11 +30,15 @@ public abstract class MovementState : MonoBehaviour
     public virtual void OnIntersectionEnter(Intersection _intersection)
     {
         insideIntersection = true;
+        currentIntersection = _intersection;
     }
+
+    public virtual void OnInsideIntersection() { }
 
     public virtual void OnIntersectionExit(Intersection _intersection)
     {
         insideIntersection = false;
+        currentIntersection = null;
     }
 
     private void OnTriggerEnter(Collider other)

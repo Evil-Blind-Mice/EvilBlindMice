@@ -74,7 +74,7 @@ public class WallRunMovementState : MovementState
 
         if (wallIsRight)
         {
-            if (_intersection.DirectionAvailable(playerMovement.gravityReference.right))
+            if (_intersection.IsDirectionAvailable(playerMovement.gravityReference.right))
             {
                 speed = intersectionSpeed;
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
@@ -84,7 +84,7 @@ public class WallRunMovementState : MovementState
         }
         else
         {
-            if (_intersection.DirectionAvailable(-playerMovement.gravityReference.right))
+            if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
             {
                 speed = intersectionSpeed;
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);

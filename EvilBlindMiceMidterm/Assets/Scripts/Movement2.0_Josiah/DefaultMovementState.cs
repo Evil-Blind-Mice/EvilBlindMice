@@ -42,6 +42,8 @@ public class DefaultMovementState : MovementState
     public override void OnUpdate(MoveInputStruct _input)
     {
 
+        if (currentIntersection != null) OnInsideIntersection();
+
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
 
@@ -97,6 +99,30 @@ public class DefaultMovementState : MovementState
         StateCheck(_input);
     }
 
+    public override void OnInsideIntersection()
+    {
+        if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
+
+        if (currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
+        {
+            if(Input.GetButtonDown("ChangeDirectionRight"))
+            {
+                playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateUprightWithGravity();
+                currentIntersection = null;
+            }
+        }
+        if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
+        {
+            if (Input.GetButtonDown("ChangeDirectionLeft"))
+            {
+                playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateUprightWithGravity();
+                currentIntersection = null;
+            }
+        }
+    }
+
     public override void OnExit()
     {
         base.OnExit();
@@ -107,7 +133,7 @@ public class DefaultMovementState : MovementState
     {
         base.OnIntersectionEnter(_intersection);
 
-        if (_intersection.DirectionAvailable(-playerMovement.gravityReference.up))
+        if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
