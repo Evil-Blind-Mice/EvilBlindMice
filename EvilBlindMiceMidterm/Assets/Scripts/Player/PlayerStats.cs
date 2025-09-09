@@ -77,4 +77,28 @@ public class PlayerStats : MonoBehaviour
     {
         currentHealth += _modifier;
     }
+
+
+
+    // GETTERS
+    
+    public float GetSpeed()
+    {
+        return runSpeed;
+    }
+
+    public float GetJumpForce()
+    {
+        return jumpForce;
+    }
+    
+    public int GetHealth()
+    {
+        return currentHealth;
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
+    }
 }
