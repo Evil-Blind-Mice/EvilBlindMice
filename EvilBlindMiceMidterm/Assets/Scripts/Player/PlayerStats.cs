@@ -4,19 +4,20 @@ public class PlayerStats : MonoBehaviour
 {
     // VARIABLES
 
-    [SerializeField] int initialRunSpeed = 15;
+    [SerializeField] public int initialRunSpeed = 15;
     [SerializeField] int initialJumpForce = 15;
     [SerializeField] int initialMaxHealth;
     [SerializeField] int initialJumpMax = 1;
-    int maxHealth;
-    int currentHealth;
-    float runSpeed;
+    public int maxHealth;
+    public int currentHealth;
+    public float runSpeed;
     float jumpForce;
     int jumpMax;
 
     SpeedState currentSpeedState;
     InvincibilityState currentInvincibilityState;
 
+    [HideInInspector] public int hasTripped = 0;
     public static PlayerStats instance { get; private set; }
 
 
