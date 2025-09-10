@@ -12,6 +12,7 @@ public class DefaultMovementState : MovementState, IDebug
     // [SerializeField] int speed = 15; replaced by player stats
     // [SerializeField] int jumpForce = 15; replaced by player stats
     // [SerializeField] int jumpMax = 1; replaced by player stats
+    [SerializeField] float speedWhileRotating = 30;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 0.1f;
@@ -30,11 +31,15 @@ public class DefaultMovementState : MovementState, IDebug
     GameObject currentWall;
     float currentWallAngle;
 
+    float speed;
+
 
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
+        speed = PlayerStats.instance.GetSpeed();
+
         base.OnEnter(_playerMovement, _body);
         playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
@@ -49,7 +54,7 @@ public class DefaultMovementState : MovementState, IDebug
         if (currentIntersection != null) OnInsideIntersection();
 
         // calculate playerVelocity
-        leftRightVelocity = _input.leftRightAxis * body.transform.right * PlayerStats.instance.GetSpeed();
+        leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
 
 
         // handle gravity and jumping
@@ -97,7 +102,7 @@ public class DefaultMovementState : MovementState, IDebug
             leftRightVelocity // velocity determined by player input
             + externalForceVelocity // velocity from previous states or knockback
             - playerMovement.gravityReference.up * currentGravityVelocity // velocity from jumping or gravity
-            + transform.forward * PlayerStats.instance.GetSpeed(); // constant forward velocity
+            + transform.forward * speed; // constant forward velocity
 
         // check for change of state conditions
         StateCheck(_input);
@@ -131,6 +136,8 @@ public class DefaultMovementState : MovementState, IDebug
 
     public override void OnExit()
     {
+        speed = PlayerStats.instance.GetSpeed();
+
         base.OnExit();
         externalForceVelocity = Vector3.zero;
     }
@@ -141,12 +148,19 @@ public class DefaultMovementState : MovementState, IDebug
 
         if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
+            speed = speedWhileRotating;
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
 
     }
 
+    public override void OnIntersectionExit(Intersection _intersection)
+    {
+        base.OnIntersectionExit(_intersection);
+
+        speed = PlayerStats.instance.GetSpeed();
+    }
 
     // Unique Functions
 
