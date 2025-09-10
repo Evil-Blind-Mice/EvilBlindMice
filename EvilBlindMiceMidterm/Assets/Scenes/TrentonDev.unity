@@ -739,7 +739,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1870897198614603479, guid: e37ae7a4a4e847742918436a9f07832a, type: 3}
       propertyPath: speedDurationSeconds
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1870897198614603479, guid: e37ae7a4a4e847742918436a9f07832a, type: 3}
       propertyPath: invincibilityDurationSeconds
@@ -1703,15 +1703,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14
+      value: -11.75
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1888,7 +1888,6 @@ MonoBehaviour:
   shootDamage: 1
   shootRate: 0.25
   shootDistance: 15
-  hasTripped: 0
   isInvincible: 0
 --- !u!4 &874170702
 Transform:

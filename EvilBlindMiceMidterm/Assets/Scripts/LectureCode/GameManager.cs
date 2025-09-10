@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,7 @@ public class GameManager : MonoBehaviour
     public GameObject playerHealingFlash;
 
     public GameObject player;
-    public PlayerController playerScript;
+    public PlayerStats playerScript;
 
     public bool isPaused;
 
@@ -37,10 +38,12 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-            timeScaleOriginal = Time.timeScale;
+        timeScaleOriginal = Time.timeScale;
+
+        instance = this;
 
         player = GameObject.FindWithTag("Player");
-        playerScript = player.GetComponent<PlayerController>();
+        playerScript = player.GetComponent<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -59,6 +62,27 @@ public class GameManager : MonoBehaviour
                 StateUnpause();
             }
         }
+    }
+
+    public void UpdatePlayerUI()
+    {
+        if (playerHealthBar != null && PlayerStats.instance != null)
+        {
+            float currentHealth = PlayerStats.instance.GetHealth();
+            float maxHealth = Mathf.Max(1, PlayerStats.instance.GetMaxHealth());
+            playerHealthBar.fillAmount = currentHealth / maxHealth;
+        }
+    }
+
+    public void FlashDamage()
+    {
+        if (playerDamageFlash)
+            StartCoroutine(Flash(playerDamageFlash, 0.1f));
+    }
+    public void FlashHeal()
+    {
+        if (playerHealingFlash)
+            StartCoroutine(Flash(playerHealingFlash, 0.1f));
     }
 
     public void StatePause()
@@ -124,4 +148,10 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
     }
 
+    IEnumerator Flash(GameObject _go, float _seconds)
+    {
+        _go.SetActive(true);
+        yield return new WaitForSecondsRealtime(_seconds);
+        _go.SetActive(false);
+    }
 }

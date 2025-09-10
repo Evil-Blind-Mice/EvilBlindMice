@@ -1,3 +1,4 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 public abstract class MovementState : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public abstract class MovementState : MonoBehaviour
 
     public virtual void OnInsideIntersection() { }
 
-    public virtual void OnIntersectionExit(Intersection _intersection)
+    public virtual void OnIntersectionExit(Intersection _intersection, Vector3 _exitPoint)
     {
         insideIntersection = false;
         currentIntersection = null;
@@ -52,6 +53,6 @@ public abstract class MovementState : MonoBehaviour
     {
         if (!isCurrentState) return;
         if (other.gameObject.tag == "Intersection")
-            OnIntersectionExit(other.GetComponent<Intersection>());
+            OnIntersectionExit(other.GetComponent<Intersection>(), other.ClosestPoint(body.transform.position));
     }
 }
