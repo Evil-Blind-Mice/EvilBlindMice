@@ -222,6 +222,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6243200634439694150, guid: 617a14d0392a0a444a1d0e7d158609d8, type: 3}
+      propertyPath: m_FillAmount
+      value: 0.066
+      objectReference: {fileID: 0}
     - target: {fileID: 6458573381825443314, guid: 617a14d0392a0a444a1d0e7d158609d8, type: 3}
       propertyPath: playerScript
       value: 
@@ -362,7 +366,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5775820253294190197, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: currentHealth
-      value: 20
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5775820253294190197, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: initialMaxHealth
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

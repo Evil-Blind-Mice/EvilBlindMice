@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerStats>();
+
     }
 
     // Update is called once per frame
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
                 StateUnpause();
             }
         }
+         UpdatePlayerUI();
     }
 
     public void UpdatePlayerUI()
@@ -138,7 +140,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuActive.SetActive(true);
     }
-
     public void Back()
     {
         Time.timeScale = 0;
@@ -147,7 +148,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuActive.SetActive(true);
     }
-
     IEnumerator Flash(GameObject _go, float _seconds)
     {
         _go.SetActive(true);
