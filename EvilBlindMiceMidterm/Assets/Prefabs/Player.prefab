@@ -348,6 +348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
   wallRunState: {fileID: 1924011206917747837}
+  speedWhileRotating: 30
   externalForceResistance: 2
   externalForceThreshold: 1
   groundedDistance: 0.3
@@ -356,7 +357,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   wallRunCooldown: 1
-  wallRunCastOffset: {x: 0, y: 0.5, z: 0}
+  wallRunCastOffset: 0.5
 --- !u!114 &1924011206917747837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,9 +371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallRunMovementState
   defaultMovementState: {fileID: 3523729438402077618}
-  normalSpeed: 15
   intersectionSpeed: 3
-  jumpForce: 30
   wallRunDistance: 1.25
   tiltDegree: 30
   groundLayers:
@@ -477,6 +476,10 @@ MonoBehaviour:
   initialJumpForce: 15
   initialMaxHealth: 0
   initialJumpMax: 1
+  maxHealth: 0
+  currentHealth: 0
+  runSpeed: 0
+  hasTripped: 0
 --- !u!1 &4051878489175559200
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5147924381228052834}
   m_Layer: 3
-  m_Name: Josiah_Player
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

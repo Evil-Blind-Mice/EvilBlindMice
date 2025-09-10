@@ -32,6 +32,8 @@ public class DefaultMovementState : MovementState, IDebug
     float currentWallAngle;
 
     float speed;
+    float distanceToGround;
+
 
 
     // Overridden Functions
@@ -50,12 +52,12 @@ public class DefaultMovementState : MovementState, IDebug
 
     public override void OnUpdate(MoveInputStruct _input)
     {
+        base.OnUpdate(_input);
 
         if (currentIntersection != null) OnInsideIntersection();
 
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
-
 
         // handle gravity and jumping
         if (IsGrounded())
@@ -146,9 +148,10 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionEnter(_intersection);
 
+        speed = PlayerStats.instance.GetSpeed() + distanceToGround;
+
         if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
-            speed = speedWhileRotating;
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
@@ -162,6 +165,7 @@ public class DefaultMovementState : MovementState, IDebug
 
         Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
 
+        
         if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.up) < 5)
         { // player exited intersection going down
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
@@ -176,24 +180,35 @@ public class DefaultMovementState : MovementState, IDebug
         { // player exited intersection to the left
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
             playerMovement.RotateUprightWithGravity();
-        }else if (Vector3.Angle(exitDirection, playerMovement.gravityReference.up) < 5)
+        }
+        else if (Vector3.Angle(exitDirection, playerMovement.gravityReference.up) < 5)
         { // player exited intersection... up?
             playerMovement.SetGravityDirection(playerMovement.gravityReference.up, -playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
+        
 
             speed = PlayerStats.instance.GetSpeed();
     }
+
+
 
     // Unique Functions
 
     bool IsGrounded()
     {
         Debug.DrawRay(transform.position, -transform.up * groundedDistance, Color.blue);
-        if (Physics.Raycast(transform.position, -transform.up, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -transform.up, out hit, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
+        {
+            distanceToGround = Vector3.Distance(transform.position, hit.point);
             return true;
+        }
         else
+        {
+            distanceToGround = 0;
             return false;
+        }
     }
 
     void Jump()
@@ -234,7 +249,9 @@ public class DefaultMovementState : MovementState, IDebug
             "Velocity: " + body.linearVelocity,
             "Is Grounded: " + IsGrounded(),
             currentWall != null ? "Wall Check hit: " + currentWall.name : "Wall Check hit: " + "nothing",
-            "Angle between wall normal and up: " + currentWallAngle
+            "Angle between wall normal and up: " + currentWallAngle,
+            "Distance to ground: " + distanceToGround,
+            "Distance Travelled: " + PlayerStats.instance.GetDistanceTraveled()
         );
     }
 }

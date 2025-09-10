@@ -134,7 +134,7 @@ public class PlayerStats : MonoBehaviour
         jumpMax += _modifier;
     }
 
-    public void SetDistanceTraveled(float _distanceTravel)
+    public void AddDistanceTraveled(float _distanceTravel)
     {
         distanceTraveled += _distanceTravel;
     }

@@ -58,6 +58,8 @@ public class WallRunMovementState : MovementState
 
     public override void OnUpdate(MoveInputStruct _input)
     {
+        base.OnUpdate(_input);
+
         playerVelocity = body.transform.forward * speed;
 
         body.linearVelocity = playerVelocity;
