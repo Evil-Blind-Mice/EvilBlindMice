@@ -5,6 +5,9 @@ public abstract class MovementState : MonoBehaviour
 
     protected PlayerMovement playerMovement;
     protected Rigidbody body;
+    protected bool isCurrentState = false;
+    protected bool insideIntersection = false;
+    protected Intersection currentIntersection;
 
 
 
@@ -14,9 +17,41 @@ public abstract class MovementState : MonoBehaviour
     {
         playerMovement = _playerMovement;
         body = _body;
+        isCurrentState = true;
     }
-    
+
     public abstract void OnUpdate(MoveInputStruct _input);
-   
-    public abstract void OnExit();
+
+    public virtual void OnExit()
+    {
+        isCurrentState = false;
+    }
+
+    public virtual void OnIntersectionEnter(Intersection _intersection)
+    {
+        insideIntersection = true;
+        currentIntersection = _intersection;
+    }
+
+    public virtual void OnInsideIntersection() { }
+
+    public virtual void OnIntersectionExit(Intersection _intersection)
+    {
+        insideIntersection = false;
+        currentIntersection = null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!isCurrentState) return;
+        if (other.gameObject.tag == "Intersection")
+            OnIntersectionEnter(other.GetComponent<Intersection>());
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!isCurrentState) return;
+        if (other.gameObject.tag == "Intersection")
+            OnIntersectionExit(other.GetComponent<Intersection>());
+    }
 }

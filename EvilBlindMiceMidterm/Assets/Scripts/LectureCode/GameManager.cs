@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
-{
-    public static GameManager instance;
+{    
+    public static GameManager instance { get; private set; }
 
     [SerializeField] public GameObject menuActive;
     [SerializeField] GameObject menuPause;
@@ -25,11 +25,19 @@ public class GameManager : MonoBehaviour
 
     float timeScaleOriginal;
 
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        instance = this;
-        timeScaleOriginal = Time.timeScale;
+
+        if (instance != null && instance != this) {
+            Destroy(gameObject);
+        } else
+        {
+            instance = this;
+        }
+            timeScaleOriginal = Time.timeScale;
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
@@ -38,15 +46,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel"))
         {
-            if(menuActive == null)
+            if (menuActive == null)
             {
                 StatePause();
                 menuActive = menuPause;
                 menuActive.SetActive(true);
             }
-            else if(menuActive == menuPause)
+            else if (menuActive == menuPause)
             {
                 StateUnpause();
             }
