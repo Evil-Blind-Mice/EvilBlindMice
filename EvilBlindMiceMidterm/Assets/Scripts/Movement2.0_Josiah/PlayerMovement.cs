@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     public int gravityAcceleration = 50;
     public int maxGravity = 50;
     public float rotationSpeed;
-    //[HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
     [HideInInspector] public bool isUpright;
 
@@ -17,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     MovementState moveState;
 
     Coroutine activeRotation;
+
+    [SerializeField] bool debugMode;
 
     private void Start()
     {
@@ -27,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         moveState.OnUpdate(GetMoveInput());
+
+        if (debugMode) Debug();
     }
 
     MoveInputStruct GetMoveInput()
@@ -83,6 +86,11 @@ public class PlayerMovement : MonoBehaviour
     public void SetGravityDirection(Vector3 _forwardDirection, Vector3 _upDirection)
     {
         gravityReference.rotation = Quaternion.LookRotation(_forwardDirection, _upDirection);
+    }
+
+    void Debug()
+    {
+
     }
 }
 
