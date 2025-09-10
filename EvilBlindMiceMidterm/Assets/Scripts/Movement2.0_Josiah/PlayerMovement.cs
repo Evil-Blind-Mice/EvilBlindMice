@@ -17,8 +17,6 @@ public class PlayerMovement : MonoBehaviour
 
     Coroutine activeRotation;
 
-    [SerializeField] bool debugMode;
-
     private void Start()
     {
         ChangeToState(defaultMoveState, true);
@@ -28,8 +26,6 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         moveState.OnUpdate(GetMoveInput());
-
-        if (debugMode) Debug();
     }
 
     MoveInputStruct GetMoveInput()
@@ -88,10 +84,7 @@ public class PlayerMovement : MonoBehaviour
         gravityReference.rotation = Quaternion.LookRotation(_forwardDirection, _upDirection);
     }
 
-    void Debug()
-    {
-
-    }
+    
 }
 
 public struct MoveInputStruct

@@ -3,7 +3,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class DefaultMovementState : MovementState
+public class DefaultMovementState : MovementState, IDebug
 {
     // Variables
 
@@ -179,5 +179,15 @@ public class DefaultMovementState : MovementState
         }
         Debug.DrawRay(body.transform.position + wallRunCastOffset, body.transform.right * wallRunDistance, Color.blue);
         Debug.DrawRay(body.transform.position + wallRunCastOffset, - body.transform.right * wallRunDistance, Color.blue);
+    }
+
+    public DebugPacket GetDebugPacket()
+    {
+        return new DebugPacket
+            (
+                "Is Current State: " + isCurrentState,
+                "Velocity: " + body.linearVelocity,
+                "Is Grounded: " + IsGrounded()
+            );
     }
 }
