@@ -52,6 +52,9 @@ MonoBehaviour:
   - {fileID: 6633068555621888376, guid: 2d52e5b0f9033594991a59ae4585ce3d, type: 3}
   - {fileID: 3563026866682210308, guid: f8aa5bc5f159dbf408b1d82e79f6b8cc, type: 3}
   - {fileID: 4113391028015115096, guid: 55643a9ebb0c52b47b324cff7aaf662f, type: 3}
+  - {fileID: 6633068555621888376, guid: 8d0d4d3d03404784cad52f46cfb2d516, type: 3}
+  - {fileID: 3563026866682210308, guid: 20db173ce9847f84b892ed1049eefa77, type: 3}
+  - {fileID: 4113391028015115096, guid: fcdd4391b00b3f54ca7fb8cc09db6eaf, type: 3}
   generationStartingPosition: {x: 0, y: 0, z: 0}
   generationStartingRotation: {x: 0, y: 0, z: 0, w: 0}
   generationIterations: 1
