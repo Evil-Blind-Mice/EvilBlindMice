@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     public int gravityAcceleration = 50;
     public int maxGravity = 50;
     public float rotationSpeed;
-    //[HideInInspector] public Vector3 gravityDirection;
     [HideInInspector] public float uprightRotation;
     [HideInInspector] public bool isUpright;
 
@@ -84,6 +83,8 @@ public class PlayerMovement : MonoBehaviour
     {
         gravityReference.rotation = Quaternion.LookRotation(_forwardDirection, _upDirection);
     }
+
+    
 }
 
 public struct MoveInputStruct
