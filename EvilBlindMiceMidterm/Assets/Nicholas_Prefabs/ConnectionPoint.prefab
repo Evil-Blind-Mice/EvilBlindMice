@@ -49,6 +49,9 @@ MonoBehaviour:
   destroyDelay: 1
   rotation: {x: 0, y: 0, z: 0, w: 0}
   position: {x: 0, y: 0, z: 0}
+  forwardAxis: {x: 0, y: 0, z: 0}
+  upAxis: {x: 0, y: 0, z: 0}
+  rightAxis: {x: 0, y: 0, z: 0}
   child: {fileID: 0}
 --- !u!65 &3750186645824362310
 BoxCollider:
@@ -65,7 +68,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

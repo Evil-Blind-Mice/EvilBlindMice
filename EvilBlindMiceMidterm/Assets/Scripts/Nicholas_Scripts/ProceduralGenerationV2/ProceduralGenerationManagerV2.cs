@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class ProceduralGenerationManagerV2 : MonoBehaviour
@@ -44,12 +45,17 @@ public class ProceduralGenerationManagerV2 : MonoBehaviour
         }
     }
 
-    //handle creation and destruction
     public void GenerateNextChunkSet(ChunkV2 _chunkToSave, int _destroyDelay = 0)
     {
+        StartCoroutine(GenerateNextChunkSetCouroutine(_chunkToSave, _destroyDelay));
+    }
 
+    //handle creation and destruction
+    private IEnumerator GenerateNextChunkSetCouroutine(ChunkV2 _chunkToSave, int _destroyDelay = 0)
+    {
         DestroyUnnessesaryChunks(_chunkToSave);
         UpdateFirstChunk(_chunkToSave, _destroyDelay);
+        yield return new WaitForSeconds(0.1f);
         UpdateChunkIterations();
         FillInTheGaps();
         GenerateTailChunks();
@@ -74,7 +80,7 @@ public class ProceduralGenerationManagerV2 : MonoBehaviour
 
     void UpdateFirstChunk(ChunkV2 newCurrentChunk, int _destroyDelay)
     {
-        Destroy(currentChunk, _destroyDelay);
+        Destroy(currentChunk.gameObject);
         currentChunk = newCurrentChunk;
     }
 

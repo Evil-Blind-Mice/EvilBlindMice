@@ -384,7 +384,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChunkV2
   connectionPoints:
   - {fileID: 5643983158075903389}
-  overlapCheck: {fileID: 5169716755956864959, guid: b8e0432541e7e9e49b51c7b89443f5b8, type: 3}
+  floorLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &7730731675942565136
 GameObject:
   m_ObjectHideFlags: 0

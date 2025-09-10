@@ -504,7 +504,9 @@ MonoBehaviour:
   connectionPoints:
   - {fileID: 2703881914222897382}
   - {fileID: 3045023341114400816}
-  overlapCheck: {fileID: 5169716755956864959, guid: b8e0432541e7e9e49b51c7b89443f5b8, type: 3}
+  floorLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &4628857644520488280
 GameObject:
   m_ObjectHideFlags: 0

@@ -898,7 +898,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4218850489133801987}
   - component: {fileID: 5410235847662796422}
-  - component: {fileID: 6612710515721576313}
   m_Layer: 0
   m_Name: ChunkTypeCross
   m_TagString: Chunks
@@ -956,28 +955,9 @@ MonoBehaviour:
   - {fileID: 5241283034931621679}
   - {fileID: 3075471457643849711}
   - {fileID: 5508488243071060884}
-  overlapCheck: {fileID: 5169716755956864959, guid: b8e0432541e7e9e49b51c7b89443f5b8, type: 3}
---- !u!65 &6612710515721576313
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4125763818362485781}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
+  floorLayer:
     serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 60, y: 10, z: 10}
-  m_Center: {x: 30, y: 5, z: 0}
+    m_Bits: 1
 --- !u!1 &4989436420996705211
 GameObject:
   m_ObjectHideFlags: 0

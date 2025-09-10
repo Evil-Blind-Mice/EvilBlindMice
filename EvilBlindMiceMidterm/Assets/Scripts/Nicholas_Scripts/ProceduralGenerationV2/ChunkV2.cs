@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ChunkV2 : MonoBehaviour
 {
     int iteration = 0;
     [SerializeField] List<ChunkConnectionPoint> connectionPoints;
+    [SerializeField] LayerMask floorLayer;
     List<ChunkV2> childChunkList = new();
     ChunkV2 parent;
     List<GameObject> chunkPool;
@@ -30,14 +32,7 @@ public class ChunkV2 : MonoBehaviour
 
     public void DestroyChildChunks(ChunkV2 _childToSave)
     {
-        if (childChunkList.Count == 0)
-        {
-            parent.childChunkList.Remove(this);
-            Destroy(gameObject);
-            return;
-        }
-
-        if (_childToSave == this)
+        if (_childToSave.gameObject == this.gameObject)
         {
             return;
         }
@@ -45,6 +40,13 @@ public class ChunkV2 : MonoBehaviour
         for (int i = childChunkList.Count - 1; i >= 0; i--)
         {
             childChunkList[i].DestroyChildChunks(_childToSave);
+        }
+
+        if (childChunkList.Count == 0)
+        {
+            parent.childChunkList.Remove(this);
+            Destroy(gameObject);
+            return;
         }
     }
 
@@ -94,11 +96,23 @@ public class ChunkV2 : MonoBehaviour
         List<int> safeSpawnIndex = new();
         for (int i = 0; i < connectionPoints.Count; i++)
         {
-            RaycastHit hit;
-            if (!Physics.Raycast(connectionPoints[i].position + (connectionPoints[i].forwardAxis * 1)
-                + (connectionPoints[i].upAxis * 1), connectionPoints[i].rightAxis, out hit, 60))
+            float increment = 13f;
+            int found = 0;
+            for (int j = 0; j < 5; j++)
+            {
+                if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.right * increment, 11f).Length > 1)
+                {
+                    found++;
+                }
+                increment += 22f;
+            }
+            if (found == 0)
             {
                 safeSpawnIndex.Add(i);
+            }
+            else
+            {
+                Debug.Log("Fuck");
             }
         }
         return safeSpawnIndex;
