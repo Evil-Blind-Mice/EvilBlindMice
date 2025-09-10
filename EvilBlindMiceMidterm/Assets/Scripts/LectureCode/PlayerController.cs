@@ -28,8 +28,6 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     int originalHealth;
 
 
-    [HideInInspector] public int hasTripped = 0;
-
     bool isSprinting;
     public bool isInvincible;
 
