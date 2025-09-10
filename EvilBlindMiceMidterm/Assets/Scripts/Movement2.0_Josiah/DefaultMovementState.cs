@@ -114,6 +114,7 @@ public class DefaultMovementState : MovementState, IDebug
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
                 currentIntersection = null;
+                return;
             }
         }
         if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
@@ -123,6 +124,7 @@ public class DefaultMovementState : MovementState, IDebug
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
                 currentIntersection = null;
+                return;
             }
         }
     }
