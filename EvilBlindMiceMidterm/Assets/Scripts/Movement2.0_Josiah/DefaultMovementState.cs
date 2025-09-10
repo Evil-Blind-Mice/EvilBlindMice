@@ -155,11 +155,34 @@ public class DefaultMovementState : MovementState, IDebug
 
     }
 
-    public override void OnIntersectionExit(Intersection _intersection)
+    public override void OnIntersectionExit(Intersection _intersection, Vector3 _exitPoint)
     {
-        base.OnIntersectionExit(_intersection);
+        base.OnIntersectionExit(_intersection, _exitPoint);
 
-        speed = PlayerStats.instance.GetSpeed();
+
+        Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
+
+        if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.up) < 5)
+        { // player exited intersection going down
+            playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
+            playerMovement.RotateUprightWithGravity();
+        }
+        else if (Vector3.Angle(exitDirection, playerMovement.gravityReference.right) < 5)
+        { // player exited intersection to the right
+            playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+            playerMovement.RotateUprightWithGravity();
+        }
+        else if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.right) < 5)
+        { // player exited intersection to the left
+            playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+            playerMovement.RotateUprightWithGravity();
+        }else if (Vector3.Angle(exitDirection, playerMovement.gravityReference.up) < 5)
+        { // player exited intersection... up?
+            playerMovement.SetGravityDirection(playerMovement.gravityReference.up, -playerMovement.gravityReference.forward);
+            playerMovement.RotateUprightWithGravity();
+        }
+
+            speed = PlayerStats.instance.GetSpeed();
     }
 
     // Unique Functions
