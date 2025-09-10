@@ -25,7 +25,7 @@ public class ScriptDebugger : MonoBehaviour
 
     private void Update()
     {
-        if (cannotDebug)
+        if (cannotDebug || debugScript.isActiveAndEnabled == false)
         {
             textsArray[0].text = "Selected script does not inherit IDebug";
             return;

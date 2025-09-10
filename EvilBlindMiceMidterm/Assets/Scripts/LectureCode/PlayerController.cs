@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     // Update is called once per frame
     void Update()
     {
-        //Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.red);
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * shootDistance, Color.red);
         Movement();
         Sprint();
     }
