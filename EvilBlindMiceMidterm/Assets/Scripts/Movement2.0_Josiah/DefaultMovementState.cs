@@ -64,7 +64,7 @@ public class DefaultMovementState : MovementState
             // if the player reorients mid-air, they go back to world space up
             if (_input.shiftPressed && playerMovement.isUpright)
             {
-                playerMovement.SetGravityDirection(body.transform.forward, Vector3.up);
+                playerMovement.SetGravityDirection(playerMovement.gravityReference.forward, -playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
             }
         }
