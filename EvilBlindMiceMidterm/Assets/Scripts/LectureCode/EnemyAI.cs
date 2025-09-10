@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
 using static PlayerController;
 
 public class EnemyAI : MonoBehaviour, IDamage
@@ -10,10 +11,12 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPosition;
+    [SerializeField] Transform headPosition;
 
     [SerializeField] int shieldHealth;
     [SerializeField] int health;
     [SerializeField] int faceTargetSpeed;
+    [SerializeField] int FOV;
 
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
@@ -21,6 +24,8 @@ public class EnemyAI : MonoBehaviour, IDamage
     Color originalColor;
 
     float shootTimer;
+
+    float angleToPlayer;
 
     bool playerInTrigger;
 
@@ -45,24 +50,41 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
 
         shootTimer += Time.deltaTime;
-        playerDirection = GameManager.instance.player.transform.position - transform.position;
 
-        if (playerInTrigger)
+        if (playerInTrigger && CanSeePlayer())
         {
-            agent.SetDestination(GameManager.instance.player.transform.position);
 
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-            }
+        }
 
-            if (shootTimer >= shootRate)
+    }
+    bool CanSeePlayer()
+    {
+        playerDirection = GameManager.instance.player.transform.position - headPosition.position;
+        angleToPlayer = Vector3.Angle(playerDirection, transform.forward);
+        Debug.DrawRay(headPosition.position, playerDirection);
+
+        RaycastHit hit;
+        if (Physics.Raycast(headPosition.position, playerDirection, out hit))
+        {
+            if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
-                Shoot();
+                agent.SetDestination(GameManager.instance.player.transform.position);
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    FaceTarget();
+                }
+
+                if (shootTimer >= shootRate)
+                {
+                    Shoot();
+                }
+
+                return true;
             }
         }
+        return false;
     }
-
     void FaceTarget()
     {
         Quaternion rot = Quaternion.LookRotation(playerDirection);
@@ -113,7 +135,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         if (shieldHealth > 0)
         {
-            model.material.color = Color.cyan;
+            model.material.color = Color.lightCyan;
             isBlue = true;
         }
 

@@ -11,10 +11,12 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
     [SerializeField] Renderer model;
     [SerializeField] Transform hitPosition;
     [SerializeField] Transform hitPosition2;
+    [SerializeField] Transform headPosition;
 
     [SerializeField] int shieldHealth;
     [SerializeField] int health;
     [SerializeField] int faceTargetSpeed;
+    [SerializeField] int FOV;
 
     [SerializeField] GameObject melee;
     [SerializeField] float hitRate;
@@ -23,6 +25,8 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
     Color originalColor;
 
     float hitTimer;
+
+    float angleToPlayer;
 
     bool playerInTrigger;
 
@@ -47,22 +51,41 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
         }
 
         hitTimer += Time.deltaTime;
-        playerDirection = GameManager.instance.player.transform.position - transform.position;
 
-        if (playerInTrigger)
+        if (playerInTrigger && CanSeePlayer())
         {
-            agent.SetDestination(GameManager.instance.player.transform.position);
 
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-            }
+        }
 
-            if (hitTimer >= hitRate)
+    }
+
+    bool CanSeePlayer()
+    {
+        playerDirection = GameManager.instance.player.transform.position - headPosition.position;
+        angleToPlayer = Vector3.Angle(playerDirection, transform.forward);
+        Debug.DrawRay(headPosition.position, playerDirection);
+
+        RaycastHit hit;
+        if (Physics.Raycast(headPosition.position, playerDirection, out hit))
+        {
+            if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
-                MeleeHit();
+                agent.SetDestination(GameManager.instance.player.transform.position);
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    FaceTarget();
+                }
+
+                if (hitTimer >= hitRate)
+                {
+                    MeleeHit();
+                }
+
+                return true;
             }
         }
+        return false;
     }
 
     void FaceTarget()
