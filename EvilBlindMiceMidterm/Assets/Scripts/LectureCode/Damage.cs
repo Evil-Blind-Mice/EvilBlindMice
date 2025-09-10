@@ -37,6 +37,7 @@ public class Damage : MonoBehaviour
         }
     }
 
+
     private void OnTriggerEnter(Collider _other)
     {
         if (_other.isTrigger)

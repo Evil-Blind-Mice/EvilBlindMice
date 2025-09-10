@@ -20,7 +20,7 @@ public class Intersection : MonoBehaviour
         if (backward) availableDirections[5] = (-transform.forward);
     }
 
-    public bool DirectionAvailable(Vector3 _direction)
+    public bool IsDirectionAvailable(Vector3 _direction)
     {
         foreach (Vector3 nextVec in availableDirections)
         {

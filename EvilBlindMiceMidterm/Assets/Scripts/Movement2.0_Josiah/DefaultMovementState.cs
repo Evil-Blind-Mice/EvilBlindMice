@@ -3,22 +3,23 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class DefaultMovementState : MovementState
+public class DefaultMovementState : MovementState, IDebug
 {
     // Variables
 
     [SerializeField] MovementState wallRunState;
 
-    [SerializeField] int speed = 15;
-    [SerializeField] int jumpForce = 15;
-    [SerializeField] int jumpMax = 1;
+    // [SerializeField] int speed = 15; replaced by player stats
+    // [SerializeField] int jumpForce = 15; replaced by player stats
+    // [SerializeField] int jumpMax = 1; replaced by player stats
+    [SerializeField] float speedWhileRotating = 30;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 0.1f;
     [SerializeField] float wallRunDistance = 0.6f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
-    [SerializeField] Vector3 wallRunCastOffset = new Vector3(0, 0.5f, 0);
+    [SerializeField] float wallRunCastOffset = 0.5f;
 
     Vector3 leftRightVelocity;
     Vector3 externalForceVelocity;
@@ -26,21 +27,31 @@ public class DefaultMovementState : MovementState
     float currentGravityVelocity;
     float wallRunCountdown;
 
+    // variables stored for debug
+    GameObject currentWall;
+    float currentWallAngle;
+
+    float speed;
+
 
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
+        speed = PlayerStats.instance.GetSpeed();
+
         base.OnEnter(_playerMovement, _body);
         playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
         currentGravityVelocity = 0;
-        jumpCount = jumpMax;
+        jumpCount = 1;
         wallRunCountdown = wallRunCooldown;
     }
 
     public override void OnUpdate(MoveInputStruct _input)
     {
+
+        if (currentIntersection != null) OnInsideIntersection();
 
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
@@ -62,7 +73,7 @@ public class DefaultMovementState : MovementState
             // if the player reorients mid-air, they go back to world space up
             if (_input.shiftPressed && playerMovement.isUpright)
             {
-                playerMovement.SetGravityDirection(body.transform.forward, Vector3.up);
+                playerMovement.SetGravityDirection(playerMovement.gravityReference.forward, -playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
             }
         }
@@ -97,8 +108,36 @@ public class DefaultMovementState : MovementState
         StateCheck(_input);
     }
 
+    public override void OnInsideIntersection()
+    {
+        if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
+
+        if (currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
+        {
+            if(Input.GetButtonDown("ChangeDirectionRight"))
+            {
+                playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateUprightWithGravity();
+                currentIntersection = null;
+                return;
+            }
+        }
+        if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
+        {
+            if (Input.GetButtonDown("ChangeDirectionLeft"))
+            {
+                playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
+                playerMovement.RotateUprightWithGravity();
+                currentIntersection = null;
+                return;
+            }
+        }
+    }
+
     public override void OnExit()
     {
+        speed = PlayerStats.instance.GetSpeed();
+
         base.OnExit();
         externalForceVelocity = Vector3.zero;
     }
@@ -107,14 +146,21 @@ public class DefaultMovementState : MovementState
     {
         base.OnIntersectionEnter(_intersection);
 
-        if (_intersection.DirectionAvailable(-playerMovement.gravityReference.up))
+        if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
+            speed = speedWhileRotating;
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
 
     }
 
+    public override void OnIntersectionExit(Intersection _intersection)
+    {
+        base.OnIntersectionExit(_intersection);
+
+        speed = PlayerStats.instance.GetSpeed();
+    }
 
     // Unique Functions
 
@@ -129,10 +175,10 @@ public class DefaultMovementState : MovementState
 
     void Jump()
     {
-        if (jumpCount < jumpMax)
+        if (jumpCount < PlayerStats.instance.GetJumpMax())
         {
             jumpCount++;
-            currentGravityVelocity = -jumpForce;
+            currentGravityVelocity = -PlayerStats.instance.GetJumpForce();
         }
     }
 
@@ -142,16 +188,30 @@ public class DefaultMovementState : MovementState
 
         if (!IsGrounded() && wallRunCountdown <= 0)
         {
+
             RaycastHit hit;
-            if ((Physics.Raycast(body.transform.position + wallRunCastOffset, body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis > 0)
-                || (Physics.Raycast(body.transform.position + wallRunCastOffset, -body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis < 0))
+            if ((Physics.Raycast(body.transform.position + body.transform.up * wallRunCastOffset, body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis > 0)
+                || (Physics.Raycast(body.transform.position + body.transform.up * wallRunCastOffset, -body.transform.right, out hit, wallRunDistance, groundLayers) && _input.leftRightAxis < 0))
             {
-                float normalAngle = Vector3.Angle(hit.normal, playerMovement.gravityReference.up);
-                if (normalAngle >= 55 && normalAngle <= 95)
+                currentWall = hit.collider.gameObject;
+                currentWallAngle = Vector3.Angle(hit.normal, playerMovement.gravityReference.up);
+                if (currentWallAngle >= 55 && currentWallAngle <= 95)
                     playerMovement.ChangeToState(wallRunState);
             }
         }
-        Debug.DrawRay(body.transform.position + wallRunCastOffset, body.transform.right * wallRunDistance, Color.blue);
-        Debug.DrawRay(body.transform.position + wallRunCastOffset, - body.transform.right * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position + body.transform.up * wallRunCastOffset, body.transform.right * wallRunDistance, Color.blue);
+        Debug.DrawRay(body.transform.position + body.transform.up * wallRunCastOffset, - body.transform.right * wallRunDistance, Color.blue);
+    }
+
+    public DebugPacket GetDebugPacket()
+    {
+        return new DebugPacket
+        (
+            "Is Current State: " + isCurrentState,
+            "Velocity: " + body.linearVelocity,
+            "Is Grounded: " + IsGrounded(),
+            currentWall != null ? "Wall Check hit: " + currentWall.name : "Wall Check hit: " + "nothing",
+            "Angle between wall normal and up: " + currentWallAngle
+        );
     }
 }

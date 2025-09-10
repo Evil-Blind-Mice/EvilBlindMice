@@ -5,10 +5,10 @@ public class PowerUpPickup : MonoBehaviour
 {
     public enum PickUpType
     {
-        Heal, TimeSlow, Invincibility
+        Heal, TimeSlow, Invincibility, SpeedBoost
     }
 
-    [Header("PowerUp Type")]
+    [Header("Power Up Type")]
     [SerializeField] PickUpType type = PickUpType.Heal;
 
     [Header("Heal")]
@@ -16,18 +16,18 @@ public class PowerUpPickup : MonoBehaviour
 
     [Header("Time Slow")]
     [SerializeField, Range(0.05f, 1f)] float slowScale;
-    [SerializeField] float slowDurationSeconds;
+    [SerializeField] int slowDurationSeconds;
 
     [Header("Invincibility")]
-    [SerializeField] float invincibilityDurationSeconds;
+    [SerializeField] int invincibilityDurationSeconds;
+
+    [Header("Speed Boost")]
+    [SerializeField, Min(1)] float speedMultiplier;
+    [SerializeField] int speedDurationSeconds;
 
     static float activeSlowScale = 1f;
-    static float slowRemain = 0f;
+    static float slowRemainingSeconds = 0f;
     static Coroutine slowRoutine;
-
-    static float invincibilityRemain = 0f;
-    static Coroutine invincibilityRoutine;
-
     static MonoBehaviour runner;
 
     void OnTriggerEnter(Collider _other)
@@ -35,21 +35,27 @@ public class PowerUpPickup : MonoBehaviour
         if (_other.isTrigger) return;
         if (!_other.CompareTag("Player")) return;
 
-        PlayerController player = _other.GetComponentInParent<PlayerController>();
-        if (player == null) return;
+        PlayerStats stats = PlayerStats.instance;
+        if (stats == null) return;
+
+        if (_other.transform.root != stats.transform.root) return;
 
         switch (type)
         {
             case PickUpType.Heal:
-                player.Heal(healAmount);
+                ApplyHeal(stats, healAmount);
                 break;
 
             case PickUpType.TimeSlow:
-                ApplySlowMotion(slowScale, slowDurationSeconds);
+                ApplyTimeSlow(slowScale, slowDurationSeconds);
                 break;
 
             case PickUpType.Invincibility:
-                ApplyInvincibility(invincibilityDurationSeconds);
+                stats.RequestInvincibility(invincibilityDurationSeconds);
+                break;
+
+            case PickUpType.SpeedBoost:
+                stats.RequestSpeedBoost(speedMultiplier, speedDurationSeconds);
                 break;
         }
 
@@ -57,6 +63,18 @@ public class PowerUpPickup : MonoBehaviour
     }
 
     // -*-*-*-*-*-*-*- Helper Methods -*-*-*-*-*-*-*-
+
+    static void ApplyHeal(PlayerStats _stats, int _amount)
+    {
+        if (_amount <= 0) return;
+
+        int currentHealth = _stats.GetHealth();
+        int maximumHealth = _stats.GetMaxHealth();
+        int healthGain = Mathf.Clamp(_amount, 0, maximumHealth - currentHealth);
+
+        if (healthGain != 0)
+            _stats.AddHealth(healthGain);
+    }
 
     static bool IsPaused()
     {
@@ -99,62 +117,32 @@ public class PowerUpPickup : MonoBehaviour
 
     // -*-*-*-*-*-*-*- Time Slow -*-*-*-*-*-*-*-
 
-    static void ApplySlowMotion(float _scale, float _duration)
+    static void ApplyTimeSlow(float _scale, int _durationSeconds)
     {
         _scale = Mathf.Clamp(_scale, 0.01f, 1f);
-        _duration = Mathf.Max(0f, _duration);
+        if (_durationSeconds < 0)
+            _durationSeconds = 0;
 
         activeSlowScale = Mathf.Min(activeSlowScale, _scale);
-        slowRemain = Mathf.Max(slowRemain, _duration);
+        slowRemainingSeconds = Mathf.Max(slowRemainingSeconds, _durationSeconds);
 
         SetScaleRespectingPause(activeSlowScale);
 
         if (slowRoutine == null)
-            slowRoutine = GetRunner().StartCoroutine(SlowMotionRoutine());
+            slowRoutine = GetRunner().StartCoroutine(TimeSlowRoutine());
     }
 
-    static IEnumerator SlowMotionRoutine()
+    static IEnumerator TimeSlowRoutine()
     {
-        while (slowRemain > 0f)
+        while (slowRemainingSeconds > 0f)
         {
             EnforceActiveScaleIfNeeded();
-            TickUnpaused(ref slowRemain);
+            TickUnpaused(ref slowRemainingSeconds);
             yield return null;
         }
 
         activeSlowScale = 1f;
         SetScaleRespectingPause(activeSlowScale);
         slowRoutine = null;
-    }
-
-    // -*-*-*-*-*-*-*- Invincibility -*-*-*-*-*-*-*-
-
-    static void ApplyInvincibility(float _duration)
-    {
-        _duration = Mathf.Max(0f, _duration);
-        invincibilityRemain = Mathf.Max(invincibilityRemain, _duration);
-        SetInvincible(true);
-
-        if (invincibilityRoutine == null)
-            invincibilityRoutine = GetRunner().StartCoroutine(InvincibilityRoutine());
-    }
-
-    static IEnumerator InvincibilityRoutine()
-    {
-        while (invincibilityRemain > 0f)
-        {
-            TickUnpaused(ref invincibilityRemain);
-            yield return null;
-        }
-
-        SetInvincible(false);
-        invincibilityRoutine = null;
-    }
-
-    static void SetInvincible(bool _on)
-    {
-        if (GameManager.instance == null) return;
-        if (GameManager.instance.playerScript == null) return;
-        GameManager.instance.playerScript.isInvincible = _on;
     }
 }

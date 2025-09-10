@@ -7,9 +7,9 @@ public class WallRunMovementState : MovementState
 
     [SerializeField] MovementState defaultMovementState;
 
-    [SerializeField] int normalSpeed = 15;
+    // [SerializeField] int normalSpeed = 15;
     [SerializeField] int intersectionSpeed = 3;
-    [SerializeField] int jumpForce = 30;
+    // [SerializeField] int jumpForce = 30;
     [SerializeField] float wallRunDistance = 2f;
     [SerializeField] int tiltDegree = 30;
     [SerializeField] LayerMask groundLayers;
@@ -18,7 +18,7 @@ public class WallRunMovementState : MovementState
     [HideInInspector] public bool wallIsRight;
     Vector3 wallNormal;
 
-    int speed;
+    float speed;
 
 
 
@@ -27,7 +27,7 @@ public class WallRunMovementState : MovementState
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
 
-        speed = normalSpeed;
+        speed = PlayerStats.instance.GetSpeed();
 
         base.OnEnter(_playerMovement, _body);
 
@@ -53,7 +53,7 @@ public class WallRunMovementState : MovementState
     public override void OnExit()
     {
         base.OnExit();
-        speed = normalSpeed;
+        speed = PlayerStats.instance.GetSpeed();
     }
 
     public override void OnUpdate(MoveInputStruct _input)
@@ -74,7 +74,7 @@ public class WallRunMovementState : MovementState
 
         if (wallIsRight)
         {
-            if (_intersection.DirectionAvailable(playerMovement.gravityReference.right))
+            if (_intersection.IsDirectionAvailable(playerMovement.gravityReference.right))
             {
                 speed = intersectionSpeed;
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
@@ -84,7 +84,7 @@ public class WallRunMovementState : MovementState
         }
         else
         {
-            if (_intersection.DirectionAvailable(-playerMovement.gravityReference.right))
+            if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
             {
                 speed = intersectionSpeed;
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
@@ -102,7 +102,7 @@ public class WallRunMovementState : MovementState
     {
         base.OnIntersectionExit(_intersection);
 
-        speed = normalSpeed;
+        speed = PlayerStats.instance.GetSpeed();
 
         playerMovement.ChangeToState(this);
     }
@@ -116,7 +116,7 @@ public class WallRunMovementState : MovementState
         // if the player jumps off of the wall
         if (_input.jumpPressedThisFrame)
         {
-            body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * jumpForce;
+            body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * PlayerStats.instance.GetJumpForce() * 2;
             TriggerDefaultState();
         }
 

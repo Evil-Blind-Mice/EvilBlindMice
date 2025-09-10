@@ -1,16 +1,22 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.AI;
 using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Rendering;
+using static PlayerController;
 
 public class EnemyAI : MonoBehaviour, IDamage
 {
+
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPosition;
+    [SerializeField] Transform headPosition;
 
+    [SerializeField] int shieldHealth;
     [SerializeField] int health;
     [SerializeField] int faceTargetSpeed;
+    [SerializeField] int FOV;
 
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
@@ -19,7 +25,11 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     float shootTimer;
 
+    float angleToPlayer;
+
     bool playerInTrigger;
+
+    bool isBlue;
 
     Vector3 playerDirection;
 
@@ -30,28 +40,51 @@ public class EnemyAI : MonoBehaviour, IDamage
         GameManager.instance.UpdateGameGoal(1);
     }
 
+
     // Update is called once per frame
     void Update()
     {
-        shootTimer += Time.deltaTime;
-        playerDirection = GameManager.instance.player.transform.position - transform.position;
-
-        if (playerInTrigger)
+        if (shieldHealth > 0)
         {
-            agent.SetDestination(GameManager.instance.player.transform.position);
+            EnemyShield();
+        }
 
-            if (agent.remainingDistance <= agent.stoppingDistance)
-            {
-                FaceTarget();
-            }
+        shootTimer += Time.deltaTime;
 
-            if (shootTimer >= shootRate)
+        if (playerInTrigger && CanSeePlayer())
+        {
+
+        }
+
+    }
+    bool CanSeePlayer()
+    {
+        playerDirection = GameManager.instance.player.transform.position - headPosition.position;
+        angleToPlayer = Vector3.Angle(playerDirection, transform.forward);
+        Debug.DrawRay(headPosition.position, playerDirection);
+
+        RaycastHit hit;
+        if (Physics.Raycast(headPosition.position, playerDirection, out hit))
+        {
+            if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
-                Shoot();
+                agent.SetDestination(GameManager.instance.player.transform.position);
+
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    FaceTarget();
+                }
+
+                if (shootTimer >= shootRate)
+                {
+                    Shoot();
+                }
+
+                return true;
             }
         }
+        return false;
     }
-
     void FaceTarget()
     {
         Quaternion rot = Quaternion.LookRotation(playerDirection);
@@ -78,16 +111,38 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     public void TakeDamage(int _amount)
     {
-        if (health > 0)
+        if (shieldHealth > 0)
         {
-            health -= _amount;
-            StartCoroutine(FlashRed());
+            shieldHealth -= _amount;
+        }
+
+        if (shieldHealth <= 0)
+        {
+            if (health > 0)
+            {
+                health -= _amount;
+                StartCoroutine(FlashRed());
+            }
         }
 
         if (health <= 0)
         {
             GameManager.instance.UpdateGameGoal(-1);
             Destroy(gameObject);
+        }
+    }
+    void EnemyShield()
+    {
+        if (shieldHealth > 0)
+        {
+            model.material.color = Color.lightCyan;
+            isBlue = true;
+        }
+
+        if (shieldHealth <= 0)
+        {
+            model.material.color = originalColor;
+            isBlue = false;
         }
     }
 
@@ -97,4 +152,5 @@ public class EnemyAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f);
         model.material.color = originalColor;
     }
+
 }

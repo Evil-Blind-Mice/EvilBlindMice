@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+
+
 public class PlayerController : MonoBehaviour, IDamage, IHeal
 {
     [SerializeField] LayerMask ignoreLayer;
@@ -8,6 +10,7 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     [SerializeField] public int health;
     [SerializeField] public int speed;
     [SerializeField] int sprintMod;
+    [SerializeField] int speedBoostMultiplier = 1;
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
@@ -24,7 +27,6 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
     int jumpCount;
     int originalHealth;
 
-    [HideInInspector]  public int hasTripped = 0;
 
     bool isSprinting;
     public bool isInvincible;
@@ -59,9 +61,9 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
         }
 
         moveDirection = (Input.GetAxis("Horizontal") * transform.right) +
-                  (Input.GetAxis("Vertical") * transform.forward);
+                        (Input.GetAxis("Vertical") * transform.forward);
 
-        controller.Move(moveDirection * speed * Time.deltaTime);
+        controller.Move(moveDirection * (speed * speedBoostMultiplier) * Time.deltaTime);
 
         Jump();
 
@@ -134,9 +136,11 @@ public class PlayerController : MonoBehaviour, IDamage, IHeal
         StartCoroutine(FlashHeal());
     }
 
+    public void SetSpeedBoostMultiplier(int _multiplier) { speedBoostMultiplier = _multiplier; }
+
     public void UpdatePlayerUI()
     {
-        GameManager.instance.playerHealthBar.fillAmount = (float)health / (float)originalHealth;
+        //GameManager.instance.playerHealthBar.fillAmount = (float)health / (float)originalHealth;
     }
 
     IEnumerator FlashDamage()
