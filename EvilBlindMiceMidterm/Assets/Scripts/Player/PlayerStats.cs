@@ -109,7 +109,22 @@ public class PlayerStats : MonoBehaviour
 
     public void AddHealth(int _modifier)
     {
+        int before = currentHealth;
         currentHealth = Mathf.Clamp(currentHealth + _modifier, 0, maxHealth);
+
+        GameManager gameManager = GameManager.instance;
+        if (gameManager != null)
+        {
+            gameManager.UpdatePlayerUI();
+
+            if (currentHealth < before)
+                gameManager.FlashDamage();
+            else if (currentHealth >= before)
+                gameManager.FlashHeal();
+        }
+
+        if (currentHealth <= 0 && gameManager != null)
+            gameManager.YouLose();
     }
 
     public void AddJumpMax(int _modifier)

@@ -1703,7 +1703,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.5
+      value: -11.75
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1711,7 +1711,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1888,7 +1888,6 @@ MonoBehaviour:
   shootDamage: 1
   shootRate: 0.25
   shootDistance: 15
-  hasTripped: 0
   isInvincible: 0
 --- !u!4 &874170702
 Transform:
