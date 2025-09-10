@@ -64,6 +64,24 @@ public class PowerUpPickup : MonoBehaviour
 
     // -*-*-*-*-*-*-*- Helper Methods -*-*-*-*-*-*-*-
 
+    public static void ResetAllEffects()
+    {
+        if (slowRoutine != null)
+        {
+            MonoBehaviour runner = GetRunner();
+            if (runner != null)
+                runner.StopCoroutine(slowRoutine);
+            slowRoutine = null;
+        }
+
+        activeSlowScale = 1f;
+        slowRemainingSeconds = 0f;
+        Time.timeScale = 1f;
+
+        if (PlayerStats.instance != null)
+            PlayerStats.instance.ResetAllPowerUpEffects();
+    }
+
     static void ApplyHeal(PlayerStats _stats, int _amount)
     {
         if (_amount <= 0) return;
@@ -102,15 +120,20 @@ public class PowerUpPickup : MonoBehaviour
     // -*-*-*-*-*-*-*- Runner -*-*-*-*-*-*-*-
     static MonoBehaviour GetRunner()
     {
-        if (GameManager.instance != null)
-            return GameManager.instance;
-
-        if (runner != null)
+        if (runner != null) 
             return runner;
 
-        GameObject go = new GameObject("PowerUpRunner");
-        Object.DontDestroyOnLoad(go);
-        runner = go.AddComponent<Runner>();
+        GameObject go = GameObject.Find("PowerUpRunner");
+        if (go == null)
+        {
+            go = new GameObject("PowerUpRunner");
+            Object.DontDestroyOnLoad(go);
+        }
+
+        runner = go.GetComponent<Runner>();
+        if (runner == null)
+            runner = go.AddComponent<Runner>();
+
         return runner;
     }
     class Runner : MonoBehaviour { }

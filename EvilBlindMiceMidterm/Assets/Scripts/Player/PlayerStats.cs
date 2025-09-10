@@ -130,6 +130,12 @@ public class PlayerStats : MonoBehaviour
 
     // HELPERS
 
+    public void ResetAllPowerUpEffects()
+    {
+        TransitionToSpeedState(new NormalSpeedState());
+        TransitionToInvincibilityState(new InvincibilityOffState());
+    }
+
     static bool IsPaused()
     {
         return GameManager.instance != null && GameManager.instance.isPaused;
