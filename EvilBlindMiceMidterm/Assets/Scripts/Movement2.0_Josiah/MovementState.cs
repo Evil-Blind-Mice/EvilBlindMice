@@ -9,7 +9,7 @@ public abstract class MovementState : MonoBehaviour
     protected bool isCurrentState = false;
     protected bool insideIntersection = false;
     protected Intersection currentIntersection;
-
+    Vector3 positionLastFrame;
 
 
     // Functions
@@ -21,7 +21,11 @@ public abstract class MovementState : MonoBehaviour
         isCurrentState = true;
     }
 
-    public abstract void OnUpdate(MoveInputStruct _input);
+    public virtual void OnUpdate(MoveInputStruct _input)
+    {
+        PlayerStats.instance.AddDistanceTraveled(Vector3.Dot((body.transform.position - positionLastFrame), playerMovement.gravityReference.forward));
+        positionLastFrame = body.transform.position;
+    }
 
     public virtual void OnExit()
     {

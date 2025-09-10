@@ -124,6 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f879846c4efffc14b81f3322862e2571, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Intersection
+  parent: {fileID: 5566366657165862689}
   up: 1
   down: 0
   right: 1
