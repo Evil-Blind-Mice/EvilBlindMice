@@ -13,6 +13,7 @@ public class PlayerStats : MonoBehaviour
     public float runSpeed;
     float jumpForce;
     int jumpMax;
+    public float distanceTraveled;
 
     SpeedState currentSpeedState;
     InvincibilityState currentInvincibilityState;
@@ -52,6 +53,7 @@ public class PlayerStats : MonoBehaviour
         currentSpeedState.Update(this, deltaSeconds, isPaused);
         currentInvincibilityState.Update(this, deltaSeconds, isPaused);
     }
+
 
 
 
@@ -132,16 +134,21 @@ public class PlayerStats : MonoBehaviour
         jumpMax += _modifier;
     }
 
+    public void SetDistanceTraveled(float _distanceTravel)
+    {
+        distanceTraveled += _distanceTravel;
+    }
+
 
 
     // GETTERS
-    
+
     public float GetSpeed() { return runSpeed; }
     public float GetJumpForce() { return jumpForce; }
     public int GetHealth() { return currentHealth; }
     public int GetMaxHealth() { return maxHealth; }
     public int GetJumpMax() { return jumpMax; }
-
+    public float GetDistanceTraveled() { return distanceTraveled; }
 
 
     // HELPERS
