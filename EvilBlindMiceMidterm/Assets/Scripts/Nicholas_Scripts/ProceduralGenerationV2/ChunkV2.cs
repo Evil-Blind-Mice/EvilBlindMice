@@ -44,7 +44,10 @@ public class ChunkV2 : MonoBehaviour
 
         if (childChunkList.Count == 0)
         {
-            parent.childChunkList.Remove(this);
+            if (parent.gameObject != null)
+            {
+                parent.childChunkList.Remove(this);
+            }
             Destroy(gameObject);
             return;
         }
@@ -109,10 +112,6 @@ public class ChunkV2 : MonoBehaviour
             if (found == 0)
             {
                 safeSpawnIndex.Add(i);
-            }
-            else
-            {
-                Debug.Log("Fuck");
             }
         }
         return safeSpawnIndex;

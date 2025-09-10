@@ -31,11 +31,4 @@ public class ChunkConnectionPoint : MonoBehaviour
     {
         child = _child;
     }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + transform.right * 1.5f
-                + transform.up * -0.5f, transform.position + transform.right * 90);
-    }
 }
