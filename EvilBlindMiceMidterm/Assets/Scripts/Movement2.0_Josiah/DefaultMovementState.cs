@@ -148,7 +148,10 @@ public class DefaultMovementState : MovementState, IDebug
 
         if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
-            speed = speedWhileRotating;
+            if (!IsGrounded())
+            {
+                speed = speedWhileRotating;
+            }
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
@@ -162,6 +165,7 @@ public class DefaultMovementState : MovementState, IDebug
 
         Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
 
+        
         if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.up) < 5)
         { // player exited intersection going down
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
@@ -176,14 +180,18 @@ public class DefaultMovementState : MovementState, IDebug
         { // player exited intersection to the left
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
             playerMovement.RotateUprightWithGravity();
-        }else if (Vector3.Angle(exitDirection, playerMovement.gravityReference.up) < 5)
+        }
+        else if (Vector3.Angle(exitDirection, playerMovement.gravityReference.up) < 5)
         { // player exited intersection... up?
             playerMovement.SetGravityDirection(playerMovement.gravityReference.up, -playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
+        
 
             speed = PlayerStats.instance.GetSpeed();
     }
+
+
 
     // Unique Functions
 
