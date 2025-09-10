@@ -22,4 +22,19 @@ public class ButtonFunctions : MonoBehaviour
         Application.Quit();
     #endif
     }
+    public void Options()
+    {
+        GameManager.instance.menuActive.SetActive(false);
+        GameManager.instance.StateOptions();
+    }
+    public void Upgrades()
+    {
+        GameManager.instance.menuActive.SetActive(false);
+        GameManager.instance.StateUpgrades();
+    }
+    public void Back()
+    {
+        GameManager.instance.menuActive.SetActive(false);
+        GameManager.instance.Back();
+    }
 }
