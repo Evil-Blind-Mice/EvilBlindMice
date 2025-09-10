@@ -238,6 +238,10 @@ PrefabInstance:
       propertyPath: playerScript
       value: 
       objectReference: {fileID: 336477224}
+    - target: {fileID: 6458573381825443314, guid: 617a14d0392a0a444a1d0e7d158609d8, type: 3}
+      propertyPath: distanceTraveledText
+      value: 
+      objectReference: {fileID: 1133323999}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -312,6 +316,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
+--- !u!114 &1133323999 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5137829601196744473, guid: 617a14d0392a0a444a1d0e7d158609d8, type: 3}
+  m_PrefabInstance: {fileID: 870298714}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1148459229 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1258636601881541156, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
@@ -397,6 +412,10 @@ PrefabInstance:
       propertyPath: initialMaxHealth
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 5775820253294190197, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: distanceTraveledText
+      value: 
+      objectReference: {fileID: 1133323999}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

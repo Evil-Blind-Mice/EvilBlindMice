@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuUpgrades;
+    [SerializeField] TMP_Text distanceTraveledText;
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
@@ -108,6 +110,7 @@ public class GameManager : MonoBehaviour
     public void UpdateGameGoal(int _amount)
     {
         gameGoalCount += _amount;
+        distanceTraveledText.text = gameGoalCount.ToString("F0");
 
         if (gameGoalCount <= 0)
         {
