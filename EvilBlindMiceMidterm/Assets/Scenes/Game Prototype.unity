@@ -222,6 +222,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4798983329342937540, guid: 617a14d0392a0a444a1d0e7d158609d8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 73.571045
+      objectReference: {fileID: 0}
+    - target: {fileID: 4798983329342937540, guid: 617a14d0392a0a444a1d0e7d158609d8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50.99121
+      objectReference: {fileID: 0}
     - target: {fileID: 6243200634439694150, guid: 617a14d0392a0a444a1d0e7d158609d8, type: 3}
       propertyPath: m_FillAmount
       value: 0.066
@@ -304,6 +312,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
+--- !u!1 &1148459229 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1258636601881541156, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+  m_PrefabInstance: {fileID: 1532762856}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1148459236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148459229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fca249f4df3be34d8ff2a4af7b9df21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDamageReceiver
 --- !u!1001 &1532762856
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375,7 +400,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1258636601881541156, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1148459236}
   m_SourcePrefab: {fileID: 100100000, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
