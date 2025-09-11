@@ -58,6 +58,8 @@ public class WallRunMovementState : MovementState
 
     public override void OnUpdate(MoveInputStruct _input)
     {
+        base.OnUpdate(_input);
+
         playerVelocity = body.transform.forward * speed;
 
         body.linearVelocity = playerVelocity;
@@ -98,9 +100,9 @@ public class WallRunMovementState : MovementState
 
     }
 
-    public override void OnIntersectionExit(Intersection _intersection)
+    public override void OnIntersectionExit(Intersection _intersection, Vector3 _exitPoint)
     {
-        base.OnIntersectionExit(_intersection);
+        base.OnIntersectionExit(_intersection, _exitPoint);
 
         speed = PlayerStats.instance.GetSpeed();
 

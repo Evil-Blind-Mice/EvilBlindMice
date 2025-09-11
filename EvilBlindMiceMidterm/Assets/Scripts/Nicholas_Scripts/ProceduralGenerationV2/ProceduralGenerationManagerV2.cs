@@ -45,16 +45,19 @@ public class ProceduralGenerationManagerV2 : MonoBehaviour
         }
     }
 
-    public void GenerateNextChunkSet(ChunkV2 _chunkToSave, int _destroyDelay = 0)
+    public void GenerateNextChunkSet(ChunkV2 _chunkToSave, float _destroyDelay = 0)
     {
         StartCoroutine(GenerateNextChunkSetCouroutine(_chunkToSave, _destroyDelay));
     }
 
     //handle creation and destruction
-    private IEnumerator GenerateNextChunkSetCouroutine(ChunkV2 _chunkToSave, int _destroyDelay = 0)
+    private IEnumerator GenerateNextChunkSetCouroutine(ChunkV2 _chunkToSave, float _destroyDelay = 0)
     {
-        DestroyUnnessesaryChunks(_chunkToSave);
-        UpdateFirstChunk(_chunkToSave, _destroyDelay);
+        if (_chunkToSave != null)
+        {
+            DestroyUnnessesaryChunks(_chunkToSave);
+            UpdateFirstChunk(_chunkToSave, _destroyDelay);
+        }
         yield return new WaitForSeconds(0.1f);
         UpdateChunkIterations();
         FillInTheGaps();
@@ -78,9 +81,9 @@ public class ProceduralGenerationManagerV2 : MonoBehaviour
         currentChunk.DestroyChildChunks(childToSave);
     }
 
-    void UpdateFirstChunk(ChunkV2 newCurrentChunk, int _destroyDelay)
+    void UpdateFirstChunk(ChunkV2 newCurrentChunk, float _destroyDelay)
     {
-        Destroy(currentChunk.gameObject);
+        Destroy(currentChunk.gameObject, _destroyDelay);
         currentChunk = newCurrentChunk;
     }
 

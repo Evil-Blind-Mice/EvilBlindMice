@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
     public GameObject playerHealingFlash;
+    public GameObject playerSpeedBoostFlash;
+
 
     public GameObject player;
     public PlayerStats playerScript;
@@ -44,6 +47,7 @@ public class GameManager : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerStats>();
+
     }
 
     // Update is called once per frame
@@ -62,6 +66,7 @@ public class GameManager : MonoBehaviour
                 StateUnpause();
             }
         }
+         UpdatePlayerUI();
     }
 
     public void UpdatePlayerUI()
@@ -83,6 +88,12 @@ public class GameManager : MonoBehaviour
     {
         if (playerHealingFlash)
             StartCoroutine(Flash(playerHealingFlash, 0.1f));
+    }
+
+    public void FlashSpeedBoost()
+    {
+        if (playerSpeedBoostFlash)
+            StartCoroutine(Flash(playerSpeedBoostFlash, 1f));
     }
 
     public void StatePause()
@@ -138,7 +149,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuActive.SetActive(true);
     }
-
     public void Back()
     {
         Time.timeScale = 0;
@@ -147,7 +157,6 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         menuActive.SetActive(true);
     }
-
     IEnumerator Flash(GameObject _go, float _seconds)
     {
         _go.SetActive(true);

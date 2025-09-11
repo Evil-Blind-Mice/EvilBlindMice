@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ChunkConnectionPoint : MonoBehaviour
 {
-    [SerializeField] int destroyDelay = 0;
+    [SerializeField] float destroyDelay = 0.1f;
     [HideInInspector] public Quaternion rotation;
     [HideInInspector] public Vector3 position;
     [HideInInspector] public Vector3 forwardAxis;

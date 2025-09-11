@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
@@ -8,11 +9,13 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] int initialJumpForce = 15;
     [SerializeField] int initialMaxHealth;
     [SerializeField] int initialJumpMax = 1;
+    [SerializeField] TMP_Text distanceTraveledText;
     public int maxHealth;
     public int currentHealth;
     public float runSpeed;
     float jumpForce;
     int jumpMax;
+    public float distanceTraveled;
 
     SpeedState currentSpeedState;
     InvincibilityState currentInvincibilityState;
@@ -51,7 +54,9 @@ public class PlayerStats : MonoBehaviour
 
         currentSpeedState.Update(this, deltaSeconds, isPaused);
         currentInvincibilityState.Update(this, deltaSeconds, isPaused);
+        distanceTraveledText.text = GetDistanceTraveled().ToString("F0");
     }
+
 
 
 
@@ -132,16 +137,21 @@ public class PlayerStats : MonoBehaviour
         jumpMax += _modifier;
     }
 
+    public void AddDistanceTraveled(float _distanceTravel)
+    {
+        distanceTraveled += _distanceTravel;
+    }
+
 
 
     // GETTERS
-    
+
     public float GetSpeed() { return runSpeed; }
     public float GetJumpForce() { return jumpForce; }
     public int GetHealth() { return currentHealth; }
     public int GetMaxHealth() { return maxHealth; }
     public int GetJumpMax() { return jumpMax; }
-
+    public float GetDistanceTraveled() { return distanceTraveled; }
 
 
     // HELPERS

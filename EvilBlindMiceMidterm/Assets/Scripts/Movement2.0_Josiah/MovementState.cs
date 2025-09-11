@@ -1,3 +1,4 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 public abstract class MovementState : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public abstract class MovementState : MonoBehaviour
     protected bool isCurrentState = false;
     protected bool insideIntersection = false;
     protected Intersection currentIntersection;
-
+    Vector3 positionLastFrame;
 
 
     // Functions
@@ -20,7 +21,11 @@ public abstract class MovementState : MonoBehaviour
         isCurrentState = true;
     }
 
-    public abstract void OnUpdate(MoveInputStruct _input);
+    public virtual void OnUpdate(MoveInputStruct _input)
+    {
+        PlayerStats.instance.AddDistanceTraveled(Vector3.Dot((body.transform.position - positionLastFrame), playerMovement.gravityReference.forward));
+        positionLastFrame = body.transform.position;
+    }
 
     public virtual void OnExit()
     {
@@ -35,7 +40,7 @@ public abstract class MovementState : MonoBehaviour
 
     public virtual void OnInsideIntersection() { }
 
-    public virtual void OnIntersectionExit(Intersection _intersection)
+    public virtual void OnIntersectionExit(Intersection _intersection, Vector3 _exitPoint)
     {
         insideIntersection = false;
         currentIntersection = null;
@@ -52,6 +57,6 @@ public abstract class MovementState : MonoBehaviour
     {
         if (!isCurrentState) return;
         if (other.gameObject.tag == "Intersection")
-            OnIntersectionExit(other.GetComponent<Intersection>());
+            OnIntersectionExit(other.GetComponent<Intersection>(), other.ClosestPoint(body.transform.position));
     }
 }
