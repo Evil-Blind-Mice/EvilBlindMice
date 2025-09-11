@@ -11,8 +11,7 @@ public class SpawnPowerups : MonoBehaviour
     void Start()
     {
         indexToSpawn = Mathf.Clamp(indexToSpawn, 0, powerups.Count - 1);
-        powerUp = Instantiate(powerups[indexToSpawn], transform.position, Quaternion.identity);
-        powerUp.transform.localScale = new Vector3(3, 3, 3);
+        powerUp = Instantiate(powerups[indexToSpawn], transform.position, Quaternion.identity, gameObject.transform);
     }
 
     // Update is called once per frame

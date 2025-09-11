@@ -12,7 +12,7 @@ public class DefaultMovementState : MovementState, IDebug
     // [SerializeField] int speed = 15; replaced by player stats
     // [SerializeField] int jumpForce = 15; replaced by player stats
     // [SerializeField] int jumpMax = 1; replaced by player stats
-    [SerializeField] float speedWhileRotating = 30;
+    // [SerializeField] float speedWhileRotating = 30;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 0.35f;
