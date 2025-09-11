@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+
+    // This script is only for storage and manipulation of player stats and handling powerup states
+    // Anything else is outside the scope of PlayerStats
+    // Please do not create object references to gameObjects outside of the player prefab
+
     // VARIABLES
 
     [SerializeField] public int initialRunSpeed = 15;
     [SerializeField] int initialJumpForce = 15;
     [SerializeField] int initialMaxHealth;
     [SerializeField] int initialJumpMax = 1;
-    [SerializeField] TMP_Text distanceTraveledText;
     public int maxHealth;
     public int currentHealth;
     public float runSpeed;
@@ -56,7 +60,6 @@ public class PlayerStats : MonoBehaviour
 
         currentSpeedState.Update(this, deltaSeconds, isPaused);
         currentInvincibilityState.Update(this, deltaSeconds, isPaused);
-        distanceTraveledText.text = GetDistanceTraveled().ToString("F0");
     }
 
 

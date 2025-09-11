@@ -18,6 +18,10 @@ public class GameManager : MonoBehaviour
     public GameObject playerDamageFlash;
     public GameObject playerHealingFlash;
     public GameObject playerSpeedBoostFlash;
+    public TMP_Text qLeft;
+    public TMP_Text eRight;
+    [SerializeField] TMP_Text distanceTraveledText;
+
 
 
     public GameObject player;
@@ -28,6 +32,8 @@ public class GameManager : MonoBehaviour
     int gameGoalCount;
 
     float timeScaleOriginal;
+
+    TMP_Text lastText;
 
 
 
@@ -77,23 +83,26 @@ public class GameManager : MonoBehaviour
             float maxHealth = Mathf.Max(1, PlayerStats.instance.GetMaxHealth());
             playerHealthBar.fillAmount = currentHealth / maxHealth;
         }
+
+        if(distanceTraveledText != null && PlayerStats.instance != null)
+            distanceTraveledText.text = PlayerStats.instance.GetDistanceTraveled().ToString("F0");
     }
 
     public void FlashDamage()
     {
         if (playerDamageFlash)
-            StartCoroutine(Flash(playerDamageFlash, 0.1f));
+            StartCoroutine(Flash(playerDamageFlash, .7f));
     }
     public void FlashHeal()
     {
         if (playerHealingFlash)
-            StartCoroutine(Flash(playerHealingFlash, 0.1f));
+            StartCoroutine(Flash(playerHealingFlash, .7f));
     }
 
     public void FlashSpeedBoost()
     {
         if (playerSpeedBoostFlash)
-            StartCoroutine(Flash(playerSpeedBoostFlash, 1f));
+            StartCoroutine(Flash(playerSpeedBoostFlash, 2f));
     }
 
     public void StatePause()
@@ -156,6 +165,15 @@ public class GameManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         menuActive.SetActive(true);
+    }
+
+    public void IntersectionDirectionPromptLeft()
+    {
+            StartCoroutine(Flash(qLeft.gameObject, 1.2f)); 
+    }
+    public void IntersectionDirectionPromptRight()
+    {
+        StartCoroutine(Flash(eRight.gameObject, 1.2f));
     }
     IEnumerator Flash(GameObject _go, float _seconds)
     {
