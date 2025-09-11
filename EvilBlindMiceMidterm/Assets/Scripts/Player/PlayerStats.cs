@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
@@ -20,7 +21,8 @@ public class PlayerStats : MonoBehaviour
     SpeedState currentSpeedState;
     InvincibilityState currentInvincibilityState;
 
-    [HideInInspector] public int hasTripped = 0;
+    [HideInInspector] public int tripCounter = 0;
+    public bool hasTripped = false;
     public static PlayerStats instance { get; private set; }
 
 
@@ -79,6 +81,15 @@ public class PlayerStats : MonoBehaviour
             _durationSeconds = 0;
 
         currentInvincibilityState.RequestInvincibility(this, _durationSeconds);
+    }
+
+    public void RequestTripState(float _multiplier, int _durationSeconds)
+    {
+
+        if (_durationSeconds < 0)
+            _durationSeconds = 0;
+
+        currentSpeedState.RequestTrip(this, _multiplier, _durationSeconds);
     }
 
     public bool IsInvincible() { return currentInvincibilityState is InvincibilityOnState; }
@@ -180,7 +191,12 @@ public class PlayerStats : MonoBehaviour
         currentInvincibilityState = _next;
         currentInvincibilityState.Enter(this);
     }
-
+    void TransitionToTripState(SpeedState _next)
+    {
+        currentSpeedState.Exit(this);
+        currentSpeedState = _next;
+        currentSpeedState.Enter(this);
+    }
 
 
     // SPEED STATES
@@ -191,6 +207,7 @@ public class PlayerStats : MonoBehaviour
         public abstract void Exit(PlayerStats _stats);
         public abstract void Update(PlayerStats _stats, float _deltaSeconds, bool _isPaused);
         public abstract void RequestBoost(PlayerStats _stats, float _multiplier, int _durationSeconds);
+        public abstract void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds);
     }
 
     class NormalSpeedState : SpeedState
@@ -201,6 +218,10 @@ public class PlayerStats : MonoBehaviour
         public override void RequestBoost(PlayerStats _stats, float _multiplier, int _durationSeconds)
         {
             _stats.TransitionToSpeedState(new BoostedSpeedState(_multiplier, _durationSeconds, _stats.initialRunSpeed));
+        }
+        public override void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds)
+        {
+            _stats.TransitionToTripState(new TripState(_multiplier, _durationSeconds, _stats.initialRunSpeed));
         }
     }
 
@@ -242,9 +263,53 @@ public class PlayerStats : MonoBehaviour
                 remainingSeconds = Mathf.Max(remainingSeconds, _newDurationSeconds);
             }
         }
+        public override void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds) { }
     }
 
+    class TripState : SpeedState
+    {
+        float multiplier;
+        float remainingSeconds;
+        readonly float baseRunSpeed;
 
+        public TripState(float _multiplier, int _durationSeconds, float _baseRunSpeed)
+        {
+            multiplier = _multiplier;
+            remainingSeconds = Mathf.Max(0, _durationSeconds);
+            baseRunSpeed = _baseRunSpeed;
+        }
+        public override void Enter(PlayerStats _stats) { _stats.runSpeed = baseRunSpeed * multiplier; }
+        public override void Exit(PlayerStats _stats) { _stats.runSpeed = baseRunSpeed; }
+        public override void Update(PlayerStats _stats, float _deltaSeconds, bool _isPaused)
+        {
+            if (_isPaused) return;
+
+            remainingSeconds -= _deltaSeconds;
+
+            if (remainingSeconds <= 0f)
+                _stats.TransitionToSpeedState(new NormalSpeedState());
+        }
+        
+        public override void RequestBoost(PlayerStats _stats, float _newMultiplier, int _newDurationSeconds)
+        {
+            
+        }
+        public override void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds) {
+            if (!_stats.hasTripped)
+            {
+                _stats.hasTripped = !_stats.hasTripped;
+                multiplier = 0.5f;
+                remainingSeconds = Mathf.Max(remainingSeconds, _durationSeconds);
+                _stats.runSpeed = baseRunSpeed * multiplier;
+            }
+            else
+            {
+                _stats.currentHealth = 0;
+                multiplier = 0;
+                _stats.runSpeed = 0;
+            }
+        }
+    }
 
     // INVINCIBILITY STATES
 
@@ -287,6 +352,6 @@ public class PlayerStats : MonoBehaviour
             if (_durationSeconds > remainingSeconds)
                 remainingSeconds = _durationSeconds;
         }
-        
+
     }
 }
