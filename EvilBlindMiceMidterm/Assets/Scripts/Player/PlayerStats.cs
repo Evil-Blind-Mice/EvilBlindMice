@@ -67,7 +67,7 @@ public class PlayerStats : MonoBehaviour
 
     // REQUEST API
 
-    public void RequestSpeedBoost(float _multiplier, int _durationSeconds)
+    public void RequestSpeedBoost(float _multiplier, float _durationSeconds)
     {
         if (_multiplier < 1f)
             _multiplier = 1f;
@@ -218,7 +218,7 @@ public class PlayerStats : MonoBehaviour
         public override void Enter(PlayerStats _stats) { _stats.runSpeed = _stats.initialRunSpeed; }
         public override void Exit(PlayerStats _stats) { }
         public override void Update(PlayerStats _stats, float _deltaSeconds, bool _isPaused) { }
-        public override void RequestBoost(PlayerStats _stats, float _multiplier, int _durationSeconds)
+        public override void RequestBoost(PlayerStats _stats, float _multiplier, float _durationSeconds)
         {
             _stats.TransitionToSpeedState(new BoostedSpeedState(_multiplier, _durationSeconds, _stats.initialRunSpeed));
         }
@@ -234,7 +234,7 @@ public class PlayerStats : MonoBehaviour
         float remainingSeconds;
         readonly float baseRunSpeed;
 
-        public BoostedSpeedState(float _multiplier, int _durationSeconds, float _baseRunSpeed)
+        public BoostedSpeedState(float _multiplier, float _durationSeconds, float _baseRunSpeed)
         {
             multiplier = Mathf.Max(1f, _multiplier);
             remainingSeconds = Mathf.Max(0, _durationSeconds);
@@ -253,7 +253,7 @@ public class PlayerStats : MonoBehaviour
                 _stats.TransitionToSpeedState(new NormalSpeedState());
         }
 
-        public override void RequestBoost(PlayerStats _stats, float _newMultiplier, int _newDurationSeconds)
+        public override void RequestBoost(PlayerStats _stats, float _newMultiplier, float _newDurationSeconds)
         {
             if (_newMultiplier > multiplier)
             {

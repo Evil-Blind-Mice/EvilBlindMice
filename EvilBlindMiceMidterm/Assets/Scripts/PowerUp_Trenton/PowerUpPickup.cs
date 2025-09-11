@@ -3,6 +3,12 @@ using System.Collections;
 
 public class PowerUpPickup : MonoBehaviour
 {
+    public static PowerUpPickup instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     public enum PickUpType
     {
         Heal, TimeSlow, Invincibility, SpeedBoost, Obstacle
@@ -23,7 +29,7 @@ public class PowerUpPickup : MonoBehaviour
 
     [Header("Speed Boost")]
     [SerializeField, Min(1)] float speedMultiplier;
-    [SerializeField] int speedDurationSeconds;
+    [SerializeField] public float speedDurationSeconds;
 
     [Header("Obstacle")]
     [SerializeField] float speedDivider;
