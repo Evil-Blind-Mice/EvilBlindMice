@@ -62,6 +62,7 @@ public class PowerUpPickup : MonoBehaviour
 
             case PickUpType.SpeedBoost:
                 stats.RequestSpeedBoost(speedMultiplier, speedDurationSeconds);
+                GameManager.instance?.FlashSpeedBoost(speedDurationSeconds);
                 break;
         }
 
