@@ -32,8 +32,9 @@ public class DefaultMovementState : MovementState, IDebug
     GameObject currentWall;
     float currentWallAngle;
 
-    float speed;
+    //float speed;
     float distanceToGround;
+    float intersectionSpeed;
 
 
 
@@ -41,8 +42,6 @@ public class DefaultMovementState : MovementState, IDebug
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
-        speed = PlayerStats.instance.GetSpeed();
-
         base.OnEnter(_playerMovement, _body);
         playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
@@ -57,8 +56,10 @@ public class DefaultMovementState : MovementState, IDebug
 
         if (playerMovement.currentIntersection != null) OnInsideIntersection();
 
+        float baseSpeed = playerMovement.currentIntersection == null ? PlayerStats.instance.GetSpeed() : intersectionSpeed;
+
         // calculate playerVelocity
-        leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
+        leftRightVelocity = _input.leftRightAxis * body.transform.right * baseSpeed;
 
         // handle gravity and jumping
         if (IsGrounded())
@@ -108,7 +109,7 @@ public class DefaultMovementState : MovementState, IDebug
             leftRightVelocity // velocity determined by player input
             + externalForceVelocity // velocity from previous states or knockback
             - playerMovement.gravityReference.up * currentGravityVelocity // velocity from jumping or gravity
-            + transform.forward * speed; // constant forward velocity
+            + transform.forward * baseSpeed; // constant forward velocity
 
         // check for change of state conditions
         StateCheck(_input);
@@ -144,8 +145,6 @@ public class DefaultMovementState : MovementState, IDebug
 
     public override void OnExit()
     {
-        speed = PlayerStats.instance.GetSpeed();
-
         base.OnExit();
         externalForceVelocity = Vector3.zero;
     }
@@ -154,13 +153,9 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionEnter(_intersection);
 
-        
-
         if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
-            speed = 15 + (float)(3 * Math.PI * distanceToGround);
-            Debug.Log(speed);
-
+            intersectionSpeed = 15 + (float)(3 * Math.PI * distanceToGround);
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
@@ -193,8 +188,6 @@ public class DefaultMovementState : MovementState, IDebug
             playerMovement.SetGravityDirection(playerMovement.gravityReference.up, -playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
-        
-        speed = PlayerStats.instance.GetSpeed();
     }
 
 
