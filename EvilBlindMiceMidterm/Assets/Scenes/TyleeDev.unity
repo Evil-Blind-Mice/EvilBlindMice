@@ -169,11 +169,12 @@ MonoBehaviour:
   menuLose: {fileID: 0}
   menuOptions: {fileID: 0}
   menuUpgrades: {fileID: 0}
+  distanceTraveledText: {fileID: 0}
   playerHealthBar: {fileID: 0}
   playerDamageFlash: {fileID: 2034531379}
   playerHealingFlash: {fileID: 1155548883}
   player: {fileID: 1072972241}
-  playerScript: {fileID: 2037041455}
+  playerScript: {fileID: 0}
   isPaused: 0
 --- !u!1001 &172141598
 PrefabInstance:
@@ -972,17 +973,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5821665283218922118, guid: 28d0d360b4361f9448f335bee3b205a0, type: 3}
   m_PrefabInstance: {fileID: 332095179735729312}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2037041455 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 261507101984248253, guid: 28d0d360b4361f9448f335bee3b205a0, type: 3}
-  m_PrefabInstance: {fileID: 332095179735729312}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1072972241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08d3546b1959d49429b701d11645d906, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::playerController
 --- !u!1001 &332095179735729312
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1082,7 +1072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6673993748746358521, guid: 885564ab25ddf244480629912ab29807, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8791978616780444289, guid: 885564ab25ddf244480629912ab29807, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1144,6 +1134,10 @@ PrefabInstance:
     - target: {fileID: 935497852919590158, guid: ebb8b55bc4ca5244faf1ffb5778bef4c, type: 3}
       propertyPath: m_Name
       value: Enemy 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 935497852919590158, guid: ebb8b55bc4ca5244faf1ffb5778bef4c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5191915987325642162, guid: ebb8b55bc4ca5244faf1ffb5778bef4c, type: 3}
       propertyPath: m_LocalPosition.x
