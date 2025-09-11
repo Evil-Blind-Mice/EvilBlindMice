@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2222196914199323878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2560957215687811888}
+  - component: {fileID: 2348671236724832168}
+  m_Layer: 0
+  m_Name: GenerationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2560957215687811888
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2222196914199323878}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2348671236724832168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2222196914199323878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5043f49cd77186242a45e4f590788a1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProceduralGenerationManagerV2
+  currentChunk: {fileID: 0}
+  initialChunkPrefab: {fileID: 6744687728859806560, guid: d3ba24c29c86eaa409f13465a2bc9d22, type: 3}
+  availableChunkPool:
+  - {fileID: 4125763818362485781, guid: 0f939092eaff2bd47a2c02b2c1ee8920, type: 3}
+  - {fileID: 6744687728859806560, guid: d3ba24c29c86eaa409f13465a2bc9d22, type: 3}
+  - {fileID: 6633068555621888376, guid: 2d52e5b0f9033594991a59ae4585ce3d, type: 3}
+  - {fileID: 3563026866682210308, guid: f8aa5bc5f159dbf408b1d82e79f6b8cc, type: 3}
+  - {fileID: 4113391028015115096, guid: 55643a9ebb0c52b47b324cff7aaf662f, type: 3}
+  - {fileID: 6633068555621888376, guid: 8d0d4d3d03404784cad52f46cfb2d516, type: 3}
+  - {fileID: 3563026866682210308, guid: 20db173ce9847f84b892ed1049eefa77, type: 3}
+  - {fileID: 4113391028015115096, guid: fcdd4391b00b3f54ca7fb8cc09db6eaf, type: 3}
+  generationStartingPosition: {x: 0, y: 0, z: 0}
+  generationStartingRotation: {x: 0, y: -0.70710677, z: 0, w: 0.70710677}
+  generationIterations: 1
