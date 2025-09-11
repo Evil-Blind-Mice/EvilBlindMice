@@ -209,8 +209,8 @@ public class PlayerStats : MonoBehaviour
         public abstract void Enter(PlayerStats _stats);
         public abstract void Exit(PlayerStats _stats);
         public abstract void Update(PlayerStats _stats, float _deltaSeconds, bool _isPaused);
-        public abstract void RequestBoost(PlayerStats _stats, float _multiplier, int _durationSeconds);
-        public abstract void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds);
+        public abstract void RequestBoost(PlayerStats _stats, float _multiplier, float _durationSeconds);
+        public abstract void RequestTrip(PlayerStats _stats, float _multiplier, float _durationSeconds);
     }
 
     class NormalSpeedState : SpeedState
@@ -222,7 +222,7 @@ public class PlayerStats : MonoBehaviour
         {
             _stats.TransitionToSpeedState(new BoostedSpeedState(_multiplier, _durationSeconds, _stats.initialRunSpeed));
         }
-        public override void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds)
+        public override void RequestTrip(PlayerStats _stats, float _multiplier, float _durationSeconds)
         {
             _stats.TransitionToTripState(new TripState(_multiplier, _durationSeconds, _stats.initialRunSpeed));
         }
@@ -266,7 +266,7 @@ public class PlayerStats : MonoBehaviour
                 remainingSeconds = Mathf.Max(remainingSeconds, _newDurationSeconds);
             }
         }
-        public override void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds) { }
+        public override void RequestTrip(PlayerStats _stats, float _multiplier, float _durationSeconds) { }
     }
 
     class TripState : SpeedState
@@ -275,7 +275,7 @@ public class PlayerStats : MonoBehaviour
         float remainingSeconds;
         readonly float baseRunSpeed;
 
-        public TripState(float _multiplier, int _durationSeconds, float _baseRunSpeed)
+        public TripState(float _multiplier, float _durationSeconds, float _baseRunSpeed)
         {
             multiplier = _multiplier;
             remainingSeconds = Mathf.Max(0, _durationSeconds);
@@ -298,11 +298,11 @@ public class PlayerStats : MonoBehaviour
 
         }
 
-        public override void RequestBoost(PlayerStats _stats, float _newMultiplier, int _newDurationSeconds)
+        public override void RequestBoost(PlayerStats _stats, float _newMultiplier, float _newDurationSeconds)
         {
 
         }
-        public override void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds)
+        public override void RequestTrip(PlayerStats _stats, float _multiplier, float _durationSeconds)
         {
             if (!_stats.hasTripped)
             {
