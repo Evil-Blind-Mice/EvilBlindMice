@@ -511,7 +511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   initialRunSpeed: 15
   initialJumpForce: 15
-  initialMaxHealth: 0
+  initialMaxHealth: 5
   initialJumpMax: 1
   maxHealth: 0
   currentHealth: 0
