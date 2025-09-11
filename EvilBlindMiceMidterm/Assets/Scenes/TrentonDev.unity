@@ -1711,7 +1711,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.75
+      value: -57.25
       objectReference: {fileID: 0}
     - target: {fileID: 5147924381228052834, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1760,6 +1760,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1258636601881541156, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       insertIndex: 4
       addedObject: {fileID: 162204185}
+    - targetCorrespondingSourceObject: {fileID: 357590355980286318, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 980572035}
   m_SourcePrefab: {fileID: 100100000, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
 --- !u!1 &874170697
 GameObject:
@@ -2043,6 +2046,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 951596540}
   m_CullTransparentMesh: 1
+--- !u!1 &980572029 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 357590355980286318, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+  m_PrefabInstance: {fileID: 843777619}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &980572035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980572029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47eac2e979f591343b08b13763296ab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShooting
+  ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 1982
+  shootDamage: 0
+  fireRate: 0.25
+  shootDistance: 15
 --- !u!1 &1123433192
 GameObject:
   m_ObjectHideFlags: 0
