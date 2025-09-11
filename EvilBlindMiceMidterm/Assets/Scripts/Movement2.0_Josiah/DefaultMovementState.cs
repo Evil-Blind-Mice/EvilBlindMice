@@ -31,11 +31,13 @@ public class DefaultMovementState : MovementState, IDebug
     // variables stored for debug
     GameObject currentWall;
     float currentWallAngle;
-
-    //float speed;
     float distanceToGround;
     float intersectionSpeed;
 
+    private void Start()
+    {
+        intersectionSpeed = PlayerStats.instance.GetSpeed();
+    }
 
     // Overridden Functions
 
