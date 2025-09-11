@@ -15,11 +15,12 @@ public class DefaultMovementState : MovementState, IDebug
     [SerializeField] float speedWhileRotating = 30;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
-    [SerializeField] float groundedDistance = 0.1f;
+    [SerializeField] float groundedDistance = 0.25f;
     [SerializeField] float wallRunDistance = 0.6f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
     [SerializeField] float wallRunCastOffset = 0.5f;
+
 
     Vector3 leftRightVelocity;
     Vector3 externalForceVelocity;
@@ -63,7 +64,10 @@ public class DefaultMovementState : MovementState, IDebug
         if (IsGrounded())
         { // on the ground
             jumpCount = 0;
-            currentGravityVelocity = 0;
+            if (distanceToGround < groundedDistance / 2)
+                currentGravityVelocity = 1;
+            else
+                currentGravityVelocity = 0;
         }
         else
         { // off of the ground
@@ -116,7 +120,8 @@ public class DefaultMovementState : MovementState, IDebug
 
         if (currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
         {
-            if(Input.GetButtonDown("ChangeDirectionRight"))
+            GameManager.instance.IntersectionDirectionPromptRight();
+            if (Input.GetButtonDown("ChangeDirectionRight"))
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
@@ -126,6 +131,7 @@ public class DefaultMovementState : MovementState, IDebug
         }
         if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
         {
+            GameManager.instance.IntersectionDirectionPromptLeft();
             if (Input.GetButtonDown("ChangeDirectionLeft"))
             {
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
@@ -148,10 +154,13 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionEnter(_intersection);
 
-        speed = PlayerStats.instance.GetSpeed() + distanceToGround;
+        
 
         if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
+            speed = 15 + (float)(3 * Math.PI * distanceToGround);
+            Debug.Log(speed);
+
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
@@ -162,10 +171,8 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionExit(_intersection, _exitPoint);
 
-
         Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
 
-        
         if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.up) < 5)
         { // player exited intersection going down
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
@@ -187,8 +194,7 @@ public class DefaultMovementState : MovementState, IDebug
             playerMovement.RotateUprightWithGravity();
         }
         
-
-            speed = PlayerStats.instance.GetSpeed();
+        speed = PlayerStats.instance.GetSpeed();
     }
 
 
@@ -197,16 +203,20 @@ public class DefaultMovementState : MovementState, IDebug
 
     bool IsGrounded()
     {
-        Debug.DrawRay(transform.position, -transform.up * groundedDistance, Color.blue);
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -transform.up, out hit, groundedDistance, groundLayers) && currentGravityVelocity >= 0)
+        if (Physics.Raycast(transform.position - (transform.forward * 0.25f), -transform.up, out hit, 100, groundLayers) && currentGravityVelocity >= 0)
         {
+            Debug.DrawRay(transform.position - (transform.forward * 0.25f), -transform.up * distanceToGround, Color.blue);
             distanceToGround = Vector3.Distance(transform.position, hit.point);
-            return true;
+
+            if (distanceToGround < groundedDistance)
+                return true;
+            else
+                return false;
         }
         else
         {
-            distanceToGround = 0;
+            //distanceToGround = 0;
             return false;
         }
     }
