@@ -158,7 +158,7 @@ public class DefaultMovementState : MovementState, IDebug
 
         if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
-            speed = PlayerStats.instance.GetSpeed() + (float)(3 * Math.PI * distanceToGround);
+            speed = 15 + (float)(3 * Math.PI * distanceToGround);
             Debug.Log(speed);
 
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
