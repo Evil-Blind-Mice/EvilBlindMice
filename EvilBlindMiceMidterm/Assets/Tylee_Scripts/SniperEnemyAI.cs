@@ -75,7 +75,8 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     FaceTarget();
-                    //gameObject.transform.GetChild(0).transform.localScale = new Vector3(0, , 0);
+                    gameObject.transform.GetChild(0).transform.localScale =
+                    new Vector3(0.1f, Vector3.Distance(GameManager.instance.player.transform.position, gameObject.transform.position), 0.1f);
                 }
 
                 if (shootTimer >= shootRate)
