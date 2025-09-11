@@ -2462,7 +2462,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2222196914199323878, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2348671236724832168, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
       propertyPath: generationStartingRotation.w
@@ -2747,9 +2747,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 357590355980286318, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: m_Name
+      value: Main Camera / Shooting
+      objectReference: {fileID: 0}
     - target: {fileID: 766139465414336596, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 987724544963863091, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
+      propertyPath: shootDistance
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 3523729438402077618, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: groundedDistance
@@ -2805,7 +2813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5775820253294190197, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: initialJumpForce
-      value: 30
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8252001650863581247, guid: 10ab3d0a6e34f45438c56b87fc0c4bb2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4310,7 +4318,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1837067126
 Transform:
   m_ObjectHideFlags: 0
