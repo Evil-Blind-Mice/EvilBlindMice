@@ -16,10 +16,15 @@ public class TripObstacle : MonoBehaviour
     {
         if (other.CompareTag("Player") && tripObstacle)
         {
-            PlayerStats.hasTripped++;
-            PlayerStats.runSpeed = PlayerStats.runSpeed / 2; 
-            resetStats();
-            
+            PlayerStats.tripCounter++;
+            PlayerStats.runSpeed = PlayerStats.runSpeed / 2;
+            StartCoroutine(resetStats());
+            if (PlayerStats.tripCounter > 1)
+            {
+                PlayerStats.runSpeed = 0;
+                PlayerStats.currentHealth = 0;
+            }
+
             Destroy(gameObject);
         }
 
@@ -28,19 +33,22 @@ public class TripObstacle : MonoBehaviour
             PlayerStats.runSpeed = 0;
             PlayerStats.currentHealth = 0;
             Destroy(gameObject);
+            GameManager.instance.YouLose();
         }
     }
 
+    public void RequestSpeedBoost(float _multiplier, int _durationSeconds)
+    {
+        if (_multiplier < 1f)
+            _multiplier = 1f;
+
+        if (_durationSeconds < 0)
+            _durationSeconds = 0;
+
+    }
     IEnumerator resetStats()
     {
-        if (PlayerStats.hasTripped > 1)
-        {
-            PlayerStats.runSpeed = 0;
-            PlayerStats.currentHealth = 0;
-        }
-        else { 
         yield return new WaitForSeconds(2f);
-            PlayerStats.runSpeed = PlayerStats.initialRunSpeed;
-        }
+        PlayerStats.runSpeed = PlayerStats.initialRunSpeed;
     }
 }
