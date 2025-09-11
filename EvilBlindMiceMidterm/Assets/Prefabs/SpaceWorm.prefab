@@ -187,7 +187,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6876360725901388731}
-  - component: {fileID: -4107411980319887904}
   - component: {fileID: 3763287572466809216}
   - component: {fileID: -6391658167134274454}
   - component: {fileID: 2545854355944920439}
@@ -219,22 +218,6 @@ Transform:
   - {fileID: 5785104785115853318}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-4107411980319887904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5293540621799867914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b6b54ea54e0cf446a195cd33d7f34d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TripObstacle
-  tripObstacle: 1
-  killObstacle: 0
-  player: {fileID: 0}
-  PlayerStats: {fileID: 0}
 --- !u!114 &3763287572466809216
 MonoBehaviour:
   m_ObjectHideFlags: 0
