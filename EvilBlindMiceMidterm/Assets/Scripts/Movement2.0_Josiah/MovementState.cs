@@ -1,4 +1,3 @@
-using UnityEditor.Rendering;
 using UnityEngine;
 public abstract class MovementState : MonoBehaviour
 {
@@ -8,7 +7,6 @@ public abstract class MovementState : MonoBehaviour
     protected Rigidbody body;
     protected bool isCurrentState = false;
     protected bool insideIntersection = false;
-    protected Intersection currentIntersection;
     Vector3 positionLastFrame;
 
 
@@ -35,7 +33,7 @@ public abstract class MovementState : MonoBehaviour
     public virtual void OnIntersectionEnter(Intersection _intersection)
     {
         insideIntersection = true;
-        currentIntersection = _intersection;
+        playerMovement.currentIntersection = _intersection;
     }
 
     public virtual void OnInsideIntersection() { }
@@ -43,7 +41,7 @@ public abstract class MovementState : MonoBehaviour
     public virtual void OnIntersectionExit(Intersection _intersection, Vector3 _exitPoint)
     {
         insideIntersection = false;
-        currentIntersection = null;
+        playerMovement.currentIntersection = null;
     }
 
     private void OnTriggerEnter(Collider other)
