@@ -5780,6 +5780,7 @@ MonoBehaviour:
   playerSpeedBoostFlash: {fileID: 4160708222602122295}
   qLeft: {fileID: 8436948876581713839}
   eRight: {fileID: 634555198485895659}
+  distanceTraveledText: {fileID: 5137829601196744473}
   player: {fileID: 0}
   playerScript: {fileID: 0}
   isPaused: 0
