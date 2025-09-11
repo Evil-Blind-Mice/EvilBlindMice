@@ -12,10 +12,10 @@ public class DefaultMovementState : MovementState, IDebug
     // [SerializeField] int speed = 15; replaced by player stats
     // [SerializeField] int jumpForce = 15; replaced by player stats
     // [SerializeField] int jumpMax = 1; replaced by player stats
-    [SerializeField] float speedWhileRotating = 30;
+    // [SerializeField] float speedWhileRotating = 30;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
-    [SerializeField] float groundedDistance = 0.25f;
+    [SerializeField] float groundedDistance = 0.35f;
     [SerializeField] float wallRunDistance = 0.6f;
     [SerializeField] LayerMask groundLayers;
     [SerializeField] float wallRunCooldown = 0.25f;
@@ -27,13 +27,15 @@ public class DefaultMovementState : MovementState, IDebug
     int jumpCount;
     float currentGravityVelocity;
     float wallRunCountdown;
+    float distanceToGround;
+    float intersectionSpeed;
+    float baseSpeed;
 
     // variables stored for debug
     GameObject currentWall;
     float currentWallAngle;
-    float distanceToGround;
-    float intersectionSpeed;
-    float baseSpeed;
+    string floorName;
+   
 
     private void Start()
     {
@@ -61,6 +63,7 @@ public class DefaultMovementState : MovementState, IDebug
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * baseSpeed;
 
+
         // handle gravity and jumping
         if (IsGrounded())
         { // on the ground
@@ -77,7 +80,7 @@ public class DefaultMovementState : MovementState, IDebug
             currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
             if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
-            // if the player reorients mid-air, they go back to world space up
+            // if the player reorients mid-air, the up direction is inverted
             if (_input.shiftPressed && playerMovement.isUpright)
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.forward, -playerMovement.gravityReference.up);
@@ -157,9 +160,11 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionEnter(_intersection);
 
+        float speedModifier = 6.5f;
+
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
-            intersectionSpeed = 15 + (float)(3 * Math.PI * distanceToGround);
+            intersectionSpeed = (float)(4 * 0.785f * Mathf.Sqrt(distanceToGround) * speedModifier);
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
@@ -172,6 +177,7 @@ public class DefaultMovementState : MovementState, IDebug
 
         Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
 
+        
         if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.up) < 5)
         { // player exited intersection going down
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
@@ -192,6 +198,7 @@ public class DefaultMovementState : MovementState, IDebug
             playerMovement.SetGravityDirection(playerMovement.gravityReference.up, -playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
+        
     }
 
 
@@ -201,19 +208,19 @@ public class DefaultMovementState : MovementState, IDebug
     bool IsGrounded()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position - (transform.forward * 0.25f), -transform.up, out hit, 50, groundLayers) && currentGravityVelocity >= 0)
+        if (Physics.Raycast(transform.position - (transform.forward * 0.25f), -playerMovement.gravityReference.up, out hit, 100, groundLayers))
         {
-            Debug.DrawRay(transform.position - (transform.forward * 0.25f), -transform.up * distanceToGround, Color.blue);
+            Debug.DrawRay(transform.position - (transform.forward * 0.25f), -playerMovement.gravityReference.up * distanceToGround, Color.blue);
             distanceToGround = Vector3.Distance(transform.position, hit.point);
+            floorName = hit.collider.name;
 
-            if (distanceToGround < groundedDistance)
+            if (distanceToGround < groundedDistance && currentGravityVelocity >= 0)
                 return true;
             else
                 return false;
         }
         else
         {
-            //distanceToGround = 0;
             return false;
         }
     }
@@ -258,7 +265,8 @@ public class DefaultMovementState : MovementState, IDebug
             currentWall != null ? "Wall Check hit: " + currentWall.name : "Wall Check hit: " + "nothing",
             "Angle between wall normal and up: " + currentWallAngle,
             "Distance to ground: " + distanceToGround,
-            "Distance Travelled: " + PlayerStats.instance.GetDistanceTraveled()
+            "Distance Travelled: " + PlayerStats.instance.GetDistanceTraveled(),
+            "Current Ground Hit: " + floorName
         );
     }
 }

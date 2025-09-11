@@ -99,10 +99,10 @@ public class GameManager : MonoBehaviour
             StartCoroutine(Flash(playerHealingFlash, .7f));
     }
 
-    public void FlashSpeedBoost()
+    public void FlashSpeedBoost(float _duration)
     {
         if (playerSpeedBoostFlash)
-            StartCoroutine(Flash(playerSpeedBoostFlash,PowerUpPickup.instance.speedDurationSeconds));
+            StartCoroutine(Flash(playerSpeedBoostFlash, _duration));
     }
 
     public void StatePause()
@@ -178,7 +178,7 @@ public class GameManager : MonoBehaviour
     IEnumerator Flash(GameObject _go, float _seconds)
     {
         _go.SetActive(true);
-        yield return new WaitForSecondsRealtime(_seconds);
+        yield return new WaitForSecondsRealtime(Mathf.Max(0f, _seconds));
         _go.SetActive(false);
     }
 }

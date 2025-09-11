@@ -5,12 +5,13 @@ public class SpawnPowerups : MonoBehaviour
 {
     [SerializeField] List<GameObject> powerups;
     [SerializeField] int indexToSpawn;
+    GameObject powerUp;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         indexToSpawn = Mathf.Clamp(indexToSpawn, 0, powerups.Count - 1);
-        Instantiate(powerups[indexToSpawn], transform.position, Quaternion.identity);
+        powerUp = Instantiate(powerups[indexToSpawn], transform.position, Quaternion.identity, gameObject.transform);
     }
 
     // Update is called once per frame
