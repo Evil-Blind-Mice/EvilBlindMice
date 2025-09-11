@@ -19,8 +19,13 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int FOV;
 
+    [SerializeField] GameObject shootLine;
     [SerializeField] GameObject bullet;
     [SerializeField] float shootRate;
+
+    [SerializeField] Material preparingShot;
+    [SerializeField] Material firedShot;
+    [SerializeField] Material reloadShot;
 
     Color originalColor;
 
@@ -31,6 +36,8 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
     float angleToPlayer;
 
     bool playerInTrigger;
+
+    bool hasShot;
 
     bool isBlue;
 
@@ -54,9 +61,21 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
 
         shootTimer += Time.deltaTime;
 
-        if (playerInTrigger && CanSeePlayer())
+        if (shootTimer > shootRate)
         {
+            shootLine.GetComponent<Renderer>().material = preparingShot;
+            shootTimer = 0;
+        }
 
+        if (hasShot)
+        {
+            ReloadSniper();
+        }
+
+        if (playerInTrigger)
+        {
+            if (CanSeePlayer()) { }
+            UpdateSniperLine();
         }
     }
     bool CanSeePlayer()
@@ -75,13 +94,12 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     FaceTarget();
-                    gameObject.transform.GetChild(0).transform.localScale =
-                    new Vector3(0.1f, Vector3.Distance(GameManager.instance.player.transform.position, gameObject.transform.position), 0.1f);
                 }
 
                 if (shootTimer >= shootRate)
                 {
                     Snipe();
+                    hasShot = true;
                 }
 
                 return true;
@@ -89,10 +107,34 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
         }
         return false;
     }
+
+    IEnumerator ReloadSniper()
+    {
+        shootLine.GetComponent<Renderer>().material = reloadShot;
+        yield return new WaitForSeconds(0.1f);
+        shootLine.GetComponent<Renderer>().material = preparingShot;
+    }
+
+    void UpdateSniperLine()
+    {
+
+        gameObject.transform.GetChild(0).transform.localScale =
+        new Vector3(0.1f, Vector3.Distance(GameManager.instance.player.transform.position, gameObject.transform.position) / 5, 0.1f);
+
+        gameObject.transform.GetChild(0).transform.localPosition =
+        new Vector3(0, 0.75f, (Vector3.Distance(GameManager.instance.player.transform.position, gameObject.transform.position) / 5) + 0.5f);
+    }
+
     void FaceTarget()
     {
         Quaternion rot = Quaternion.LookRotation(playerDirection);
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
+    }
+
+    public void OnTriggerStay(Collider _other)
+    {
+        if (_other.CompareTag("Player"))
+            playerInTrigger = true;
     }
 
     private void OnTriggerEnter(Collider _other)
@@ -109,8 +151,7 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
 
     void Snipe()
     {
-        shootTimer = 0;
-        Instantiate(bullet, shootPosition.position, transform.rotation);
+        shootLine.GetComponent<Renderer>().material = firedShot;
     }
 
     public void TakeDamage(int _amount)

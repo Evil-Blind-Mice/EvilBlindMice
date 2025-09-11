@@ -214,11 +214,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3205967534994611179, guid: 0e8913747e7c4bb40a44fb6127d76b5c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3205967534994611179, guid: 0e8913747e7c4bb40a44fb6127d76b5c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3205967534994611179, guid: 0e8913747e7c4bb40a44fb6127d76b5c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -804,6 +804,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebb8b55bc4ca5244faf1ffb5778bef4c, type: 3}
+--- !u!1 &1995252404 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2600197996759489832, guid: 0e8913747e7c4bb40a44fb6127d76b5c, type: 3}
+  m_PrefabInstance: {fileID: 470061560}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2037041451 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5821665283218922118, guid: 28d0d360b4361f9448f335bee3b205a0, type: 3}
@@ -831,15 +836,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5821665283218922118, guid: 28d0d360b4361f9448f335bee3b205a0, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.84
+      value: 1.06
       objectReference: {fileID: 0}
     - target: {fileID: 5821665283218922118, guid: 28d0d360b4361f9448f335bee3b205a0, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.84
+      value: 1.06
       objectReference: {fileID: 0}
     - target: {fileID: 5821665283218922118, guid: 28d0d360b4361f9448f335bee3b205a0, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.84
+      value: 1.06
       objectReference: {fileID: 0}
     - target: {fileID: 5821665283218922118, guid: 28d0d360b4361f9448f335bee3b205a0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1129,9 +1134,13 @@ MonoBehaviour:
   shieldHealth: 0
   health: 3
   faceTargetSpeed: 8
-  FOV: 90
+  FOV: 180
+  shootLine: {fileID: 1995252404}
   bullet: {fileID: 486650950796547754, guid: a97fb25af1bbba342a5facf6762c451f, type: 3}
-  shootRate: 1
+  shootRate: 5
+  preparingShot: {fileID: 2100000, guid: d6ae972a0f6faf141a814b2cf4b6aea6, type: 2}
+  firedShot: {fileID: 2100000, guid: 634c07b6687375e4bb4ed7d094de1fff, type: 2}
+  reloadShot: {fileID: 2100000, guid: d1a75a6bb52420b498a20e1f81da56ef, type: 2}
 --- !u!4 &7807783769802580024 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8324321285598014131, guid: 859c5524b2f1e30449807f080336aa5b, type: 3}
