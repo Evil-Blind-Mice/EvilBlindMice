@@ -11,7 +11,7 @@ public class PowerUpPickup : MonoBehaviour
     }
     public enum PickUpType
     {
-        Heal, TimeSlow, Invincibility, SpeedBoost
+        Heal, TimeSlow, Invincibility, SpeedBoost, Obstacle
     }
 
     [Header("Power Up Type")]
@@ -30,6 +30,10 @@ public class PowerUpPickup : MonoBehaviour
     [Header("Speed Boost")]
     [SerializeField, Min(1)] float speedMultiplier;
     [SerializeField] public float speedDurationSeconds;
+
+    [Header("Obstacle")]
+    [SerializeField] float speedDivider;
+    [SerializeField] int speedDuration;
 
     static float activeSlowScale = 1f;
     static float slowRemainingSeconds = 0f;
@@ -62,6 +66,10 @@ public class PowerUpPickup : MonoBehaviour
 
             case PickUpType.SpeedBoost:
                 stats.RequestSpeedBoost(speedMultiplier, speedDurationSeconds);
+                break;
+
+            case PickUpType.Obstacle:
+                stats.RequestTripState(speedDivider, speedDuration);
                 break;
         }
 
