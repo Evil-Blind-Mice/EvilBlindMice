@@ -18,17 +18,11 @@ public class WallRunMovementState : MovementState
     [HideInInspector] public bool wallIsRight;
     Vector3 wallNormal;
 
-    float speed;
-
-
 
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
-
-        speed = PlayerStats.instance.GetSpeed();
-
         base.OnEnter(_playerMovement, _body);
 
         // lean so that bottom of player is closer to wall
@@ -50,17 +44,13 @@ public class WallRunMovementState : MovementState
         wallNormal = hit.normal;
     }
 
-    public override void OnExit()
-    {
-        base.OnExit();
-        speed = PlayerStats.instance.GetSpeed();
-    }
-
     public override void OnUpdate(MoveInputStruct _input)
     {
         base.OnUpdate(_input);
 
-        playerVelocity = body.transform.forward * speed;
+        float baseSpeed = playerMovement.currentIntersection != null ? intersectionSpeed : PlayerStats.instance.GetSpeed();
+
+        playerVelocity = body.transform.forward * baseSpeed;
 
         body.linearVelocity = playerVelocity;
 
@@ -78,7 +68,6 @@ public class WallRunMovementState : MovementState
         {
             if (_intersection.IsDirectionAvailable(playerMovement.gravityReference.right))
             {
-                speed = intersectionSpeed;
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
             }
@@ -88,7 +77,6 @@ public class WallRunMovementState : MovementState
         {
             if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
             {
-                speed = intersectionSpeed;
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
             }
@@ -103,8 +91,6 @@ public class WallRunMovementState : MovementState
     public override void OnIntersectionExit(Intersection _intersection, Vector3 _exitPoint)
     {
         base.OnIntersectionExit(_intersection, _exitPoint);
-
-        speed = PlayerStats.instance.GetSpeed();
 
         playerMovement.ChangeToState(this);
     }

@@ -33,6 +33,7 @@ public class DefaultMovementState : MovementState, IDebug
     float currentWallAngle;
     float distanceToGround;
     float intersectionSpeed;
+    float baseSpeed;
 
     private void Start()
     {
@@ -119,6 +120,8 @@ public class DefaultMovementState : MovementState, IDebug
     public override void OnInsideIntersection()
     {
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
+
+        intersectionSpeed = PlayerStats.instance.GetSpeed();
 
         if (playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
         {

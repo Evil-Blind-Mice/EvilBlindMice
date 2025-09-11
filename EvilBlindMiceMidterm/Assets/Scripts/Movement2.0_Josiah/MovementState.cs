@@ -17,6 +17,8 @@ public abstract class MovementState : MonoBehaviour
         playerMovement = _playerMovement;
         body = _body;
         isCurrentState = true;
+
+        if (playerMovement.currentIntersection != null) OnIntersectionEnter(playerMovement.currentIntersection);
     }
 
     public virtual void OnUpdate(MoveInputStruct _input)
