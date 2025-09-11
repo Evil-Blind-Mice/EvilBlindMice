@@ -37,7 +37,6 @@ public class DefaultMovementState : MovementState, IDebug
     float intersectionSpeed;
 
 
-
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)

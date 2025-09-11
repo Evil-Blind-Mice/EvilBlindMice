@@ -288,6 +288,7 @@ GameObject:
   - component: {fileID: 6947330033585847528}
   - component: {fileID: 3523729438402077618}
   - component: {fileID: 1924011206917747837}
+  - component: {fileID: 1832479736687873031}
   - component: {fileID: 3619112338890508793}
   - component: {fileID: 5823385982206694601}
   m_Layer: 3
@@ -334,6 +335,7 @@ MonoBehaviour:
   rotationSpeed: 45
   uprightRotation: 0
   isUpright: 0
+  currentIntersection: {fileID: 0}
   defaultMoveState: {fileID: 3523729438402077618}
 --- !u!114 &3523729438402077618
 MonoBehaviour:
@@ -378,6 +380,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   wallIsRight: 0
+--- !u!114 &1832479736687873031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1258636601881541156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fca249f4df3be34d8ff2a4af7b9df21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDamageReceiver
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
+  gameOverDamage: 2147483647
 --- !u!136 &3619112338890508793
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -479,6 +497,7 @@ MonoBehaviour:
   maxHealth: 0
   currentHealth: 0
   runSpeed: 0
+  distanceTraveled: 0
   hasTripped: 0
 --- !u!1 &4051878489175559200
 GameObject:
