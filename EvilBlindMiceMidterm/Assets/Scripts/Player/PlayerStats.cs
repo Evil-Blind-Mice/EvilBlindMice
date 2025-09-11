@@ -15,18 +15,18 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] int initialJumpForce = 15;
     [SerializeField] int initialMaxHealth;
     [SerializeField] int initialJumpMax = 1;
-    public int maxHealth;
-    public int currentHealth;
-    public float runSpeed;
+    [HideInInspector] public int maxHealth;
+    [HideInInspector] public int currentHealth;
+    [HideInInspector] public float runSpeed;
     float jumpForce;
     int jumpMax;
-    public float distanceTraveled;
+    [HideInInspector] public float distanceTraveled;
 
     SpeedState currentSpeedState;
     InvincibilityState currentInvincibilityState;
 
     [HideInInspector] public int tripCounter = 0;
-    public bool hasTripped = false;
+    [HideInInspector] public bool hasTripped = false;
     public static PlayerStats instance { get; private set; }
 
 
@@ -168,6 +168,7 @@ public class PlayerStats : MonoBehaviour
     public float GetDistanceTraveled() { return distanceTraveled; }
 
 
+
     // HELPERS
 
     public void ResetAllPowerUpEffects()
@@ -200,6 +201,7 @@ public class PlayerStats : MonoBehaviour
         currentSpeedState = _next;
         currentSpeedState.Enter(this);
     }
+
 
 
     // SPEED STATES
@@ -318,6 +320,8 @@ public class PlayerStats : MonoBehaviour
             }
         }
     }
+
+
 
     // INVINCIBILITY STATES
 
