@@ -1,16 +1,17 @@
 using System.Collections;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
 using static PlayerController;
 
-public class MeleeEnemyAI : MonoBehaviour, IDamage
+public class sniperEnemyAI : MonoBehaviour, IDamage
 {
 
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Renderer model;
-    [SerializeField] Transform hitPosition;
-    [SerializeField] Transform hitPosition2;
+    [SerializeField] Transform shootPosition;
     [SerializeField] Transform headPosition;
 
     [SerializeField] int shieldHealth;
@@ -18,13 +19,14 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int FOV;
 
-    [SerializeField] GameObject melee;
-    [SerializeField] float hitRate;
-
+    [SerializeField] GameObject bullet;
+    [SerializeField] float shootRate;
 
     Color originalColor;
 
-    float hitTimer;
+    float shootTimer;
+
+    float distanceFromPlayer;
 
     float angleToPlayer;
 
@@ -50,15 +52,13 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
             EnemyShield();
         }
 
-        hitTimer += Time.deltaTime;
+        shootTimer += Time.deltaTime;
 
         if (playerInTrigger && CanSeePlayer())
         {
 
         }
-
     }
-
     bool CanSeePlayer()
     {
         playerDirection = GameManager.instance.player.transform.position - headPosition.position;
@@ -75,11 +75,12 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     FaceTarget();
+                    //gameObject.transform.GetChild(0).transform.localScale = new Vector3(0, , 0);
                 }
 
-                if (hitTimer >= hitRate)
+                if (shootTimer >= shootRate)
                 {
-                    MeleeHit();
+                    Snipe();
                 }
 
                 return true;
@@ -87,7 +88,6 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
         }
         return false;
     }
-
     void FaceTarget()
     {
         Quaternion rot = Quaternion.LookRotation(playerDirection);
@@ -106,13 +106,11 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
             playerInTrigger = false;
     }
 
-    void MeleeHit()
+    void Snipe()
     {
-        hitTimer = 0;
-        Instantiate(melee, hitPosition.position, transform.rotation);
-        Instantiate(melee, hitPosition2.position, transform.rotation);
+        shootTimer = 0;
+        Instantiate(bullet, shootPosition.position, transform.rotation);
     }
-
 
     public void TakeDamage(int _amount)
     {
@@ -140,7 +138,7 @@ public class MeleeEnemyAI : MonoBehaviour, IDamage
     {
         if (shieldHealth > 0)
         {
-            model.material.color = Color.cyan;
+            model.material.color = Color.lightCyan;
             isBlue = true;
         }
 
