@@ -55,7 +55,7 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnUpdate(_input);
 
-        if (currentIntersection != null) OnInsideIntersection();
+        if (playerMovement.currentIntersection != null) OnInsideIntersection();
 
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
@@ -116,27 +116,27 @@ public class DefaultMovementState : MovementState, IDebug
 
     public override void OnInsideIntersection()
     {
-        if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
+        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
 
-        if (currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
+        if (playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
         {
             GameManager.instance.IntersectionDirectionPromptRight();
             if (Input.GetButtonDown("ChangeDirectionRight"))
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
-                currentIntersection = null;
+                playerMovement.currentIntersection = null;
                 return;
             }
         }
-        if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
+        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
         {
             GameManager.instance.IntersectionDirectionPromptLeft();
             if (Input.GetButtonDown("ChangeDirectionLeft"))
             {
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
-                currentIntersection = null;
+                playerMovement.currentIntersection = null;
                 return;
             }
         }

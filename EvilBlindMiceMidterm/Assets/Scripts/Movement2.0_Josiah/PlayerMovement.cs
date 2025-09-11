@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed;
     [HideInInspector] public float uprightRotation;
     [HideInInspector] public bool isUpright;
+    [HideInInspector] public Intersection currentIntersection;
 
     [SerializeField] MovementState defaultMoveState;
     MovementState moveState;
