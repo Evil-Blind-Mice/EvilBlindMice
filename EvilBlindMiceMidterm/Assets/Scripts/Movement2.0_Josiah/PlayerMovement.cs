@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+   public static PlayerMovement instance;
     [SerializeField] Rigidbody body;
     public Transform gravityReference;
 
@@ -17,6 +18,11 @@ public class PlayerMovement : MonoBehaviour
     MovementState moveState;
 
     Coroutine activeRotation;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
