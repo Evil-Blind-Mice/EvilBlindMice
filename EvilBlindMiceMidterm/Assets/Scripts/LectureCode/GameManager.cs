@@ -13,11 +13,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuUpgrades;
-    [SerializeField] TMP_Text distanceTraveledText;
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
     public GameObject playerHealingFlash;
+    public GameObject playerSpeedBoostFlash;
+
 
     public GameObject player;
     public PlayerStats playerScript;
@@ -89,6 +90,12 @@ public class GameManager : MonoBehaviour
             StartCoroutine(Flash(playerHealingFlash, 0.1f));
     }
 
+    public void FlashSpeedBoost()
+    {
+        if (playerSpeedBoostFlash)
+            StartCoroutine(Flash(playerSpeedBoostFlash, 1f));
+    }
+
     public void StatePause()
     {
         isPaused = !isPaused;
@@ -110,7 +117,6 @@ public class GameManager : MonoBehaviour
     public void UpdateGameGoal(int _amount)
     {
         gameGoalCount += _amount;
-        distanceTraveledText.text = gameGoalCount.ToString("F0");
 
         if (gameGoalCount <= 0)
         {
