@@ -281,8 +281,8 @@ public class PlayerStats : MonoBehaviour
             remainingSeconds = Mathf.Max(0, _durationSeconds);
             baseRunSpeed = _baseRunSpeed;
         }
-        public override void Enter(PlayerStats _stats) { _stats.runSpeed = baseRunSpeed * multiplier; }
-        public override void Exit(PlayerStats _stats) { _stats.runSpeed = baseRunSpeed; }
+        public override void Enter(PlayerStats _stats) { _stats.hasTripped = false; }
+        public override void Exit(PlayerStats _stats) { _stats.hasTripped = true; }
         public override void Update(PlayerStats _stats, float _deltaSeconds, bool _isPaused)
         {
             if (_isPaused) return;
@@ -298,19 +298,20 @@ public class PlayerStats : MonoBehaviour
             
         }
         public override void RequestTrip(PlayerStats _stats, float _multiplier, int _durationSeconds) {
-            if (!_stats.hasTripped)
+            _stats.tripCounter++;
+            if(_stats.tripCounter > 1)
+            {
+                _stats.currentHealth = 0;
+                GameManager.instance.YouLose();
+            }
+            if (_stats.hasTripped)
             {
                 _stats.hasTripped = !_stats.hasTripped;
                 multiplier = 0.5f;
                 remainingSeconds = Mathf.Max(remainingSeconds, _durationSeconds);
                 _stats.runSpeed = baseRunSpeed * multiplier;
             }
-            else
-            {
-                _stats.currentHealth = 0;
-                multiplier = 0;
-                _stats.runSpeed = 0;
-            }
+            
         }
     }
 
