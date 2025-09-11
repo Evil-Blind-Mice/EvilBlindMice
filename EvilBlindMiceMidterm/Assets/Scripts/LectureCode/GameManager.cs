@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpeedBoostFlash;
     public TMP_Text qLeft;
     public TMP_Text eRight;
+    [SerializeField] TMP_Text distanceTraveledText;
+
 
 
     public GameObject player;
@@ -81,6 +83,9 @@ public class GameManager : MonoBehaviour
             float maxHealth = Mathf.Max(1, PlayerStats.instance.GetMaxHealth());
             playerHealthBar.fillAmount = currentHealth / maxHealth;
         }
+
+        if(distanceTraveledText != null && PlayerStats.instance != null)
+            distanceTraveledText.text = PlayerStats.instance.GetDistanceTraveled().ToString("F0");
     }
 
     public void FlashDamage()
