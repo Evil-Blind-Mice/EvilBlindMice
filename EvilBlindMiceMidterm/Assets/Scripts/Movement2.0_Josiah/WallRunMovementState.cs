@@ -6,10 +6,7 @@ public class WallRunMovementState : MovementState
     // Variables
 
     [SerializeField] MovementState defaultMovementState;
-
-    // [SerializeField] int normalSpeed = 15;
-    [SerializeField] int intersectionSpeed = 3;
-    // [SerializeField] int jumpForce = 30;
+    [SerializeField] float roundingCornerSpeed = 4f;
     [SerializeField] float wallRunDistance = 2f;
     [SerializeField] int tiltDegree = 30;
     [SerializeField] LayerMask groundLayers;
@@ -17,6 +14,8 @@ public class WallRunMovementState : MovementState
     Vector3 playerVelocity;
     [HideInInspector] public bool wallIsRight;
     Vector3 wallNormal;
+    float intersectionSpeed;
+
 
 
     // Overridden Functions
@@ -64,26 +63,17 @@ public class WallRunMovementState : MovementState
         Vector3 leanOutToward = body.transform.forward;
 
 
-        if (wallIsRight)
-        {
-            if (_intersection.IsDirectionAvailable(playerMovement.gravityReference.right))
-            {
-                playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
-                playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
-            }
+        int directionMultilplier = wallIsRight ? 1 : -1;
 
+        if (_intersection.IsDirectionAvailable(playerMovement.gravityReference.right * directionMultilplier))
+        {
+            intersectionSpeed = roundingCornerSpeed;
+            playerMovement.SetGravityDirection(playerMovement.gravityReference.right * directionMultilplier, playerMovement.gravityReference.up);
+            playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
         }
         else
         {
-            if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
-            {
-                playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
-                playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
-            }
-            else
-            {
-                playerMovement.ChangeToState(defaultMovementState);
-            }
+            intersectionSpeed = PlayerStats.instance.GetSpeed();
         }
 
     }
