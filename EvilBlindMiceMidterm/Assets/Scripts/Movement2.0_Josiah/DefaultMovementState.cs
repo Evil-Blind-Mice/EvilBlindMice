@@ -31,18 +31,19 @@ public class DefaultMovementState : MovementState, IDebug
     // variables stored for debug
     GameObject currentWall;
     float currentWallAngle;
-
-    float speed;
     float distanceToGround;
+    float intersectionSpeed;
+    float baseSpeed;
 
-
+    private void Start()
+    {
+        intersectionSpeed = PlayerStats.instance.GetSpeed();
+    }
 
     // Overridden Functions
 
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
-        speed = PlayerStats.instance.GetSpeed();
-
         base.OnEnter(_playerMovement, _body);
         playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
@@ -55,10 +56,10 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnUpdate(_input);
 
-        if (playerMovement.currentIntersection != null) OnInsideIntersection();
+        float baseSpeed = playerMovement.currentIntersection == null ? PlayerStats.instance.GetSpeed() : intersectionSpeed;
 
         // calculate playerVelocity
-        leftRightVelocity = _input.leftRightAxis * body.transform.right * speed;
+        leftRightVelocity = _input.leftRightAxis * body.transform.right * baseSpeed;
 
         // handle gravity and jumping
         if (IsGrounded())
@@ -108,7 +109,7 @@ public class DefaultMovementState : MovementState, IDebug
             leftRightVelocity // velocity determined by player input
             + externalForceVelocity // velocity from previous states or knockback
             - playerMovement.gravityReference.up * currentGravityVelocity // velocity from jumping or gravity
-            + transform.forward * speed; // constant forward velocity
+            + transform.forward * baseSpeed; // constant forward velocity
 
         // check for change of state conditions
         StateCheck(_input);
@@ -116,7 +117,10 @@ public class DefaultMovementState : MovementState, IDebug
 
     public override void OnInsideIntersection()
     {
+
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
+        
+        intersectionSpeed = PlayerStats.instance.GetSpeed();
 
         if (playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
         {
@@ -140,12 +144,11 @@ public class DefaultMovementState : MovementState, IDebug
                 return;
             }
         }
+        
     }
 
     public override void OnExit()
     {
-        speed = PlayerStats.instance.GetSpeed();
-
         base.OnExit();
         externalForceVelocity = Vector3.zero;
     }
@@ -154,13 +157,9 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionEnter(_intersection);
 
-        
-
-        if (_intersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
+        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
-            speed = 15 + (float)(3 * Math.PI * distanceToGround);
-            Debug.Log(speed);
-
+            intersectionSpeed = 15 + (float)(3 * Math.PI * distanceToGround);
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
@@ -193,8 +192,6 @@ public class DefaultMovementState : MovementState, IDebug
             playerMovement.SetGravityDirection(playerMovement.gravityReference.up, -playerMovement.gravityReference.forward);
             playerMovement.RotateUprightWithGravity();
         }
-        
-        speed = PlayerStats.instance.GetSpeed();
     }
 
 
@@ -204,7 +201,7 @@ public class DefaultMovementState : MovementState, IDebug
     bool IsGrounded()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position - (transform.forward * 0.25f), -transform.up, out hit, 100, groundLayers) && currentGravityVelocity >= 0)
+        if (Physics.Raycast(transform.position - (transform.forward * 0.25f), -transform.up, out hit, 50, groundLayers) && currentGravityVelocity >= 0)
         {
             Debug.DrawRay(transform.position - (transform.forward * 0.25f), -transform.up * distanceToGround, Color.blue);
             distanceToGround = Vector3.Distance(transform.position, hit.point);

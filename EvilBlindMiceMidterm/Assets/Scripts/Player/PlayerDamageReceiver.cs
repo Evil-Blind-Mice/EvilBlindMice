@@ -3,6 +3,8 @@ using UnityEngine;
 public class PlayerDamageReceiver : MonoBehaviour, IDamage
 {
     PlayerStats playerStats;
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] int gameOverDamage;
 
     void Awake()
     {
@@ -21,4 +23,20 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
         int newHealth = Mathf.Max(0, currentHealth - _amount);
         playerStats.AddHealth(newHealth - currentHealth);
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if ((groundLayer & (1 << collision.gameObject.layer)) != 0)
+        {
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                if (contact.normal == -PlayerMovement.instance.gravityReference.forward)
+                { // ran face first into a wall
+                    TakeDamage(gameOverDamage);
+                    break;
+                }
+            }
+        }
+    }
 }
+
+

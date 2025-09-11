@@ -91,18 +91,18 @@ public class GameManager : MonoBehaviour
     public void FlashDamage()
     {
         if (playerDamageFlash)
-            StartCoroutine(Flash(playerDamageFlash, 0.1f));
+            StartCoroutine(Flash(playerDamageFlash, .7f));
     }
     public void FlashHeal()
     {
         if (playerHealingFlash)
-            StartCoroutine(Flash(playerHealingFlash, 0.1f));
+            StartCoroutine(Flash(playerHealingFlash, .7f));
     }
 
     public void FlashSpeedBoost()
     {
         if (playerSpeedBoostFlash)
-            StartCoroutine(Flash(playerSpeedBoostFlash, 1f));
+            StartCoroutine(Flash(playerSpeedBoostFlash, 2f));
     }
 
     public void StatePause()
