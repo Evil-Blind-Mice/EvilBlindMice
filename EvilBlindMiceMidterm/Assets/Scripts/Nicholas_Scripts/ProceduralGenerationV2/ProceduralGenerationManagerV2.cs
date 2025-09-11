@@ -12,7 +12,7 @@ public class ProceduralGenerationManagerV2 : MonoBehaviour
     [SerializeField] GameObject initialChunkPrefab;
     [SerializeField] List<GameObject> availableChunkPool;
     [SerializeField] Vector3 generationStartingPosition = new(0, 0, 0);
-    [SerializeField] Quaternion generationStartingRotation = new(0, -90, 0, 0);
+    [SerializeField] Quaternion generationStartingRotation = new(0, 0, 0, 0);
     public int generationIterations = 1;
 
     void Awake()

@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,10 @@ public class GameManager : MonoBehaviour
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
     public GameObject playerHealingFlash;
+    public GameObject playerSpeedBoostFlash;
+    public TMP_Text qLeft;
+    public TMP_Text eRight;
+
 
     public GameObject player;
     public PlayerStats playerScript;
@@ -25,6 +30,8 @@ public class GameManager : MonoBehaviour
     int gameGoalCount;
 
     float timeScaleOriginal;
+
+    TMP_Text lastText;
 
 
 
@@ -87,6 +94,12 @@ public class GameManager : MonoBehaviour
             StartCoroutine(Flash(playerHealingFlash, 0.1f));
     }
 
+    public void FlashSpeedBoost()
+    {
+        if (playerSpeedBoostFlash)
+            StartCoroutine(Flash(playerSpeedBoostFlash, 1f));
+    }
+
     public void StatePause()
     {
         isPaused = !isPaused;
@@ -147,6 +160,15 @@ public class GameManager : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         menuActive.SetActive(true);
+    }
+
+    public void IntersectionDirectionPromptLeft()
+    {
+            StartCoroutine(Flash(qLeft.gameObject, 1.2f)); 
+    }
+    public void IntersectionDirectionPromptRight()
+    {
+        StartCoroutine(Flash(eRight.gameObject, 1.2f));
     }
     IEnumerator Flash(GameObject _go, float _seconds)
     {

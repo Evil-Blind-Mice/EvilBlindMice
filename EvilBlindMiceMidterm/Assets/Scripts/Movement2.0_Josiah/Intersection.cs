@@ -15,10 +15,10 @@ public class Intersection : MonoBehaviour
         availableDirections = new Vector3[6];
         if (up) availableDirections[0] = (parent.transform.up);
         if (down) availableDirections[1] = (-parent.transform.up);
-        if (right) availableDirections[2] = (parent.transform.right);
-        if (left) availableDirections[3] = (-parent.transform.right);
-        if (forward) availableDirections[4] = (parent.transform.forward);
-        if (backward) availableDirections[5] = (-parent.transform.forward);
+        if (backward) availableDirections[2] = (parent.transform.right);
+        if (forward) availableDirections[3] = (-parent.transform.right);
+        if (left) availableDirections[4] = (parent.transform.forward);
+        if (right) availableDirections[5] = (-parent.transform.forward);
     }
 
     public bool IsDirectionAvailable(Vector3 _direction)

@@ -21,6 +21,7 @@ public class DefaultMovementState : MovementState, IDebug
     [SerializeField] float wallRunCooldown = 0.25f;
     [SerializeField] float wallRunCastOffset = 0.5f;
 
+
     Vector3 leftRightVelocity;
     Vector3 externalForceVelocity;
     int jumpCount;
@@ -119,7 +120,8 @@ public class DefaultMovementState : MovementState, IDebug
 
         if (currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
         {
-            if(Input.GetButtonDown("ChangeDirectionRight"))
+            GameManager.instance.IntersectionDirectionPromptRight();
+            if (Input.GetButtonDown("ChangeDirectionRight"))
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
@@ -129,6 +131,7 @@ public class DefaultMovementState : MovementState, IDebug
         }
         if (currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
         {
+            GameManager.instance.IntersectionDirectionPromptLeft();
             if (Input.GetButtonDown("ChangeDirectionLeft"))
             {
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
