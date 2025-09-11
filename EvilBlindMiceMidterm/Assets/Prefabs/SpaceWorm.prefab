@@ -255,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
   type: 4
-  healAmount: -2
+  healAmount: 0
   slowScale: 0.05
   slowDurationSeconds: 0
   invincibilityDurationSeconds: 0

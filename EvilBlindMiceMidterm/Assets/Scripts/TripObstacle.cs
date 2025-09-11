@@ -23,6 +23,7 @@ public class TripObstacle : MonoBehaviour
             {
                 PlayerStats.runSpeed = 0;
                 PlayerStats.currentHealth = 0;
+                GameManager.instance.YouLose();
             }
 
             Destroy(gameObject);

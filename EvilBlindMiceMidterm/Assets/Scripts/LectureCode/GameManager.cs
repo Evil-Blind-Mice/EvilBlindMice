@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
     public void FlashSpeedBoost()
     {
         if (playerSpeedBoostFlash)
-            StartCoroutine(Flash(playerSpeedBoostFlash, 2f));
+            StartCoroutine(Flash(playerSpeedBoostFlash,PowerUpPickup.instance.speedDurationSeconds));
     }
 
     public void StatePause()
