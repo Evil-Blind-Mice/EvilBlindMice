@@ -98,9 +98,9 @@ public class DefaultMovementState : MovementState, IDebug
 
         // reduce external forces by the resistance percentage of their value
         externalForceVelocity = new Vector3(
-            externalForceVelocity.x - (externalForceVelocity.x * Time.deltaTime * externalForceResistance),
-            externalForceVelocity.y - (externalForceVelocity.y * Time.deltaTime * externalForceResistance),
-            externalForceVelocity.z - (externalForceVelocity.z * Time.deltaTime * externalForceResistance)
+            externalForceVelocity.x - Mathf.Clamp((Time.deltaTime * externalForceResistance), 0, externalForceVelocity.x),
+            externalForceVelocity.y - Mathf.Clamp((Time.deltaTime * externalForceResistance), 0, externalForceVelocity.y),
+            externalForceVelocity.z - Mathf.Clamp((Time.deltaTime * externalForceResistance), 0, externalForceVelocity.z)
             );
 
         // if the external force is small enough, round to zero

@@ -401,6 +401,8 @@ MonoBehaviour:
   initialJumpForce: 15
   initialMaxHealth: 25
   initialJumpMax: 1
+  initialDashForce: 50
+  initialDashCount: 0
   maxHealth: 25
   currentHealth: 25
   runSpeed: 5
@@ -515,8 +517,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
   wallRunState: {fileID: 4316812403031956506}
-  speedWhileRotating: 30
-  externalForceResistance: 2
+  externalForceResistance: 50
   externalForceThreshold: 1
   groundedDistance: 0.3
   wallRunDistance: 0.75

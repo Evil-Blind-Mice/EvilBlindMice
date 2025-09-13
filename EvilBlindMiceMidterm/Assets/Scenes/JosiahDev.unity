@@ -2134,6 +2134,10 @@ PrefabInstance:
       propertyPath: groundedDistance
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 2589811350598675171, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
+      propertyPath: externalForceResistance
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 3227171916248818486, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.30788
