@@ -15,9 +15,13 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] int initialJumpForce = 15;
     [SerializeField] int initialMaxHealth;
     [SerializeField] int initialJumpMax = 1;
+    [SerializeField] float initialDashForce = 50;
+    [SerializeField] int initialDashCount = 0;
     [HideInInspector] public int maxHealth;
     [HideInInspector] public int currentHealth;
     [HideInInspector] public float runSpeed;
+    float dashForce;
+    int dashCount; 
     float jumpForce;
     int jumpMax;
     [HideInInspector] public float distanceTraveled;
@@ -51,6 +55,8 @@ public class PlayerStats : MonoBehaviour
         ResetMaxHealth();
         ResetHealthToFull();
         ResetJumpMax();
+        ResetDashForce();
+        ResetDashCount();
     }
 
     private void Update()
@@ -61,7 +67,6 @@ public class PlayerStats : MonoBehaviour
         currentSpeedState.Update(this, deltaSeconds, isPaused);
         currentInvincibilityState.Update(this, deltaSeconds, isPaused);
     }
-
 
 
 
@@ -99,7 +104,6 @@ public class PlayerStats : MonoBehaviour
 
 
 
-
     // RESET
 
     public void ResetRunSpeed() { runSpeed = initialRunSpeed; }
@@ -107,6 +111,8 @@ public class PlayerStats : MonoBehaviour
     public void ResetMaxHealth() { maxHealth = initialMaxHealth; }
     public void ResetHealthToFull() { currentHealth = maxHealth; }
     public void ResetJumpMax() { jumpMax = initialJumpMax; }
+    public void ResetDashForce() { dashForce = initialDashForce; }
+    public void ResetDashCount() { dashCount = initialDashCount; }
 
 
 
@@ -156,6 +162,11 @@ public class PlayerStats : MonoBehaviour
         distanceTraveled += _distanceTravel;
     }
 
+    public void AddDashCount(int _modifier)
+    {
+        dashCount += _modifier;
+    }
+
 
 
     // GETTERS
@@ -166,6 +177,7 @@ public class PlayerStats : MonoBehaviour
     public int GetMaxHealth() { return maxHealth; }
     public int GetJumpMax() { return jumpMax; }
     public float GetDistanceTraveled() { return distanceTraveled; }
+    public int GetDashCount() { return dashCount; }
 
 
 
