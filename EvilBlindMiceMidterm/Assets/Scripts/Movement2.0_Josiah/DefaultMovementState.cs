@@ -8,11 +8,6 @@ public class DefaultMovementState : MovementState, IDebug
     // Variables
 
     [SerializeField] MovementState wallRunState;
-
-    // [SerializeField] int speed = 15; replaced by player stats
-    // [SerializeField] int jumpForce = 15; replaced by player stats
-    // [SerializeField] int jumpMax = 1; replaced by player stats
-    // [SerializeField] float speedWhileRotating = 30;
     [SerializeField] int externalForceResistance = 2;
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 0.35f;
@@ -67,14 +62,22 @@ public class DefaultMovementState : MovementState, IDebug
         // handle gravity and jumping
         if (IsGrounded())
         { // on the ground
-            jumpCount = 0;
-            if (distanceToGround < groundedDistance / 2)
-                currentGravityVelocity = 1;
-            else
+
+            if (currentGravityVelocity >= 0)
+            {
+                jumpCount = 0;
                 currentGravityVelocity = 0;
+            }
+
+            // handle jumping
+            if (_input.jumpPressedThisFrame) Jump();
+
         }
         else
         { // off of the ground
+
+            // trigger dash
+            if (_input.jumpPressedThisFrame) Dash();
 
             // add gravity/second to velocity
             currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
@@ -88,9 +91,8 @@ public class DefaultMovementState : MovementState, IDebug
             }
         }
 
-        // handle jumping
-        if (_input.jumpPressedThisFrame) Jump();
 
+        
 
         // handle external forces
 
@@ -207,6 +209,7 @@ public class DefaultMovementState : MovementState, IDebug
 
     bool IsGrounded()
     {
+        float checkBuffer = 0.5f;
         RaycastHit hit;
         if (Physics.Raycast(transform.position - (transform.forward * 0.25f), -playerMovement.gravityReference.up, out hit, 100, groundLayers))
         {
@@ -214,7 +217,7 @@ public class DefaultMovementState : MovementState, IDebug
             distanceToGround = Vector3.Distance(transform.position, hit.point);
             floorName = hit.collider.name;
 
-            if (distanceToGround < groundedDistance && currentGravityVelocity >= 0)
+            if (distanceToGround < groundedDistance + checkBuffer)
                 return true;
             else
                 return false;
@@ -231,6 +234,16 @@ public class DefaultMovementState : MovementState, IDebug
         {
             jumpCount++;
             currentGravityVelocity = -PlayerStats.instance.GetJumpForce();
+        }
+    }
+
+    void Dash()
+    {
+        if(PlayerStats.instance.GetDashCount() > 0)
+        {
+            externalForceVelocity = Camera.main.transform.forward * 100;
+            currentGravityVelocity = 0;
+            PlayerStats.instance.AddDashCount(-1);
         }
     }
 
@@ -262,11 +275,11 @@ public class DefaultMovementState : MovementState, IDebug
             "Is Current State: " + isCurrentState,
             "Velocity: " + body.linearVelocity,
             "Is Grounded: " + IsGrounded(),
-            currentWall != null ? "Wall Check hit: " + currentWall.name : "Wall Check hit: " + "nothing",
+            currentWall != null ? "Wall Check hit: " + currentWall.name : "Wall Check hit: nothing",
             "Angle between wall normal and up: " + currentWallAngle,
             "Distance to ground: " + distanceToGround,
-            "Distance Travelled: " + PlayerStats.instance.GetDistanceTraveled(),
-            "Current Ground Hit: " + floorName
+            "current gravity velocity: " + currentGravityVelocity,
+            "Floor: " + floorName
         );
     }
 }
