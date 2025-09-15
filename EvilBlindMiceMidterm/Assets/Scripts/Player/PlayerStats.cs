@@ -178,6 +178,7 @@ public class PlayerStats : MonoBehaviour
     public int GetJumpMax() { return jumpMax; }
     public float GetDistanceTraveled() { return distanceTraveled; }
     public int GetDashCount() { return dashCount; }
+    public float GetDashForce() {  return dashForce; }
 
 
 

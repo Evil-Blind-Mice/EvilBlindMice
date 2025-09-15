@@ -51,20 +51,21 @@ public class PlayerMovement : MonoBehaviour
         moveState.OnEnter(this, body);
     }
 
-    public void RotateUprightWithGravity()
+    public void RotateUprightWithGravity(float _rotationSpeed = -1)
     {
         
         Quaternion lookRotation = Quaternion.LookRotation(gravityReference.forward, gravityReference.up);
-        RotateSmooth(lookRotation);
+        RotateSmooth(lookRotation, _rotationSpeed);
     }
 
-    public void RotateSmooth(Quaternion _lookRotation) 
+    public void RotateSmooth(Quaternion _lookRotation, float _rotationSpeed = -1) 
     {
         if (activeRotation != null) StopCoroutine(activeRotation);
-        activeRotation = StartCoroutine(RotateSmoothCoroutine(_lookRotation));
+        if (_rotationSpeed == -1) _rotationSpeed = rotationSpeed;
+        activeRotation = StartCoroutine(RotateSmoothCoroutine(_lookRotation, _rotationSpeed));
     }
 
-    IEnumerator RotateSmoothCoroutine(Quaternion _lookRotation)
+    IEnumerator RotateSmoothCoroutine(Quaternion _lookRotation, float _rotationSpeed)
     {
         isUpright = false;
         float timeCount = 0f;
@@ -77,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
             timeCount += Time.deltaTime;
 
             // rotate by rotationSpeed divided by the total number of degrees of rotation that will occur, multipled by time
-            slerpProgress = timeCount * (rotationSpeed / (totalRotDegrees / 10));
+            slerpProgress = (timeCount * _rotationSpeed) / (totalRotDegrees);
             
             body.transform.rotation = Quaternion.Slerp(startRotation, _lookRotation, slerpProgress);
 
