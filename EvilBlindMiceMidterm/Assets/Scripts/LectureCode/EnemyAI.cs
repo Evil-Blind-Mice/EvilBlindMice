@@ -19,6 +19,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int FOV;
 
     [SerializeField] GameObject bullet;
+    [SerializeField] GameObject shield;
     [SerializeField] float shootRate;
 
     Color originalColor;
@@ -44,10 +45,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     // Update is called once per frame
     void Update()
     {
-        if (shieldHealth > 0)
-        {
             EnemyShield();
-        }
 
         shootTimer += Time.deltaTime;
 
@@ -68,7 +66,6 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
-                agent.SetDestination(GameManager.instance.player.transform.position);
 
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -135,13 +132,13 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         if (shieldHealth > 0)
         {
-            model.material.color = Color.lightCyan;
+            shield.SetActive(true);
             isBlue = true;
         }
 
         if (shieldHealth <= 0)
         {
-            model.material.color = originalColor;
+            shield.SetActive(false);
             isBlue = false;
         }
     }
