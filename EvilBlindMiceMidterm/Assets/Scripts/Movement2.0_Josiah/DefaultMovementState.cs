@@ -44,7 +44,7 @@ public class DefaultMovementState : MovementState, IDebug
         playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
         currentGravityVelocity = 0;
-        jumpCount = 1;
+        if(IsGrounded()) jumpCount = 1;
         wallRunCountdown = wallRunCooldown;
     }
 
@@ -53,6 +53,11 @@ public class DefaultMovementState : MovementState, IDebug
         base.OnUpdate(_input);
 
         float baseSpeed = (playerMovement.currentIntersection == null) ? PlayerStats.instance.GetSpeed() : Mathf.Clamp(PlayerStats.instance.GetSpeed(), intersectionSpeed, PlayerStats.instance.GetSpeed());
+
+        if (playerMovement.currentIntersection != null)
+        {
+            externalForceVelocity = Vector3.zero;
+        }
 
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * baseSpeed;
@@ -168,11 +173,11 @@ public class DefaultMovementState : MovementState, IDebug
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
             currentGravityVelocity = 0;
-            intersectionSpeed = Mathf.Clamp((float)(4 * 0.785f * Mathf.Sqrt(distanceToGround) * speedModifier), PlayerStats.instance.GetSpeed(), 10000);
-            body.linearVelocity = transform.forward * intersectionSpeed;
+            intersectionSpeed = (float)(4 * 0.785f * Mathf.Sqrt(distanceToGround) * speedModifier);
+            body.linearVelocity = transform.forward * Mathf.Clamp(PlayerStats.instance.GetSpeed(), intersectionSpeed, PlayerStats.instance.GetSpeed());
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
-            float arcSegmentLength = (2f * MathF.PI * Mathf.Clamp(distanceToGround, 5, 100)) / 4;
-            playerMovement.RotateUprightWithGravity(90f/(arcSegmentLength/intersectionSpeed));
+            float arcSegmentLength = (2f * MathF.PI * Mathf.Clamp(distanceToGround, 2.5f, 100)) / 4;
+            playerMovement.RotateUprightWithGravity(90f/(arcSegmentLength/ Mathf.Clamp(PlayerStats.instance.GetSpeed(), intersectionSpeed, PlayerStats.instance.GetSpeed())));
             rotationSpeedEquation = 90f / (arcSegmentLength / PlayerStats.instance.GetSpeed());
         }
 
@@ -184,6 +189,7 @@ public class DefaultMovementState : MovementState, IDebug
 
         Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
 
+        intersectionSpeed = 0;
         
         if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.up) < 5)
         { // player exited intersection going down

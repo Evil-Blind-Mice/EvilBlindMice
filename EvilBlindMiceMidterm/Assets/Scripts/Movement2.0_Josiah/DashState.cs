@@ -19,6 +19,13 @@ public class DashState : MovementState
     public override void OnUpdate(MoveInputStruct _input)
     {
         base.OnUpdate(_input);
+
+        if (playerMovement.currentIntersection != null)
+        {
+            body.linearVelocity = Vector3.zero;
+            return;
+        }
+
         body.linearVelocity = Camera.main.transform.forward * PlayerStats.instance.GetDashForce() * (1 + dashesStacked * .5f);
 
         if (_input.jumpPressedThisFrame)
@@ -32,8 +39,8 @@ public class DashState : MovementState
 
     public override void OnExit()
     {
-        base.OnExit();
         body.linearVelocity = Vector3.zero;
+        base.OnExit();
     }
 
     public override void OnIntersectionEnter(Intersection _intersection)

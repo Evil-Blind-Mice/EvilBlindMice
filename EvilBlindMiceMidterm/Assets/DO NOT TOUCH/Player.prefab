@@ -451,7 +451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallRunMovementState
   defaultMovementState: {fileID: 2589811350598675171}
-  roundingCornerSpeed: 4
+  roundingCornerSpeed: 5
   wallRunDistance: 1.25
   tiltDegree: 30
   groundLayers:
