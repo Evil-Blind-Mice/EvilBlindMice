@@ -83,10 +83,22 @@ public class DefaultMovementState : MovementState, IDebug
         { // off of the ground
 
             // trigger dash
-            if (_input.jumpPressedThisFrame) Dash();
+            if (_input.jumpPressedThisFrame && playerMovement.isUpright)
+            {
+                if (playerMovement.currentIntersection)
+                {
+                    if (!playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
+                    {
+                        Dash();
 
-            // add gravity/second to velocity
-            currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
+                    }
+                }
+                else Dash();
+
+            }
+
+                // add gravity/second to velocity
+                currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
             if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
             // if the player reorients mid-air, the up direction is inverted
