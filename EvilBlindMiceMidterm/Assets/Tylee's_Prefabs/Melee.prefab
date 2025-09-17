@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bf809a6685a5044e85f1a3cbbbec145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damage
-  type: 1
+  type: 2
   rigidBody: {fileID: 7819856216750546079}
   damageAmount: 2
   damageRate: 0

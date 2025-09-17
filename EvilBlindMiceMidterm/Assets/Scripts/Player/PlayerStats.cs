@@ -15,9 +15,13 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] int initialJumpForce = 15;
     [SerializeField] int initialMaxHealth;
     [SerializeField] int initialJumpMax = 1;
+    [SerializeField] float initialDashForce = 50;
+    [SerializeField] int initialDashCount = 0;
     [HideInInspector] public int maxHealth;
     [HideInInspector] public int currentHealth;
     [HideInInspector] public float runSpeed;
+    float dashForce;
+    int dashCount; 
     float jumpForce;
     int jumpMax;
     [HideInInspector] public float distanceTraveled;
@@ -51,6 +55,8 @@ public class PlayerStats : MonoBehaviour
         ResetMaxHealth();
         ResetHealthToFull();
         ResetJumpMax();
+        ResetDashForce();
+        ResetDashCount();
     }
 
     private void Update()
@@ -61,7 +67,6 @@ public class PlayerStats : MonoBehaviour
         currentSpeedState.Update(this, deltaSeconds, isPaused);
         currentInvincibilityState.Update(this, deltaSeconds, isPaused);
     }
-
 
 
 
@@ -99,7 +104,6 @@ public class PlayerStats : MonoBehaviour
 
 
 
-
     // RESET
 
     public void ResetRunSpeed() { runSpeed = initialRunSpeed; }
@@ -107,6 +111,8 @@ public class PlayerStats : MonoBehaviour
     public void ResetMaxHealth() { maxHealth = initialMaxHealth; }
     public void ResetHealthToFull() { currentHealth = maxHealth; }
     public void ResetJumpMax() { jumpMax = initialJumpMax; }
+    public void ResetDashForce() { dashForce = initialDashForce; }
+    public void ResetDashCount() { dashCount = initialDashCount; }
 
 
 
@@ -156,6 +162,11 @@ public class PlayerStats : MonoBehaviour
         distanceTraveled += _distanceTravel;
     }
 
+    public void AddDashCount(int _modifier)
+    {
+        dashCount += _modifier;
+    }
+
 
 
     // GETTERS
@@ -166,6 +177,8 @@ public class PlayerStats : MonoBehaviour
     public int GetMaxHealth() { return maxHealth; }
     public int GetJumpMax() { return jumpMax; }
     public float GetDistanceTraveled() { return distanceTraveled; }
+    public int GetDashCount() { return dashCount; }
+    public float GetDashForce() {  return dashForce; }
 
 
 
@@ -206,6 +219,10 @@ public class PlayerStats : MonoBehaviour
 
     // SPEED STATES
 
+
+    /* Base class for all run-speed-related states.
+     * The PlayerStats.Update() drives these with unscaled delta seconds,
+     * so timers are unaffected by Time.timeScale (pause/slow) */
     abstract class SpeedState
     {
         public abstract void Enter(PlayerStats _stats);
@@ -215,13 +232,15 @@ public class PlayerStats : MonoBehaviour
         public abstract void RequestTrip(PlayerStats _stats, float _multiplier, float _durationSeconds);
     }
 
+    // Baseline movement: runSpeed equals initialRunSpeed. No timers.
     class NormalSpeedState : SpeedState
     {
-        public override void Enter(PlayerStats _stats) { _stats.runSpeed = _stats.initialRunSpeed; }
+        public override void Enter(PlayerStats _stats) { _stats.runSpeed = _stats.initialRunSpeed; } // Always snap back to baseline when entering normal
         public override void Exit(PlayerStats _stats) { }
         public override void Update(PlayerStats _stats, float _deltaSeconds, bool _isPaused) { }
         public override void RequestBoost(PlayerStats _stats, float _multiplier, float _durationSeconds)
         {
+            // Switch to a timed boosted state
             _stats.TransitionToSpeedState(new BoostedSpeedState(_multiplier, _durationSeconds, _stats.initialRunSpeed));
         }
         public override void RequestTrip(PlayerStats _stats, float _multiplier, float _durationSeconds)
@@ -230,12 +249,16 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    /* Temporary speed boost: runSpeed = baseRunSpeed * multiplier while active,
+     * then returns to NormalSpeedState when time runs out */
     class BoostedSpeedState : SpeedState
     {
         float multiplier;
         float remainingSeconds;
         readonly float baseRunSpeed;
 
+        /* Captured when the boost is created. Keeping a base avoids compounding
+         * boosts on top of boosts and guarantees a clean Exit() revert */
         public BoostedSpeedState(float _multiplier, float _durationSeconds, float _baseRunSpeed)
         {
             multiplier = Mathf.Max(1f, _multiplier);
@@ -251,12 +274,17 @@ public class PlayerStats : MonoBehaviour
 
             remainingSeconds -= _deltaSeconds;
 
+            // Time's up -> back to normal
             if (remainingSeconds <= 0f)
                 _stats.TransitionToSpeedState(new NormalSpeedState());
         }
 
         public override void RequestBoost(PlayerStats _stats, float _newMultiplier, float _newDurationSeconds)
         {
+            /* Re-boost logic:
+             * - If the new multiplier is stronger, apply it and extend/refresh duration.
+             * - If equal, extend/refresh duration.
+             * - If weaker, ignore. */
             if (_newMultiplier > multiplier)
             {
                 multiplier = _newMultiplier;
@@ -325,14 +353,18 @@ public class PlayerStats : MonoBehaviour
 
     // INVINCIBILITY STATES
 
+    // Base class for Invincibility
     abstract class InvincibilityState
     {
         public abstract void Enter(PlayerStats _stats);
         public abstract void Exit(PlayerStats _stats);
         public abstract void Update(PlayerStats _stats, float _deltaSeconds, bool _isPaused);
+        /* Turn on / extend invincibility for the given duration
+         * The active state decides whether to transition or extend */
         public abstract void RequestInvincibility(PlayerStats _stats, int _durationSeconds);
     }
 
+    // Default: not invincible. Request switches to On-state with a timer.
     class InvincibilityOffState : InvincibilityState
     {
         public override void Enter(PlayerStats _stats) { }
@@ -344,6 +376,8 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    /* Invincible while the timer runs. When it expires, returns to Off-state.
+     * PlayerDamageReceiver checks PlayerStats.IsInvincible() to gate damage. */
     class InvincibilityOnState : InvincibilityState
     {
         float remainingSeconds;

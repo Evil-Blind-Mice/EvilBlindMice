@@ -45,6 +45,7 @@ public class PowerUpPickup : MonoBehaviour
         if (_other.isTrigger) return;
         if (!_other.CompareTag("Player")) return;
 
+        // Fetch player stats
         PlayerStats stats = PlayerStats.instance;
         if (stats == null) return;
 
@@ -114,12 +115,16 @@ public class PowerUpPickup : MonoBehaviour
         return GameManager.instance != null && GameManager.instance.isPaused;
     }
 
+    // Decrement a real-time countdown only while not paused
+    // (Uses Time.unscaledDeltaTime so Time.timeScale doesn't affect the timer).
     static void TickUnpaused(ref float _seconds)
     {
         if (!IsPaused())
             _seconds -= Time.unscaledDeltaTime;
     }
 
+    // Ensure Time.timeScale matches our desired slow target (or 0 if paused).
+    // Avoids jitter if something else changed timeScale externally.
     static void EnforceActiveScaleIfNeeded()
     {
         float target = IsPaused() ? 0f : activeSlowScale;
@@ -133,6 +138,10 @@ public class PowerUpPickup : MonoBehaviour
     }
 
     // -*-*-*-*-*-*-*- Runner -*-*-*-*-*-*-*-
+    
+    /* We do NOT host the time-slow coroutine on GameManager because it may be
+     * destroyed/reloaded on scene changes. This creates/fetches a small, hidden
+     * object that survives scene loads to keep the coroutine alive. */
     static MonoBehaviour GetRunner()
     {
         if (runner != null) 
@@ -155,6 +164,9 @@ public class PowerUpPickup : MonoBehaviour
 
     // -*-*-*-*-*-*-*- Time Slow -*-*-*-*-*-*-*-
 
+    /* Start or extend a global time slow. Multiple pickups will:
+     * - take the "lowest" slow scale, and
+     * - take the "longest" remaining duration */
     static void ApplyTimeSlow(float _scale, int _durationSeconds)
     {
         _scale = Mathf.Clamp(_scale, 0.01f, 1f);
@@ -170,6 +182,8 @@ public class PowerUpPickup : MonoBehaviour
             slowRoutine = GetRunner().StartCoroutine(TimeSlowRoutine());
     }
 
+    /* While time slow is active, enforce the requested timeScale and
+     * tick down real-time seconds. When finished, restore timeScale to 1. */
     static IEnumerator TimeSlowRoutine()
     {
         while (slowRemainingSeconds > 0f)
