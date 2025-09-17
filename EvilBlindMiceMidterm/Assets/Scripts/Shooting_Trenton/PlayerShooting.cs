@@ -24,8 +24,6 @@ public class PlayerShooting : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDistance, ~ignoreLayers))
         {
-            Debug.Log(hit.collider.name);
-
             IDamage damage = hit.collider.GetComponent<IDamage>();
 
             if (damage != null)
