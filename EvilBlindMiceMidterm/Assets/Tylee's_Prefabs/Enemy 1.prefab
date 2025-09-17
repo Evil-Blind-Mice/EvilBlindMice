@@ -116,7 +116,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2953812435600490365}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.00000008940696, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.000000003230648, y: 0.40662718, z: 0.07390854}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -262,15 +262,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5c9967feea6c784fb27cf34c8f39eaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  agent: {fileID: 0}
+  agent: {fileID: 4018473087000019562}
   model: {fileID: 8697304243430298209}
   shootPosition: {fileID: 5931503903252847276}
-  headPosition: {fileID: 0}
+  headPosition: {fileID: 5931503903252847276}
   shieldHealth: 0
   health: 3
   faceTargetSpeed: 8
   FOV: 90
   bullet: {fileID: 486650950796547754, guid: d3338facf22c4e5448326a69d17fecf2, type: 3}
+  shield: {fileID: 7384149937332723377, guid: f94d6f5493661e348a12cbcc94b1bd52, type: 3}
   shootRate: 0.4
 --- !u!195 &4018473087000019562
 NavMeshAgent:
