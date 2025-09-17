@@ -64,7 +64,6 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
         if (shootTimer > shootRate)
         {
             shootLine.GetComponent<Renderer>().material = preparingShot;
-            shootTimer = 0;
         }
 
         if (hasShot)
@@ -151,6 +150,8 @@ public class sniperEnemyAI : MonoBehaviour, IDamage
 
     void Snipe()
     {
+        shootTimer = 0;
+        Instantiate(bullet, shootPosition.position, transform.rotation);
         shootLine.GetComponent<Renderer>().material = firedShot;
     }
 
