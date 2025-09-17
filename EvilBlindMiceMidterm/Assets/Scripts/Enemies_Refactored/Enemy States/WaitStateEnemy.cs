@@ -17,7 +17,7 @@ public class WaitStateEnemy : CustomState
         if (sightCheckPos == null) sightCheckPos = transform;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (!isCurrentState) return;
 
