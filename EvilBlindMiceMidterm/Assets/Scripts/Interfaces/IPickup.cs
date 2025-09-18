@@ -1,7 +1,6 @@
 using UnityEngine;
 
-public interface IPickup
+public interface IPickupWeapon
 {
     public void GetWeaponStats(WeaponStats weapon);
-    public void GetPowerUpStats(PowerUpStats powerUp);
 }

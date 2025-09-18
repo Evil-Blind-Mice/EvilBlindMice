@@ -6,11 +6,10 @@ public class GunPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider _other)
     {
-        IPickup pickupable = _other.GetComponent<IPickup>();
+        IPickupWeapon pickupable = _other.GetComponent<IPickupWeapon>();
 
-        if (pickupable != null )
+        if (pickupable != null)
         {
-            gun.currentWeaponAmmo = gun.maxWeaponAmmo;
             pickupable.GetWeaponStats(gun);
             Destroy(gameObject);
         }
