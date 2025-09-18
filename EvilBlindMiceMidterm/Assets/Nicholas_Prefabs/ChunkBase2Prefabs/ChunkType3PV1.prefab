@@ -850,6 +850,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1838174365489318353}
     m_Modifications:
+    - target: {fileID: 1857444323846784412, guid: dcc601467a797d24683650211736a5b7, type: 3}
+      propertyPath: m_TagString
+      value: Intersection
+      objectReference: {fileID: 0}
     - target: {fileID: 2711597669551942747, guid: dcc601467a797d24683650211736a5b7, type: 3}
       propertyPath: m_IsActive
       value: 0
