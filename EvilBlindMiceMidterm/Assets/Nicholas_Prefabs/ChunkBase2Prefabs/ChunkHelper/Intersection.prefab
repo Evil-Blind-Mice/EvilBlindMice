@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 8127786115098444040}
   - component: {fileID: 2824739878517675941}
   - component: {fileID: 4366449857413495384}
+  - component: {fileID: 5711492027366963771}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -222,6 +223,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5711492027366963771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857444323846784412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f879846c4efffc14b81f3322862e2571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Intersection
+  parent: {fileID: 0}
+  up: 0
+  down: 0
+  right: 0
+  left: 0
+  forward: 0
+  backward: 0
+  availableDirections: []
 --- !u!1 &2711597669551942747
 GameObject:
   m_ObjectHideFlags: 0

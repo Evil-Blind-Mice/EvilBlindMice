@@ -107,7 +107,6 @@ public class ChunkV2 : MonoBehaviour
                 if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.forward * increment, 6f * connectionPoints[i].transform.localScale.z).Length > 0)
                 {
                     found++;
-                    Debug.Log("Overlapped");
                 }
                 increment += 12f * connectionPoints[i].transform.localScale.z;
             }
