@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DashState : MovementState
@@ -20,7 +19,7 @@ public class DashState : MovementState
     {
         base.OnUpdate(_input);
 
-        if (playerMovement.currentIntersection != null)
+        if (playerMovement.currentIntersection != null && playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
             body.linearVelocity = Vector3.zero;
             return;
@@ -46,7 +45,10 @@ public class DashState : MovementState
     public override void OnIntersectionEnter(Intersection _intersection)
     {
         base.OnIntersectionEnter(_intersection);
-        playerMovement.ChangeToState(defaultMovementState);
+        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
+        {
+            playerMovement.ChangeToState(defaultMovementState);
+        }
     }
 
     void stackDash()
