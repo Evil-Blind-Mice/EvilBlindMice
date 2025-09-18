@@ -26,17 +26,12 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
 
     private void OnCollisionEnter(Collision _collision)
     {
-        if ((groundLayer & (1 << _collision.gameObject.layer)) != 0)
-        {
-            foreach (ContactPoint contact in _collision.contacts)
-            {
-                if (contact.normal == -PlayerMovement.instance.gravityReference.forward)
-                { // ran face first into a wall
-                    TakeDamage(gameOverDamage);
-                    break;
-                }
-            }
+        
+        if(Physics.Raycast(transform.position, transform.forward, 1, groundLayer))
+        { // ran face first into a wall
+            TakeDamage(gameOverDamage);
         }
+           
     }
 }
 
