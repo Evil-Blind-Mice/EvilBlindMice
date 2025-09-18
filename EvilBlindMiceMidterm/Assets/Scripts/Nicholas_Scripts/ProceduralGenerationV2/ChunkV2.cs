@@ -74,6 +74,7 @@ public class ChunkV2 : MonoBehaviour
     {
         GameObject childChunk = Instantiate(chunkPool[Random.Range(0, chunkPool.Count)],
                 connectionPoints[connectionPoint].position, connectionPoints[connectionPoint].rotation);
+        childChunk.transform.localScale = connectionPoints[connectionPoint].transform.localScale;
         childChunk.GetComponent<ChunkV2>().SetInfo(iteration + 1, chunkPool, generationIterations, this);
         connectionPoints[connectionPoint].SetChild(childChunk.GetComponent<ChunkV2>());
         childChunkList.Add(childChunk.GetComponent<ChunkV2>());
@@ -99,15 +100,15 @@ public class ChunkV2 : MonoBehaviour
         List<int> safeSpawnIndex = new();
         for (int i = 0; i < connectionPoints.Count; i++)
         {
-            float increment = 13f;
+            float increment = 12 * connectionPoints[i].transform.localScale.z + 2;
             int found = 0;
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < 8; j++)
             {
-                if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.right * increment, 11f).Length > 1)
+                if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.forward * increment, 6f * connectionPoints[i].transform.localScale.z).Length > 0)
                 {
                     found++;
                 }
-                increment += 22f;
+                increment += 12f * connectionPoints[i].transform.localScale.z;
             }
             if (found == 0)
             {
