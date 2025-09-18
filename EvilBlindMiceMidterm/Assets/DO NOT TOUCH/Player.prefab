@@ -309,11 +309,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   initialRunSpeed: 20
-  initialJumpForce: 20
+  initialJumpForce: 25
   initialMaxHealth: 25
   initialJumpMax: 1
   initialDashForce: 150
-  initialDashCount: 5
+  initialDashCount: 0
   maxHealth: 25
   currentHealth: 25
   runSpeed: 5
@@ -436,7 +436,7 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
-  wallRunCooldown: 1
+  wallRunCooldown: 0.1
   wallRunCastOffset: 0.5
 --- !u!114 &4316812403031956506
 MonoBehaviour:
