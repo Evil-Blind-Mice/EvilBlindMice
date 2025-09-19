@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class GunPickup : MonoBehaviour
+public class WeaponPickup : MonoBehaviour
 {
-    [SerializeField] WeaponStats gun;
+    [SerializeField] WeaponStats weapon;
 
     private void OnTriggerEnter(Collider _other)
     {
@@ -10,7 +10,7 @@ public class GunPickup : MonoBehaviour
 
         if (pickupable != null)
         {
-            pickupable.GetWeaponStats(gun);
+            pickupable.GetWeaponStats(weapon);
             Destroy(gameObject);
         }
     }

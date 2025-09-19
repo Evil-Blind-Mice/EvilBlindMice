@@ -43,12 +43,13 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
 
-        if (instance != null && instance != this) {
-            Destroy(gameObject);
-        } else
+        if (instance != null && instance != this) 
         {
-            instance = this;
+            Destroy(gameObject);
+            return;
         }
+        instance = this;
+
         timeScaleOriginal = Time.timeScale;
 
         instance = this;
@@ -57,6 +58,13 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<PlayerStats>();
         playerAttackScript = player.GetComponent<PlayerShooting>();
 
+    }
+
+    void Start()
+    {
+        isPaused = false;
+        TimeSlowService.Reset();
+        PlayerStats.instance.ResetAllPowerUpEffects();
     }
 
     // Update is called once per frame

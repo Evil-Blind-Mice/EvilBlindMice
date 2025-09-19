@@ -77,12 +77,12 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Approximately(scroll, 0)) return;
 
-        if (scroll > 0)
-            weaponListPosition = (weaponListPosition + 1) % weaponList.Count;
-        else if (scroll < 0)
-            weaponListPosition = (weaponListPosition - 1 + weaponList.Count) % weaponList.Count;
+        //if (scroll > 0)
+            //weaponListPosition = (weaponListPosition + 1) % weaponList.Count;
+        //else if (scroll < 0)
+            //weaponListPosition = (weaponListPosition - 1 + weaponList.Count) % weaponList.Count;
 
-        ChangeWeapon();
+        //ChangeWeapon();
     }
 
     public void GetWeaponStats(WeaponStats _weapon)
@@ -90,13 +90,15 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         if (!ammoByWeapon.ContainsKey(_weapon))
             ammoByWeapon[_weapon] = _weapon.weaponMaxAmmo;
 
-        weaponList.Add(_weapon);
+        if (!weaponList.Contains(_weapon))
+            weaponList.Add(_weapon);
+
         weaponListPosition = weaponList.Count - 1;
 
-        ChangeWeapon();
+        //ChangeWeapon();
     }
 
-    void ChangeWeapon()
+    /*void ChangeWeapon()
     {
         currentWeapon = weaponList[weaponListPosition];
 
@@ -111,5 +113,5 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         weaponModel.GetComponent<MeshRenderer>().sharedMaterial = currentWeapon.weaponModel.GetComponent<MeshRenderer>().sharedMaterial;
 
         GameManager.instance.UpdatePlayerUI();
-    }
+    }*/
 }

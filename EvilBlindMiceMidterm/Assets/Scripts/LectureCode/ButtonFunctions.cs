@@ -10,7 +10,8 @@ public class ButtonFunctions : MonoBehaviour
 
     public void Restart()
     {
-        PowerUpPickup.ResetAllEffects();
+        TimeSlowService.Reset();
+        PlayerStats.instance.ResetAllPowerUpEffects();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameManager.instance.StateUnpause();
     }
