@@ -187,13 +187,14 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
     }
 
-    public void IntersectionDirectionPromptLeft()
+    
+    public void IntersectionDirectionPromptLeft(bool _active)
     {
-            StartCoroutine(Flash(qLeft.gameObject, 1.2f)); 
+        qLeft.gameObject.SetActive(_active);
     }
-    public void IntersectionDirectionPromptRight()
+    public void IntersectionDirectionPromptRight(bool _active)
     {
-        StartCoroutine(Flash(eRight.gameObject, 1.2f));
+        eRight.gameObject.SetActive(_active);
     }
     IEnumerator Flash(GameObject _go, float _seconds)
     {
