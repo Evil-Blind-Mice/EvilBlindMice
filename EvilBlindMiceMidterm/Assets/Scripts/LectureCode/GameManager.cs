@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuUpgrades;
+    [SerializeField] TMP_Text distanceTraveledText;
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
@@ -20,12 +21,13 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpeedBoostFlash;
     public TMP_Text qLeft;
     public TMP_Text eRight;
-    [SerializeField] TMP_Text distanceTraveledText;
+    public TMP_Text weaponCurrentAmmo, weaponMaxAmmo;
 
 
 
     public GameObject player;
     public PlayerStats playerScript;
+    public PlayerShooting playerAttackScript;
 
     public bool isPaused;
 
@@ -41,19 +43,28 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
 
-        if (instance != null && instance != this) {
-            Destroy(gameObject);
-        } else
+        if (instance != null && instance != this) 
         {
-            instance = this;
+            Destroy(gameObject);
+            return;
         }
+        instance = this;
+
         timeScaleOriginal = Time.timeScale;
 
         instance = this;
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerStats>();
+        playerAttackScript = player.GetComponent<PlayerShooting>();
 
+    }
+
+    void Start()
+    {
+        isPaused = false;
+        TimeSlowService.Reset();
+        PlayerStats.instance.ResetAllPowerUpEffects();
     }
 
     // Update is called once per frame
@@ -86,6 +97,15 @@ public class GameManager : MonoBehaviour
 
         if(distanceTraveledText != null && PlayerStats.instance != null)
             distanceTraveledText.text = PlayerStats.instance.GetDistanceTraveled().ToString("F0");
+
+        if(playerAttackScript != null && playerAttackScript.HasWeapon)
+        {
+            if (weaponCurrentAmmo)
+                weaponCurrentAmmo.text = playerAttackScript.WeaponCurrentAmmo.ToString("F0");
+
+            if (weaponMaxAmmo)
+                weaponMaxAmmo.text = playerAttackScript.WeaponMaxAmmo.ToString("F0");
+        }
     }
 
     public void FlashDamage()
