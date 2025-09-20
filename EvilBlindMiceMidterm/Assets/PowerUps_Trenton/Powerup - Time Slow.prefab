@@ -368,7 +368,6 @@ GameObject:
   - component: {fileID: 2250894898711724607}
   - component: {fileID: 503853148866081931}
   - component: {fileID: 909087193936666666}
-  - component: {fileID: 8513276415768273448}
   m_Layer: 10
   m_Name: Powerup - Time Slow
   m_TagString: Untagged
@@ -384,7 +383,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7510177946620485933}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.00000046193594, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.0000002, y: 1.5, z: -4.75}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
@@ -444,30 +443,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.23914337, y: 0.23554415, z: 0.24502349}
   m_Center: {x: -0.0004813671, y: 0.114044815, z: 0.0011404753}
---- !u!54 &8513276415768273448
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7510177946620485933}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 1
-  m_Constraints: 0
-  m_CollisionDetection: 0

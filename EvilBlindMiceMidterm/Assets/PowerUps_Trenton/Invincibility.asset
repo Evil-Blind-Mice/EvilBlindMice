@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19d2b3ee46c540e4e9608936d1287f40, type: 3}
   m_Name: Invincibility
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpStats
-  type: 0
+  type: 2
   sound: []
   healAmount: 0
   speedMultiplier: 0
   speedDurationSeconds: 0
-  invincibilityDurationSeconds: 0
+  invincibilityDurationSeconds: 5
   slowScale: 0.05
   slowDurationSeconds: 0
   tripSpeedDivider: 0
