@@ -26,6 +26,8 @@ public class PlayerStats : MonoBehaviour
     int jumpMax;
     [HideInInspector] public float distanceTraveled;
 
+    public event System.Action<int> OnDashChanged;
+
     SpeedState currentSpeedState;
     InvincibilityState currentInvincibilityState;
 
@@ -164,7 +166,22 @@ public class PlayerStats : MonoBehaviour
 
     public void AddDashCount(int _modifier)
     {
-        dashCount += _modifier;
+        int before = dashCount;
+
+        dashCount = Mathf.Max(0, dashCount + _modifier);
+
+        if (dashCount != before)
+            OnDashChanged?.Invoke(dashCount);
+    }
+
+    public bool TrySpendDash()
+    {
+        if (dashCount <= 0) 
+            return false;
+
+        dashCount--;
+        OnDashChanged?.Invoke(dashCount);
+        return true;
     }
 
 
