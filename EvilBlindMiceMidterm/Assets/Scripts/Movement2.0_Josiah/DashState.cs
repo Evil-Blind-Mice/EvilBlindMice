@@ -10,7 +10,13 @@ public class DashState : MovementState
     public override void OnEnter(PlayerMovement _playerMovement, Rigidbody _body)
     {
         base.OnEnter(_playerMovement, _body);
-        PlayerStats.instance.AddDashCount(-1);
+
+        if (!PlayerStats.instance.TrySpendDash())
+        {
+            playerMovement.ChangeToState(defaultMovementState);
+            return;
+        }
+
         timer = dashDuration;
         dashesStacked = 0;
     }
@@ -29,7 +35,7 @@ public class DashState : MovementState
 
         if (_input.jumpPressedThisFrame)
         {
-            stackDash();
+            StackDash();
         }
 
         timer -= Time.deltaTime;
@@ -51,8 +57,10 @@ public class DashState : MovementState
         }
     }
 
-    void stackDash()
+    void StackDash()
     {
+        if (!PlayerStats.instance.TrySpendDash()) return;
+
         dashesStacked++;
         timer = dashDuration;
     }

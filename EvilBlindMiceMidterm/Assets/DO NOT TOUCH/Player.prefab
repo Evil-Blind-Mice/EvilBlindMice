@@ -175,9 +175,11 @@ MonoBehaviour:
   ignoreLayers:
     serializedVersion: 2
     m_Bits: 0
-  shootDamage: 1
-  fireRate: 0.1
-  shootDistance: 200
+  weaponList: []
+  weaponModel: {fileID: 0}
+  weaponFiringDamage: 0
+  weaponFireRate: 0
+  weaponFiringDistance: 0
 --- !u!1 &1974939068119532531
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,6 +712,7 @@ GameObject:
   - component: {fileID: 4316812403031956506}
   - component: {fileID: 4441652848683688913}
   - component: {fileID: 8156081038612412106}
+  - component: {fileID: 5960243340350875845}
   - component: {fileID: 1290850322841129772}
   - component: {fileID: 8622106737285489853}
   m_Layer: 3
@@ -728,7 +731,7 @@ Transform:
   m_GameObject: {fileID: 8741673822585386556}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 1.75, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -830,6 +833,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   gameOverDamage: 2147483647
+--- !u!114 &5960243340350875845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8741673822585386556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42dcf0195bd899340bcd1914229350f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPowerUps
 --- !u!136 &1290850322841129772
 CapsuleCollider:
   m_ObjectHideFlags: 0
