@@ -13,7 +13,7 @@ public class ProceduralGenerationManagerV2 : MonoBehaviour
     [SerializeField] List<GameObject> availableChunkPool;
     [SerializeField] Vector3 generationStartingPosition = new(0, 0, 0);
     [SerializeField] Quaternion generationStartingRotation = new(0, 0, 0, 0);
-    [SerializeField] Vector3 generationStartingScale = new(1, 1, 1);
+    [Range(0.001f, 10f)][SerializeField] float generationStartingScale = 1;
     public int generationIterations = 1;
 
     void Awake()
@@ -37,7 +37,7 @@ public class ProceduralGenerationManagerV2 : MonoBehaviour
     private void GenerateFirstChunks()
     {
         firstSpawn = Instantiate(initialChunkPrefab, generationStartingPosition, generationStartingRotation);
-        firstSpawn.transform.localScale = generationStartingScale;
+        firstSpawn.transform.localScale = new Vector3(generationStartingScale, generationStartingScale, generationStartingScale);
         currentChunk = firstSpawn.GetComponent<ChunkV2>();
         currentChunk.SetInfo(0, availableChunkPool, generationIterations);
 
