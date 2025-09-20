@@ -73,8 +73,8 @@ public class ChunkV2 : MonoBehaviour
     void CreateChunk(int connectionPoint)
     {
         GameObject childChunk = Instantiate(chunkPool[Random.Range(0, chunkPool.Count)],
-                connectionPoints[connectionPoint].position, connectionPoints[connectionPoint].rotation);
-        childChunk.transform.localScale = connectionPoints[connectionPoint].transform.localScale;
+                connectionPoints[connectionPoint].transform.position, connectionPoints[connectionPoint].transform.rotation);
+        childChunk.transform.localScale = connectionPoints[connectionPoint].gameObject.transform.parent.transform.localScale;
         childChunk.GetComponent<ChunkV2>().SetInfo(iteration + 1, chunkPool, generationIterations, this);
         connectionPoints[connectionPoint].SetChild(childChunk.GetComponent<ChunkV2>());
         childChunkList.Add(childChunk.GetComponent<ChunkV2>());
@@ -100,15 +100,16 @@ public class ChunkV2 : MonoBehaviour
         List<int> safeSpawnIndex = new();
         for (int i = 0; i < connectionPoints.Count; i++)
         {
-            float increment = 12 * connectionPoints[i].transform.localScale.z + 2;
+            float scaleMuliplier = connectionPoints[0].gameObject.transform.parent.transform.localScale.z;
+            float increment = (15 * scaleMuliplier) + 2;
             int found = 0;
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < 6; j++)
             {
-                if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.forward * increment, 6f * connectionPoints[i].transform.localScale.z).Length > 0)
+                if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.forward * increment, 7.5f * scaleMuliplier).Length > 0)
                 {
                     found++;
                 }
-                increment += 12f * connectionPoints[i].transform.localScale.z;
+                increment += (15 * scaleMuliplier);
             }
             if (found == 0)
             {

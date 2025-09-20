@@ -201,6 +201,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2348671236724832168, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
+      propertyPath: generationStartingScale
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2348671236724832168, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
       propertyPath: generationStartingPosition.y
       value: 0
       objectReference: {fileID: 0}
