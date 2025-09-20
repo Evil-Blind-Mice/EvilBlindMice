@@ -26,8 +26,8 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
 
     private void OnCollisionEnter(Collision _collision)
     {
-        
-        if(Physics.Raycast(transform.position, transform.forward, 1, groundLayer))
+        Transform gravityReference = PlayerMovement.instance.gravityReference;
+        if (Physics.Raycast(transform.position + gravityReference.up, gravityReference.forward, 1, groundLayer))
         { // ran face first into a wall
             TakeDamage(gameOverDamage);
         }

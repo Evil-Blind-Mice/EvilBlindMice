@@ -143,27 +143,27 @@ public class DefaultMovementState : MovementState, IDebug
     public override void OnInsideIntersection()
     {
 
-        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
+        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up) || playerMovement.currentIntersection == null) return;
         
         if (playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
         {
-            GameManager.instance.IntersectionDirectionPromptRight();
             if (Input.GetButtonDown("ChangeDirectionRight"))
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
                 playerMovement.currentIntersection = null;
+                ShowPrompts(false, false);
                 return;
             }
         }
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
         {
-            GameManager.instance.IntersectionDirectionPromptLeft();
             if (Input.GetButtonDown("ChangeDirectionLeft"))
             {
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
                 playerMovement.currentIntersection = null;
+                ShowPrompts(false, false);
                 return;
             }
         }
@@ -191,6 +191,12 @@ public class DefaultMovementState : MovementState, IDebug
             float arcSegmentLength = (2f * MathF.PI * Mathf.Clamp(distanceToGround, 2.5f, 100)) / 4;
             playerMovement.RotateUprightWithGravity(90f/(arcSegmentLength/ Mathf.Clamp(PlayerStats.instance.GetSpeed(), intersectionSpeed, PlayerStats.instance.GetSpeed())));
             rotationSpeedEquation = 90f / (arcSegmentLength / PlayerStats.instance.GetSpeed());
+            playerMovement.currentIntersection = null;
+        }else 
+        {
+            ShowPrompts(
+                playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right),
+                playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right));
         }
 
     }
@@ -198,6 +204,8 @@ public class DefaultMovementState : MovementState, IDebug
     public override void OnIntersectionExit(Intersection _intersection, Vector3 _exitPoint)
     {
         base.OnIntersectionExit(_intersection, _exitPoint);
+
+        ShowPrompts(false, false);
 
         Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
 
@@ -226,6 +234,11 @@ public class DefaultMovementState : MovementState, IDebug
         
     }
 
+    void ShowPrompts(bool _left, bool _right)
+    {
+        GameManager.instance.IntersectionDirectionPromptLeft(_left);
+        GameManager.instance.IntersectionDirectionPromptRight(_right);
+    }
 
 
     // Unique Functions
