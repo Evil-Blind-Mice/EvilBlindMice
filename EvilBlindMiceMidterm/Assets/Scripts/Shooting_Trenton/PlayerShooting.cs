@@ -34,15 +34,19 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         shootTimer += Time.deltaTime;
         if(GameManager.instance != null && GameManager.instance.isPaused) return;
 
-        bool hasWeapon = weaponList.Count > 0;
-        bool hasAmmo = hasWeapon && weaponList[weaponListPosition].weaponCurrentAmmo > 0;
-        bool canShoot = hasWeapon && hasAmmo && shootTimer >= weaponFireRate;
-
-        if (Input.GetButton("Fire1") && canShoot)
-            Shoot();
-
         SelectWeapon();
         ReloadWeapon();
+
+        int weaponPosition = Mathf.Clamp(weaponListPosition, 0, weaponList.Count - 1);
+        WeaponStats weapon = weaponList[weaponPosition];
+
+        bool wantsToShoot = weapon.isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
+        bool canShoot = weapon.weaponCurrentAmmo > 0 && shootTimer >= weaponFireRate;
+
+        if (wantsToShoot && canShoot)
+            Shoot();
+
+        
     }
 
     void EnsureStartingWeapon()
