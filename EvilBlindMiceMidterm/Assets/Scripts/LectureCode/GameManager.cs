@@ -98,13 +98,13 @@ public class GameManager : MonoBehaviour
         if(distanceTraveledText != null && PlayerStats.instance != null)
             distanceTraveledText.text = PlayerStats.instance.GetDistanceTraveled().ToString("F0");
 
-        if(playerAttackScript != null && playerAttackScript.HasWeapon)
+        if(playerAttackScript != null && playerAttackScript.weaponList != null && playerAttackScript.weaponList.Count > 0)
         {
-            if (weaponCurrentAmmo)
-                weaponCurrentAmmo.text = playerAttackScript.WeaponCurrentAmmo.ToString("F0");
+            int weaponPosition = Mathf.Clamp(playerAttackScript.weaponListPosition, 0, playerAttackScript.weaponList.Count - 1);
+            WeaponStats weapon = playerAttackScript.weaponList[weaponPosition];
 
-            if (weaponMaxAmmo)
-                weaponMaxAmmo.text = playerAttackScript.WeaponMaxAmmo.ToString("F0");
+            if (weaponCurrentAmmo) weaponCurrentAmmo.text = weapon.weaponCurrentAmmo.ToString("F0");
+            if (weaponMaxAmmo) weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
         }
     }
 
