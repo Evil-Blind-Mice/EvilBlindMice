@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Weapon - MG
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStats
   weaponModel: {fileID: 6128342872770344015, guid: 142357b1ff506c54098fe03f9faa8c7c, type: 3}
+  isAutomatic: 1
   weaponFiringDamage: 2
   weaponFireRate: 0.12
   weaponFiringDistance: 200
-  weaponCurrentAmmo: 50
+  weaponCurrentAmmo: 39
   weaponMaxAmmo: 50
   hitEffect: {fileID: 0}
   shootingSound: []
