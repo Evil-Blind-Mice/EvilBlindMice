@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 237093100117595030}
   - component: {fileID: 7114342325381882277}
   - component: {fileID: 1974035796704016320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Powerup Pickup - Dash Charge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Floating
   amplitude: 0.25
   bobSpeed: 1.5
-  rotateSpeed: 40
+  rotateSpeed: 80
 --- !u!33 &237093100117595030
 MeshFilter:
   m_ObjectHideFlags: 0

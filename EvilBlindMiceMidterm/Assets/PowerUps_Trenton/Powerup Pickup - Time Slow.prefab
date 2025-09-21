@@ -421,7 +421,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Floating
   amplitude: 0.25
   bobSpeed: 1.5
-  rotateSpeed: 40
+  rotateSpeed: 80
 --- !u!65 &909087193936666666
 BoxCollider:
   m_ObjectHideFlags: 0
