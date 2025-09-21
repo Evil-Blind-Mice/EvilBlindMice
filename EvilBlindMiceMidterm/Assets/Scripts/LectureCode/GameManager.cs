@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
             WeaponStats weapon = playerAttackScript.weaponList[weaponPosition];
 
             if (weaponCurrentAmmo)
-                weaponCurrentAmmo.text = playerAttackScript.InfiniteAmmoActive ? "?" : weapon.weaponCurrentAmmo.ToString("F0");
+                weaponCurrentAmmo.text = playerAttackScript.InfiniteAmmoActive ? "INF" : weapon.weaponCurrentAmmo.ToString("F0");
             
             if (weaponMaxAmmo)
                 weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
