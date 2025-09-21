@@ -103,8 +103,11 @@ public class GameManager : MonoBehaviour
             int weaponPosition = Mathf.Clamp(playerAttackScript.weaponListPosition, 0, playerAttackScript.weaponList.Count - 1);
             WeaponStats weapon = playerAttackScript.weaponList[weaponPosition];
 
-            if (weaponCurrentAmmo) weaponCurrentAmmo.text = weapon.weaponCurrentAmmo.ToString("F0");
-            if (weaponMaxAmmo) weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
+            if (weaponCurrentAmmo)
+                weaponCurrentAmmo.text = playerAttackScript.InfiniteAmmoActive ? "?" : weapon.weaponCurrentAmmo.ToString("F0");
+            
+            if (weaponMaxAmmo)
+                weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
         }
     }
 

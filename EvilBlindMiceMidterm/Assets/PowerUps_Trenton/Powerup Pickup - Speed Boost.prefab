@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3978028999895763672}
   - component: {fileID: 7014711122673411229}
   - component: {fileID: 3254354170801351959}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Powerup Pickup - Speed Boost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Floating
   amplitude: 0.25
   bobSpeed: 1.5
-  rotateSpeed: 40
+  rotateSpeed: 80
 --- !u!33 &3978028999895763672
 MeshFilter:
   m_ObjectHideFlags: 0

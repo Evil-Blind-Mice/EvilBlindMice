@@ -14,8 +14,12 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     [SerializeField] int weaponFiringDamage;
     [SerializeField] float weaponFireRate;
     [SerializeField] int weaponFiringDistance;
+    [SerializeField] bool infiniteAmmoActive;
+
+    public bool InfiniteAmmoActive => infiniteAmmoActive;
 
     float shootTimer;
+    float infiniteAmmoRemaining;
 
     public int weaponListPosition;
 
@@ -32,7 +36,17 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     void Update()
     {
         shootTimer += Time.deltaTime;
-        if(GameManager.instance != null && GameManager.instance.isPaused) return;
+        if (GameManager.instance != null && GameManager.instance.isPaused) return;
+
+        if (infiniteAmmoActive)
+        {
+            infiniteAmmoRemaining -= Time.unscaledDeltaTime;
+            if (infiniteAmmoRemaining <= 0)
+            {
+                infiniteAmmoActive = false;
+                infiniteAmmoRemaining = 0;
+            }
+        }
 
         SelectWeapon();
         ReloadWeapon();
@@ -69,7 +83,13 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         shootTimer = 0;
 
         WeaponStats weapon = weaponList[weaponListPosition];
-        weapon.weaponCurrentAmmo--;
+
+        if (!infiniteAmmoActive)
+        {
+            if (weapon.weaponCurrentAmmo <= 0) return;
+            weapon.weaponCurrentAmmo--;
+        }
+
         GameManager.instance?.UpdatePlayerUI();
 
         RaycastHit hit;
@@ -86,11 +106,16 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     {
         if (weaponList.Count == 0) return;
 
+        if (infiniteAmmoActive) return;
+
         if (Input.GetButtonDown("Reload"))
         {
             WeaponStats weapon = weaponList[weaponListPosition];
-            weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
-            GameManager.instance?.UpdatePlayerUI();
+            if (weapon.weaponCurrentAmmo < weapon.weaponMaxAmmo)
+            {
+                weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
+                GameManager.instance?.UpdatePlayerUI();
+            }
         }
     }
 
@@ -144,5 +169,17 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         }
 
         GameManager.instance?.UpdatePlayerUI();
+    }
+
+    public void ActivateInfiniteAmmo(int _duration)
+    {
+        infiniteAmmoRemaining = Mathf.Max(infiniteAmmoRemaining, Mathf.Max(0, _duration));
+        infiniteAmmoActive = true;
+
+        int weaponPosition = Mathf.Clamp(weaponListPosition, 0, weaponList.Count - 1);
+        WeaponStats weapon = weaponList[weaponPosition];
+
+        if (weapon)
+            weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
     }
 }
