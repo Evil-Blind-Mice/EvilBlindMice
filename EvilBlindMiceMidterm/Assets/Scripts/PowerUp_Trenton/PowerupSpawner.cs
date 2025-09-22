@@ -1,12 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[System.Serializable]
+public struct PowerupChance
+{
+    public GameObject powerup;
+    [Range(0, 100)] public int percent;
+}
+
 public class PowerupSpawner : MonoBehaviour
 {
     [Header("Spawn Settings")]
-    [SerializeField] List<GameObject> powerupsToSpawn;
+    [SerializeField] List<PowerupChance> powerupsToSpawn;
     [SerializeField] int numberToSpawn;
-    [SerializeField] int spawnRate;
+    [SerializeField] float spawnRate;
+    [SerializeField] bool noDuplicates;
 
     [Header("Spawn Positions")]
     [SerializeField] Transform[] spawnAnchors;
@@ -20,43 +28,124 @@ public class PowerupSpawner : MonoBehaviour
 
     float spawnTimer;
     int spawnCount;
+    List<int> availableAnchorIndices;
+    HashSet<int> usedPowerupIndices = new();
+
+    void Awake()
+    {
+        RebuildAvailableAnchors();
+    }
+
+    void OnValidate()
+    {
+        if (!Application.isPlaying)
+            RebuildAvailableAnchors();
+    }
 
     void Update()
     {
+        if (spawnAnchors == null || spawnAnchors.Length == 0) return;
+        if (powerupsToSpawn == null || powerupsToSpawn.Count == 0) return;
+        if (spawnCount >= numberToSpawn) return;
+
         spawnTimer += Time.deltaTime;
 
-        if (spawnCount < numberToSpawn && spawnTimer >= spawnRate)
+        if (spawnTimer >= spawnRate)
         {
             SpawnPowerup();
             spawnTimer = 0;
         }
     }
 
+    void RebuildAvailableAnchors()
+    {
+        if (availableAnchorIndices == null)
+            availableAnchorIndices = new List<int>();
+        else
+            availableAnchorIndices.Clear();
+
+        if (spawnAnchors == null) return;
+        for (int anchorIndex = 0;  anchorIndex < spawnAnchors.Length; anchorIndex++)
+            if (spawnAnchors[anchorIndex] != null)
+                availableAnchorIndices.Add(anchorIndex);
+    }
+
     void SpawnPowerup()
     {
-        GameObject powerup = powerupsToSpawn[Random.Range(0, powerupsToSpawn.Count)];
-        Transform anchor = spawnAnchors[Random.Range(0, spawnAnchors.Length)];
+        // Pick anchor
+        int anchorIndex = PickAnchorIndex();
+        if (anchorIndex < 0) return;
 
+        Transform anchor = spawnAnchors[anchorIndex];
+
+        // Scatter on anchor's local plane and raycast along -Up
         Vector3 localScatter = anchor.right * Random.Range(-spawnRadius, spawnRadius) + anchor.forward * Random.Range(-spawnRadius, spawnRadius);
         Vector3 castStart = anchor.position + localScatter + anchor.up * castHeight;
         Vector3 castDir = -anchor.up;
 
-        if (Physics.Raycast(castStart, castDir, out RaycastHit hit, castHeight * 4, surface, QueryTriggerInteraction.Ignore))
+        // No surface
+        if (!Physics.Raycast(castStart, castDir, out RaycastHit hitInfo, castHeight * 4, surface, QueryTriggerInteraction.Ignore)) return;
+
+        // Roll which powerup to spawn
+        int chosenPowerupIndex = PickByPercent(noDuplicates);
+        if (chosenPowerupIndex < 0) return;
+
+        GameObject powerup = powerupsToSpawn[chosenPowerupIndex].powerup;
+        if (!powerup) return;
+
+        // Place and orient the powerup
+        Vector3 surfaceNormal = hitInfo.normal;
+        Vector3 spawnPosition = hitInfo.point + surfaceNormal * surfaceGap;
+
+        float powerupRotation = powerup.transform.localEulerAngles.z;
+        GameObject instance = Instantiate(powerup, spawnPosition, powerup.transform.rotation);
+
+        if (alignToSurface)
         {
-            Vector3 up = hit.normal;
-            Vector3 position = hit.point + up * surfaceGap;
-
-            float powerupRotation = powerup.transform.localEulerAngles.z;
-
-            GameObject instance = Instantiate(powerup, position, powerup.transform.rotation);
-
-            if (alignToSurface)
-            {
-                Quaternion align = Quaternion.FromToRotation(instance.transform.up, up);
-                instance.transform.Rotate(up, powerupRotation, Space.World);
-            }
-
-            spawnCount++;
+            Quaternion alignRotation = Quaternion.FromToRotation(instance.transform.up, surfaceNormal);
+            instance.transform.Rotate(surfaceNormal, powerupRotation, Space.World);
         }
+
+        usedPowerupIndices.Add(chosenPowerupIndex);
+        RetireAnchor(anchorIndex);
+        spawnCount++;
+    }
+
+    int PickAnchorIndex()
+    {
+        if (availableAnchorIndices == null || availableAnchorIndices.Count == 0) return -1;
+        int bagIndex = Random.Range(0, availableAnchorIndices.Count);
+        return availableAnchorIndices[bagIndex];
+    }
+
+    void RetireAnchor(int _anchorIndex)
+    {
+        if (availableAnchorIndices == null) return;
+        int listIndex = availableAnchorIndices.IndexOf(_anchorIndex);
+        if (listIndex >= 0)
+            availableAnchorIndices.RemoveAt(listIndex);
+    }
+
+    // Return index into powerupsToSpawn, or -1 for nothing
+    int PickByPercent(bool _enforceUnique)
+    {
+        if (powerupsToSpawn == null || powerupsToSpawn.Count == 0) return -1;
+
+        float randomRollPercent = Random.Range(0, 100);
+        float cumulativeActivePercent = 0;
+
+        for (int powerupIndex = 0; powerupIndex < powerupsToSpawn.Count; powerupIndex++)
+        {
+            if (_enforceUnique && usedPowerupIndices.Contains(powerupIndex)) continue;
+
+            float entryPercent = Mathf.Clamp(powerupsToSpawn[powerupIndex].percent, 0, 100);
+            if (entryPercent <= 0) continue;
+
+            cumulativeActivePercent += entryPercent;
+
+            if (randomRollPercent < cumulativeActivePercent) return powerupIndex;
+        }
+
+        return -1;
     }
 }
