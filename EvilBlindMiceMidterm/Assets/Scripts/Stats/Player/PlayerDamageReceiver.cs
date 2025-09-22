@@ -4,6 +4,8 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
 {
     PlayerStats playerStats;
     [SerializeField] LayerMask groundLayer;
+    [Tooltip("The distance above the player's feet that the raycast should originate from when checking for head-on collisions")]
+    [SerializeField] float crashCastOffset = 0.5f;
     [SerializeField] int gameOverDamage;
 
     void Awake()
@@ -27,7 +29,7 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
     private void OnCollisionEnter(Collision _collision)
     {
         Transform gravityReference = PlayerMovement.instance.gravityReference;
-        if (Physics.Raycast(transform.position + gravityReference.up, gravityReference.forward, 1, groundLayer))
+        if (Physics.Raycast(transform.position + transform.up * crashCastOffset, gravityReference.forward, 1, groundLayer))
         { // ran face first into a wall
             TakeDamage(gameOverDamage);
         }

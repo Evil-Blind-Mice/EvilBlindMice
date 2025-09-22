@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using TMPro;
 using Unity.Burst;
@@ -31,7 +32,6 @@ public class DefaultMovementState : MovementState, IDebug
     // variables stored for debug
     GameObject currentWall;
     float currentWallAngle;
-    string floorName;
     float rotationSpeedEquation;
    
 
@@ -52,12 +52,7 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnUpdate(_input);
 
-        float baseSpeed = (playerMovement.currentIntersection == null) ? PlayerStats.instance.GetSpeed() : Mathf.Clamp(PlayerStats.instance.GetSpeed(), intersectionSpeed, PlayerStats.instance.GetSpeed());
-
-        if (playerMovement.currentIntersection != null)
-        {
-            externalForceVelocity = Vector3.zero;
-        }
+        baseSpeed = (playerMovement.currentIntersection == null) ? PlayerStats.instance.GetSpeed() : intersectionSpeed;
 
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * baseSpeed;
@@ -90,15 +85,14 @@ public class DefaultMovementState : MovementState, IDebug
                     if (!playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
                     {
                         Dash();
-
                     }
                 }
                 else Dash();
 
             }
 
-                // add gravity/second to velocity
-                currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
+            // add gravity/second to velocity
+            currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
             if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
             // if the player reorients mid-air, the up direction is inverted
@@ -109,24 +103,7 @@ public class DefaultMovementState : MovementState, IDebug
             }
         }
 
-
-        // handle external forces
-
-        // The force of Air Resistance: F = -cv^2. 
-        Vector3 resistance = new Vector3(
-            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.x)),
-            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.y)),
-            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.z)));
-
-        externalForceVelocity = new Vector3(
-            externalForceVelocity.x + (externalForceVelocity.x > 0 ? -resistance.x : resistance.x),
-            externalForceVelocity.y + (externalForceVelocity.y > 0 ? -resistance.y : resistance.y),
-            externalForceVelocity.z + (externalForceVelocity.z > 0 ? -resistance.z : resistance.z));
-
-        // if the external force is small enough, round to zero
-        if (Mathf.Abs(externalForceVelocity.x) < externalForceThreshold) externalForceVelocity.x = 0;
-        if (Mathf.Abs(externalForceVelocity.y) < externalForceThreshold) externalForceVelocity.y = 0;
-        if (Mathf.Abs(externalForceVelocity.z) < externalForceThreshold) externalForceVelocity.z = 0;
+        CalculateExternalForces();
 
 
         // apply all forces (playerVelocity, external forces, and gravity)
@@ -181,17 +158,19 @@ public class DefaultMovementState : MovementState, IDebug
         base.OnIntersectionEnter(_intersection);
 
         float speedModifier = 7f;
+        float statsSpeed = PlayerStats.instance.GetSpeed();
+        intersectionSpeed = statsSpeed;
 
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
             currentGravityVelocity = 0;
             intersectionSpeed = (float)(4 * 0.785f * Mathf.Sqrt(distanceToGround) * speedModifier);
-            body.linearVelocity = transform.forward * Mathf.Clamp(PlayerStats.instance.GetSpeed(), intersectionSpeed, PlayerStats.instance.GetSpeed());
+            intersectionSpeed = (intersectionSpeed > statsSpeed ? intersectionSpeed : statsSpeed);
+            body.linearVelocity = transform.forward * intersectionSpeed;
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
             float arcSegmentLength = (2f * MathF.PI * Mathf.Clamp(distanceToGround, 2.5f, 100)) / 4;
-            playerMovement.RotateUprightWithGravity(90f/(arcSegmentLength/ Mathf.Clamp(PlayerStats.instance.GetSpeed(), intersectionSpeed, PlayerStats.instance.GetSpeed())));
-            rotationSpeedEquation = 90f / (arcSegmentLength / PlayerStats.instance.GetSpeed());
-            playerMovement.currentIntersection = null;
+            rotationSpeedEquation = 90f / (arcSegmentLength / intersectionSpeed); // cached for debugging in the script debugger
+            StartCoroutine(RotateAfterUprightCoroutine());
         }else 
         {
             ShowPrompts(
@@ -234,14 +213,40 @@ public class DefaultMovementState : MovementState, IDebug
         
     }
 
+
+
+    // Unique Functions
+
+    void CalculateExternalForces()
+    {
+        // handle external forces
+        if (playerMovement.currentIntersection != null)
+        {
+            externalForceVelocity = Vector3.zero;
+        }
+
+        // The force of Air Resistance: F = -cv^2. 
+        Vector3 resistance = new Vector3(
+            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.x)),
+            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.y)),
+            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.z)));
+
+        externalForceVelocity = new Vector3(
+            externalForceVelocity.x + (externalForceVelocity.x > 0 ? -resistance.x : resistance.x),
+            externalForceVelocity.y + (externalForceVelocity.y > 0 ? -resistance.y : resistance.y),
+            externalForceVelocity.z + (externalForceVelocity.z > 0 ? -resistance.z : resistance.z));
+
+        // if the external force is small enough, round to zero
+        if (Mathf.Abs(externalForceVelocity.x) < externalForceThreshold) externalForceVelocity.x = 0;
+        if (Mathf.Abs(externalForceVelocity.y) < externalForceThreshold) externalForceVelocity.y = 0;
+        if (Mathf.Abs(externalForceVelocity.z) < externalForceThreshold) externalForceVelocity.z = 0;
+    }
+
     void ShowPrompts(bool _left, bool _right)
     {
         GameManager.instance.IntersectionDirectionPromptLeft(_left);
         GameManager.instance.IntersectionDirectionPromptRight(_right);
     }
-
-
-    // Unique Functions
 
     bool IsGrounded()
     {
@@ -251,7 +256,6 @@ public class DefaultMovementState : MovementState, IDebug
         {
             Debug.DrawRay(transform.position - (transform.forward * 0.25f) + (playerMovement.gravityReference.up * 0.1f), -playerMovement.gravityReference.up * distanceToGround, Color.blue);
             distanceToGround = Vector3.Distance(transform.position, hit.point);
-            floorName = hit.collider.name;
 
             if (distanceToGround < groundedDistance + checkBuffer)
                 return true;
@@ -300,6 +304,12 @@ public class DefaultMovementState : MovementState, IDebug
         }
         Debug.DrawRay(body.transform.position + body.transform.up * wallRunCastOffset, body.transform.right * wallRunDistance, Color.blue);
         Debug.DrawRay(body.transform.position + body.transform.up * wallRunCastOffset, - body.transform.right * wallRunDistance, Color.blue);
+    }
+
+    IEnumerator RotateAfterUprightCoroutine()
+    {
+        if (!playerMovement.isUpright) yield return new WaitForEndOfFrame();
+        playerMovement.RotateUprightWithGravity(rotationSpeedEquation);
     }
 
     public DebugPacket GetDebugPacket()
