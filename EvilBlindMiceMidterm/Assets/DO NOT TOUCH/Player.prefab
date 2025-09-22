@@ -690,6 +690,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
+  crashCastOffset: 0.75
   gameOverDamage: 2147483647
 --- !u!114 &5960243340350875845
 MonoBehaviour:
@@ -724,6 +725,7 @@ MonoBehaviour:
   weaponFiringDamage: 0
   weaponFireRate: 0
   weaponFiringDistance: 0
+  infiniteAmmoActive: 0
   weaponListPosition: 0
 --- !u!136 &1290850322841129772
 CapsuleCollider:

@@ -1,8 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
-using TMPro;
-using Unity.Burst;
 using UnityEngine;
 
 public class DefaultMovementState : MovementState, IDebug
@@ -250,7 +247,7 @@ public class DefaultMovementState : MovementState, IDebug
 
     bool IsGrounded()
     {
-        float checkBuffer = 0.5f;
+        float checkBuffer = 0.25f;
         RaycastHit hit;
         if (Physics.Raycast(transform.position - (transform.forward * 0.25f) + (playerMovement.gravityReference.up * 0.1f), -playerMovement.gravityReference.up, out hit, 100, groundLayers))
         {
