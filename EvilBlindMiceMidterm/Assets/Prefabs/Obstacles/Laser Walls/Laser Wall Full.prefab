@@ -1179,9 +1179,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CriticalTarget
   HP: 2
   scriptsToDisable: []
-  objectsToDestroy:
+  objectsToDisable:
   - {fileID: 6785856955333727809}
   - {fileID: 7743955597756430434}
+  objectsToEnable: []
 --- !u!65 &8800297644799169745
 BoxCollider:
   m_ObjectHideFlags: 0
