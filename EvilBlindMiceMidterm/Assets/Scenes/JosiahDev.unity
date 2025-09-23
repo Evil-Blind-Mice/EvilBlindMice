@@ -2798,6 +2798,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3457861345445024290, guid: 698eabba876610b4780d065b10cd6f48, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6121792042539462502, guid: 698eabba876610b4780d065b10cd6f48, type: 3}
       propertyPath: m_Name
       value: ChunkType4PV5
@@ -2805,6 +2809,18 @@ PrefabInstance:
     - target: {fileID: 6121792042539462502, guid: 698eabba876610b4780d065b10cd6f48, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6658957321913941145, guid: 698eabba876610b4780d065b10cd6f48, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8161195610046448984, guid: 698eabba876610b4780d065b10cd6f48, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8197816753121585284, guid: 698eabba876610b4780d065b10cd6f48, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4994,7 +5010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4744536816544262838, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 39.25
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 4744536816544262838, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5002,15 +5018,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4744536816544262838, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4744536816544262838, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4744536816544262838, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4744536816544262838, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5027,10 +5043,6 @@ PrefabInstance:
     - target: {fileID: 9208567958034241237, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
       propertyPath: m_Name
       value: Laser Bridge
-      objectReference: {fileID: 0}
-    - target: {fileID: 9208567958034241237, guid: 92e18476dd53865428bd2c82a3729798, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5188,5 +5200,5 @@ SceneRoots:
   - {fileID: 1004605455}
   - {fileID: 1148504004}
   - {fileID: 2109331788}
-  - {fileID: 4172182745245681788}
   - {fileID: 71877859}
+  - {fileID: 4172182745245681788}
