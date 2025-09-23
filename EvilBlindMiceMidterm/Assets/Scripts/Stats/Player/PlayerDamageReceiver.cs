@@ -2,15 +2,19 @@ using UnityEngine;
 
 public class PlayerDamageReceiver : MonoBehaviour, IDamage
 {
-    PlayerStats playerStats;
     [SerializeField] LayerMask groundLayer;
     [Tooltip("The distance above the player's feet that the raycast should originate from when checking for head-on collisions")]
     [SerializeField] float crashCastOffset = 0.5f;
     [SerializeField] int gameOverDamage;
+    [SerializeField] float impactDistance = .75f;
 
-    void Awake()
+    Transform gravityReference;
+    PlayerStats playerStats;
+
+    void Start()
     {
         playerStats = PlayerStats.instance;
+        gravityReference = PlayerMovement.instance.gravityReference;
     }
 
     public void TakeDamage(int _amount)
@@ -26,15 +30,15 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
         playerStats.AddHealth(newHealth - currentHealth);
     }
 
-    private void OnCollisionEnter(Collision _collision)
+    private void Update()
     {
-        Transform gravityReference = PlayerMovement.instance.gravityReference;
-        if (Physics.Raycast(transform.position + transform.up * crashCastOffset, gravityReference.forward, 1, groundLayer))
+        Debug.DrawRay(transform.position + transform.up * crashCastOffset, gravityReference.forward * impactDistance, Color.red);
+        if (Physics.Raycast(transform.position + transform.up * crashCastOffset, gravityReference.forward, impactDistance, groundLayer))
         { // ran face first into a wall
             TakeDamage(gameOverDamage);
         }
-           
     }
+
 }
 
 

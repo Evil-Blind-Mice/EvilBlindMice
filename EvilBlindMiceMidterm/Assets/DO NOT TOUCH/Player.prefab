@@ -762,7 +762,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
   dashState: {fileID: 4441652848683688913}
   wallRunState: {fileID: 4316812403031956506}
-  externalForceResistance: 30
+  externalForceResistance: 50
   externalForceThreshold: 5
   groundedDistance: 0.3
   wallRunDistance: 0.75
@@ -790,6 +790,7 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 1
+  jumpForceMultiplier: 1.75
   wallIsRight: 0
 --- !u!114 &4441652848683688913
 MonoBehaviour:
@@ -822,6 +823,7 @@ MonoBehaviour:
     m_Bits: 1
   crashCastOffset: 0.75
   gameOverDamage: 2147483647
+  impactDistance: 0.75
 --- !u!114 &5960243340350875845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -931,7 +933,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8828511379406868612}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
