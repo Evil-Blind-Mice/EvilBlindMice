@@ -23,7 +23,7 @@ public abstract class MovementState : MonoBehaviour
 
     public virtual void OnUpdate(MoveInputStruct _input)
     {
-        PlayerStats.instance.AddDistanceTraveled(Vector3.Dot((body.transform.position - positionLastFrame), playerMovement.gravityReference.forward));
+        PlayerStats.instance.AddDistanceTraveled(Vector3.Dot((body.transform.position - positionLastFrame)/10, playerMovement.gravityReference.forward));
         positionLastFrame = body.transform.position;
 
         if (playerMovement.currentIntersection != null) OnInsideIntersection();
