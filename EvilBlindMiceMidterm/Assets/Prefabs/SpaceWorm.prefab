@@ -190,6 +190,7 @@ GameObject:
   - component: {fileID: 3763287572466809216}
   - component: {fileID: -6391658167134274454}
   - component: {fileID: 2545854355944920439}
+  - component: {fileID: 7941196665228938323}
   m_Layer: 0
   m_Name: SpaceWorm
   m_TagString: Untagged
@@ -254,15 +255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1d97c55481ead54c983c9ce851dc64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpPickup
-  type: 4
-  healAmount: 0
-  slowScale: 0.05
-  slowDurationSeconds: 0
-  invincibilityDurationSeconds: 0
-  speedMultiplier: 0
-  speedDurationSeconds: 0
-  speedDivider: 0.5
-  speedDuration: 2
+  powerUp: {fileID: 0}
 --- !u!136 &2545854355944920439
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -286,6 +279,24 @@ CapsuleCollider:
   m_Height: 2.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.75, z: 0}
+--- !u!114 &7941196665228938323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5293540621799867914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b6b54ea54e0cf446a195cd33d7f34d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TripObstacle
+  tripObstacle: 1
+  killObstacle: 0
+  spaceWorm: 1
+  player: {fileID: 0}
+  playerStats: {fileID: 0}
+  wormDamage: 0.25
 --- !u!1 &6280424801215555025
 GameObject:
   m_ObjectHideFlags: 0
