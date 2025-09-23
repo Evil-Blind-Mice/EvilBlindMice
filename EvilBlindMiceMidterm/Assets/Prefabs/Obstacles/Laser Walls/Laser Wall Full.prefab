@@ -1177,7 +1177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fccabf65b7ac247be1369516dc0d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CriticalTarget
-  HP: 3
+  HP: 2
   scriptsToDisable: []
   objectsToDestroy:
   - {fileID: 6785856955333727809}
