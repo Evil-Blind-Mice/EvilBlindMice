@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuUpgrades;
-    [SerializeField] TMP_Text distanceTraveledText;
+    [SerializeField] TMP_Text scoreText;
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public bool isPaused;
 
     int gameGoalCount;
+    float currentScore;
 
     float timeScaleOriginal;
 
@@ -95,9 +96,6 @@ public class GameManager : MonoBehaviour
             playerHealthBar.fillAmount = currentHealth / maxHealth;
         }
 
-        if(distanceTraveledText != null && PlayerStats.instance != null)
-            distanceTraveledText.text = PlayerStats.instance.GetDistanceTraveled().ToString("F0");
-
         if(playerAttackScript != null && playerAttackScript.weaponList != null && playerAttackScript.weaponList.Count > 0)
         {
             int weaponPosition = Mathf.Clamp(playerAttackScript.weaponListPosition, 0, playerAttackScript.weaponList.Count - 1);
@@ -109,6 +107,12 @@ public class GameManager : MonoBehaviour
             if (weaponMaxAmmo)
                 weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
         }
+    }
+
+    public void UpdateScoreUI()
+    {
+        if (scoreText != null)
+            scoreText.text = currentScore.ToString("F0");
     }
 
     public void FlashDamage()
@@ -157,6 +161,12 @@ public class GameManager : MonoBehaviour
             menuActive = menuWin;
             menuActive.SetActive(true);
         }
+    }
+
+    public void UpdateScore(float _amount)
+    {
+        currentScore += _amount;
+        UpdateScoreUI();
     }
 
     public void YouLose()

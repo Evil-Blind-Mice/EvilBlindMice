@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyStats : MonoBehaviour
 {
     // inspector variables
-    public Rigidbody body;
+    public int pointValue;
     public int startingHealth;
 
     // private variables

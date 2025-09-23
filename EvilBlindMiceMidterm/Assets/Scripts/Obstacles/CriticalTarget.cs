@@ -4,7 +4,8 @@ public class CriticalTarget : MonoBehaviour, IDamage
 {
     [SerializeField] int HP;
     [SerializeField] MonoBehaviour[] scriptsToDisable;
-    [SerializeField] GameObject[] objectsToDestroy;
+    [SerializeField] GameObject[] objectsToDisable;
+    [SerializeField] GameObject[] objectsToEnable;
     public void TakeDamage(int _amount)
     {
         HP -= _amount;
@@ -15,9 +16,14 @@ public class CriticalTarget : MonoBehaviour, IDamage
                 _script.enabled = false;
             }
 
-            foreach(GameObject _object in objectsToDestroy)
+            foreach(GameObject _object in objectsToDisable)
             {
-                Destroy(_object);
+                _object.SetActive(false);
+            }
+
+            foreach(GameObject _object in objectsToEnable)
+            {
+                _object.SetActive(true);
             }
         }
     }
