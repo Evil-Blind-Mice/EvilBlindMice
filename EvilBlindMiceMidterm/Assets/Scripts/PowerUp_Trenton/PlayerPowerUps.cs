@@ -28,6 +28,17 @@ public class PlayerPowerUps : MonoBehaviour, IPickupPowerUp
                 TimeSlowService.Apply(powerUp.slowScale, powerUp.slowDurationSeconds);
                 break;
 
+            case PowerUpType.Dash:
+                if(powerUp.dashCharges > 0)
+                    PlayerStats.instance.AddDashCount(powerUp.dashCharges);
+                break;
+
+            case PowerUpType.InfiniteAmmo:
+                PlayerShooting shooter = GetComponent<PlayerShooting>();
+                if (shooter != null)
+                    shooter.ActivateInfiniteAmmo(powerUp.infiniteAmmoDurationSeconds);
+                break;
+
             case PowerUpType.Trip:
                 PlayerStats.instance.RequestTripState(powerUp.tripSpeedDivider, powerUp.tripDurationSeconds);
                 break;

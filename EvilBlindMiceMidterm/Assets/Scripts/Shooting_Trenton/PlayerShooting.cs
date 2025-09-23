@@ -3,50 +3,94 @@ using System.Collections.Generic;
 
 public class PlayerShooting : MonoBehaviour, IPickupWeapon
 {
+    public static PlayerShooting instance;
+
     [Header("Gun")]
     [SerializeField] LayerMask ignoreLayers;
 
-    [SerializeField] List<WeaponStats> weaponList = new List<WeaponStats>();
+    [SerializeField] public List<WeaponStats> weaponList = new List<WeaponStats>();
+    [SerializeField] WeaponStats startingWeapon;
     [SerializeField] GameObject weaponModel;
     [SerializeField] int weaponFiringDamage;
     [SerializeField] float weaponFireRate;
     [SerializeField] int weaponFiringDistance;
+    [SerializeField] bool infiniteAmmoActive;
 
-    private readonly Dictionary<WeaponStats, int> ammoByWeapon = new();
-
-    WeaponStats currentWeapon;
+    public bool InfiniteAmmoActive => infiniteAmmoActive;
 
     float shootTimer;
+    float infiniteAmmoRemaining;
 
-    int weaponListPosition;
-    int weaponCurrentAmmo, weaponMaxAmmo;
+    public int weaponListPosition;
 
-    public bool HasWeapon => currentWeapon != null;
-    public int WeaponCurrentAmmo => weaponCurrentAmmo;
-    public int WeaponMaxAmmo => weaponMaxAmmo;
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    private void Start()
+    {
+        EnsureStartingWeapon();
+    }
 
     void Update()
     {
         shootTimer += Time.deltaTime;
-
-        bool hasWeapon = weaponList != null && weaponList.Count > 0;
-        bool canShoot = hasWeapon && weaponCurrentAmmo > 0 && shootTimer >= weaponFireRate;
-
         if (GameManager.instance != null && GameManager.instance.isPaused) return;
+
+        if (infiniteAmmoActive)
+        {
+            infiniteAmmoRemaining -= Time.unscaledDeltaTime;
+            if (infiniteAmmoRemaining <= 0)
+            {
+                infiniteAmmoActive = false;
+                infiniteAmmoRemaining = 0;
+            }
+        }
 
         SelectWeapon();
         ReloadWeapon();
 
-        if (Input.GetButton("Fire1") && canShoot)
+        int weaponPosition = Mathf.Clamp(weaponListPosition, 0, weaponList.Count - 1);
+        WeaponStats weapon = weaponList[weaponPosition];
+
+        bool wantsToShoot = weapon.isAutomatic ? Input.GetButton("Fire1") : Input.GetButtonDown("Fire1");
+        bool canShoot = weapon.weaponCurrentAmmo > 0 && shootTimer >= weaponFireRate;
+
+        if (wantsToShoot && canShoot)
             Shoot();
+
+        
+    }
+
+    void EnsureStartingWeapon()
+    {
+        if (startingWeapon == null) return;
+
+        weaponList.Clear();
+
+        weaponList.Add(startingWeapon);
+        weaponListPosition = 0;
+
+        startingWeapon.weaponCurrentAmmo = startingWeapon.weaponMaxAmmo;
+
+        ChangeWeapon();
+        GameManager.instance?.UpdatePlayerUI();
     }
 
     public void Shoot()
     {
         shootTimer = 0;
-        weaponCurrentAmmo--;
-        ammoByWeapon[currentWeapon] = weaponCurrentAmmo;
-        GameManager.instance.UpdatePlayerUI();
+
+        WeaponStats weapon = weaponList[weaponListPosition];
+
+        if (!infiniteAmmoActive)
+        {
+            if (weapon.weaponCurrentAmmo <= 0) return;
+            weapon.weaponCurrentAmmo--;
+        }
+
+        GameManager.instance?.UpdatePlayerUI();
 
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponFiringDistance, ~ignoreLayers))
@@ -60,58 +104,82 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
 
     void ReloadWeapon()
     {
-        if (Input.GetButtonDown("Reload") && (weaponCurrentAmmo < weaponMaxAmmo))
+        if (weaponList.Count == 0) return;
+
+        if (infiniteAmmoActive) return;
+
+        if (Input.GetButtonDown("Reload"))
         {
-            weaponCurrentAmmo = weaponMaxAmmo;
-            ammoByWeapon[currentWeapon] = weaponCurrentAmmo;
-
-            GameManager.instance.UpdatePlayerUI();
+            WeaponStats weapon = weaponList[weaponListPosition];
+            if (weapon.weaponCurrentAmmo < weapon.weaponMaxAmmo)
+            {
+                weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
+                GameManager.instance?.UpdatePlayerUI();
+            }
         }
-
     }
 
     void SelectWeapon()
     {
-        if (GameManager.instance != null && GameManager.instance.isPaused) return;
+        if (weaponList.Count == 0) return;
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Approximately(scroll, 0)) return;
 
-        //if (scroll > 0)
-            //weaponListPosition = (weaponListPosition + 1) % weaponList.Count;
-        //else if (scroll < 0)
-            //weaponListPosition = (weaponListPosition - 1 + weaponList.Count) % weaponList.Count;
+        if (scroll > 0)
+            weaponListPosition = Mathf.Min(weaponListPosition + 1, weaponList.Count - 1);
+        else
+            weaponListPosition = Mathf.Max(weaponListPosition - 1, 0);
 
-        //ChangeWeapon();
+        ChangeWeapon();
     }
 
     public void GetWeaponStats(WeaponStats _weapon)
     {
-        if (!ammoByWeapon.ContainsKey(_weapon))
-            ammoByWeapon[_weapon] = _weapon.weaponMaxAmmo;
-
         if (!weaponList.Contains(_weapon))
             weaponList.Add(_weapon);
 
         weaponListPosition = weaponList.Count - 1;
-
-        //ChangeWeapon();
+        ChangeWeapon();
     }
 
-    /*void ChangeWeapon()
+    void ChangeWeapon()
     {
-        currentWeapon = weaponList[weaponListPosition];
+        if (weaponList.Count == 0) return;
 
-        weaponFiringDamage = currentWeapon.weaponFiringDamage;
-        weaponFiringDistance = currentWeapon.weaponFiringDistance;
-        weaponFireRate = currentWeapon.weaponFireRate;
+        WeaponStats weapon = weaponList[weaponListPosition];
 
-        weaponMaxAmmo = currentWeapon.weaponMaxAmmo;
-        weaponCurrentAmmo = ammoByWeapon[currentWeapon];
+        weaponFiringDamage =weapon.weaponFiringDamage;
+        weaponFiringDistance = weapon.weaponFiringDistance;
+        weaponFireRate = weapon.weaponFireRate;
 
-        weaponModel.GetComponent<MeshFilter>().sharedMesh = currentWeapon.weaponModel.GetComponent<MeshFilter>().sharedMesh;
-        weaponModel.GetComponent<MeshRenderer>().sharedMaterial = currentWeapon.weaponModel.GetComponent<MeshRenderer>().sharedMaterial;
+        if(weaponModel != null && weapon.weaponModel != null)
+        {
+            MeshFilter sourceMeshFilter = weapon.weaponModel ? weapon.weaponModel.GetComponentInChildren<MeshFilter>() : null;
+            MeshRenderer sourceMeshRenderer = weapon.weaponModel ? weapon.weaponModel.GetComponentInChildren<MeshRenderer>() : null;
 
-        GameManager.instance.UpdatePlayerUI();
-    }*/
+            MeshFilter destinationMeshFilter = weaponModel.GetComponent<MeshFilter>();
+            MeshRenderer destinationMeshRenderer = weaponModel.GetComponent<MeshRenderer>();
+
+            if(sourceMeshFilter && destinationMeshFilter)
+                destinationMeshFilter.sharedMesh = sourceMeshFilter.sharedMesh;
+
+            if(sourceMeshRenderer && destinationMeshRenderer)
+                destinationMeshRenderer.sharedMaterial = sourceMeshRenderer.sharedMaterial;
+        }
+
+        GameManager.instance?.UpdatePlayerUI();
+    }
+
+    public void ActivateInfiniteAmmo(int _duration)
+    {
+        infiniteAmmoRemaining = Mathf.Max(infiniteAmmoRemaining, Mathf.Max(0, _duration));
+        infiniteAmmoActive = true;
+
+        int weaponPosition = Mathf.Clamp(weaponListPosition, 0, weaponList.Count - 1);
+        WeaponStats weapon = weaponList[weaponPosition];
+
+        if (weapon)
+            weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
+    }
 }

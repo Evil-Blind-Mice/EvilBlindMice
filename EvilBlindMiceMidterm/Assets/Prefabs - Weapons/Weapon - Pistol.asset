@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cf727ccd66b4c3458820d48d9bbedaf, type: 3}
+  m_Name: Weapon - Pistol
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStats
+  weaponModel: {fileID: 2440906724474284878, guid: 1bdff09e3515c5649a59277a1a9a9676, type: 3}
+  weaponFiringDamage: 1
+  weaponFireRate: 0.25
+  weaponFiringDistance: 150
+  weaponCurrentAmmo: 20
+  weaponMaxAmmo: 20
+  hitEffect: {fileID: 0}
+  shootingSound: []
+  shootingSoundVolume: 0.5

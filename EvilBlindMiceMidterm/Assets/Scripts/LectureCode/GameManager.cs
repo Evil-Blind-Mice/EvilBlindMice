@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuUpgrades;
-    [SerializeField] TMP_Text distanceTraveledText;
+    [SerializeField] TMP_Text scoreText;
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public bool isPaused;
 
     int gameGoalCount;
+    float currentScore;
 
     float timeScaleOriginal;
 
@@ -95,17 +96,23 @@ public class GameManager : MonoBehaviour
             playerHealthBar.fillAmount = currentHealth / maxHealth;
         }
 
-        if(distanceTraveledText != null && PlayerStats.instance != null)
-            distanceTraveledText.text = PlayerStats.instance.GetDistanceTraveled().ToString("F0");
-
-        if(playerAttackScript != null && playerAttackScript.HasWeapon)
+        if(playerAttackScript != null && playerAttackScript.weaponList != null && playerAttackScript.weaponList.Count > 0)
         {
-            if (weaponCurrentAmmo)
-                weaponCurrentAmmo.text = playerAttackScript.WeaponCurrentAmmo.ToString("F0");
+            int weaponPosition = Mathf.Clamp(playerAttackScript.weaponListPosition, 0, playerAttackScript.weaponList.Count - 1);
+            WeaponStats weapon = playerAttackScript.weaponList[weaponPosition];
 
+            if (weaponCurrentAmmo)
+                weaponCurrentAmmo.text = playerAttackScript.InfiniteAmmoActive ? "INF" : weapon.weaponCurrentAmmo.ToString("F0");
+            
             if (weaponMaxAmmo)
-                weaponMaxAmmo.text = playerAttackScript.WeaponMaxAmmo.ToString("F0");
+                weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
         }
+    }
+
+    public void UpdateScoreUI()
+    {
+        if (scoreText != null)
+            scoreText.text = currentScore.ToString("F0");
     }
 
     public void FlashDamage()
@@ -156,6 +163,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void UpdateScore(float _amount)
+    {
+        currentScore += _amount;
+        UpdateScoreUI();
+    }
+
     public void YouLose()
     {
         StatePause();
@@ -187,13 +200,14 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
     }
 
-    public void IntersectionDirectionPromptLeft()
+    
+    public void IntersectionDirectionPromptLeft(bool _active)
     {
-            StartCoroutine(Flash(qLeft.gameObject, 1.2f)); 
+        qLeft.gameObject.SetActive(_active);
     }
-    public void IntersectionDirectionPromptRight()
+    public void IntersectionDirectionPromptRight(bool _active)
     {
-        StartCoroutine(Flash(eRight.gameObject, 1.2f));
+        eRight.gameObject.SetActive(_active);
     }
     IEnumerator Flash(GameObject _go, float _seconds)
     {

@@ -84,6 +84,7 @@ public class PlayerMovement : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+        body.transform.rotation = _lookRotation;
         isUpright = true;
     }
 

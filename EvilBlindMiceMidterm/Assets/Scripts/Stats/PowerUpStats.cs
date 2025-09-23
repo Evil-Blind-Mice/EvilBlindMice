@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum PowerUpType { Heal, SpeedBoost, Invincibility, TimeSlow, Trip }
+public enum PowerUpType { Heal, SpeedBoost, Invincibility, TimeSlow, Dash, InfiniteAmmo, Trip }
 
 [CreateAssetMenu]
 public class PowerUpStats : ScriptableObject
@@ -22,6 +22,12 @@ public class PowerUpStats : ScriptableObject
     [Header("Time Slow")]
     [Range(0.05f, 1)] public float slowScale;
     public int slowDurationSeconds;
+
+    [Header("Dash Charge")]
+    public int dashCharges;
+
+    [Header("Infinite Ammo")]
+    public int infiniteAmmoDurationSeconds;
 
     [Header("Trip/Obstacle")]
     public float tripSpeedDivider;

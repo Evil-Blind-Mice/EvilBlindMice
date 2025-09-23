@@ -10,6 +10,7 @@ public class WallRunMovementState : MovementState
     [SerializeField] float wallRunDistance = 2f;
     [SerializeField] int tiltDegree = 30;
     [SerializeField] LayerMask groundLayers;
+    [SerializeField] float jumpForceMultiplier = 1.5f;
 
     Vector3 playerVelocity;
     [HideInInspector] public bool wallIsRight;
@@ -94,7 +95,7 @@ public class WallRunMovementState : MovementState
         // if the player jumps off of the wall
         if (_input.jumpPressedThisFrame)
         {
-            body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * PlayerStats.instance.GetJumpForce() * 2;
+            body.linearVelocity = Vector3.Normalize(body.transform.up * 3 + wallNormal) * PlayerStats.instance.GetJumpForce() * jumpForceMultiplier;
             TriggerDefaultState();
         }
 

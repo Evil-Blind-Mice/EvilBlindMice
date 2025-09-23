@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cf727ccd66b4c3458820d48d9bbedaf, type: 3}
+  m_Name: Weapon - MG
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponStats
+  weaponModel: {fileID: 6128342872770344015, guid: 142357b1ff506c54098fe03f9faa8c7c, type: 3}
+  isAutomatic: 1
+  weaponFiringDamage: 2
+  weaponFireRate: 0.12
+  weaponFiringDistance: 200
+  weaponCurrentAmmo: 39
+  weaponMaxAmmo: 50
+  hitEffect: {fileID: 0}
+  shootingSound: []
+  shootingSoundVolume: 0.5
