@@ -16,6 +16,15 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     [SerializeField] int weaponFiringDistance;
     [SerializeField] bool infiniteAmmoActive;
 
+    [Header("Projectile")]
+    [SerializeField] Transform firePoint;
+    [SerializeField] GameObject projectile;
+    [SerializeField, Min(1)] float projectileSpeed;
+    [SerializeField, Min(0.05f)] float projectileLifeSeconds;
+
+    Transform currentWeaponInstance;
+    Camera shootCamera;
+
     public bool InfiniteAmmoActive => infiniteAmmoActive;
 
     float shootTimer;
@@ -26,6 +35,7 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     private void Awake()
     {
         instance = this;
+        shootCamera = Camera.main;
     }
 
     private void Start()
@@ -78,10 +88,18 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         GameManager.instance?.UpdatePlayerUI();
     }
 
+    static void SetLayer(Transform _transform, int _layer)
+    {
+        _transform.gameObject.layer = _layer;
+        foreach (Transform c in _transform)
+            SetLayer(c, _layer);
+    }
+
     public void Shoot()
     {
         shootTimer = 0;
 
+        if (weaponList.Count == 0) return;
         WeaponStats weapon = weaponList[weaponListPosition];
 
         if (!infiniteAmmoActive)
@@ -92,14 +110,36 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
 
         GameManager.instance?.UpdatePlayerUI();
 
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponFiringDistance, ~ignoreLayers))
-        {
-            IDamage damage = hit.collider.GetComponent<IDamage>();
+        if (!projectile) return;
+        if (!shootCamera) shootCamera = Camera.main;
 
-            if (damage != null)
-                damage.TakeDamage(weaponFiringDamage);
+        Vector3 spawnPosition;
+        Vector3 direction;
+        Quaternion rot;
+
+        if(firePoint)
+        {
+            spawnPosition = firePoint.position;
+            direction = firePoint.forward;
+            rot = firePoint.rotation;
         }
+        else
+        {
+            spawnPosition = shootCamera.transform.position + shootCamera.transform.forward * 0.4f;
+            direction = shootCamera.transform.forward;
+            rot = Quaternion.LookRotation(direction);
+        }
+
+        float life = Mathf.Max(projectileLifeSeconds, weaponFiringDistance / Mathf.Max(1, projectileSpeed));
+
+        GameObject go = Instantiate(projectile, spawnPosition, rot);
+
+        int bulletLayer = LayerMask.NameToLayer("PlayerBullet");
+        SetLayer(go.transform, bulletLayer);
+
+        LaserProjectile laser = go.GetComponent<LaserProjectile>();
+        if (laser)
+            laser.Init(direction, projectileSpeed, life, weaponFiringDamage, gameObject, weapon);
     }
 
     void ReloadWeapon()
@@ -149,23 +189,25 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
 
         WeaponStats weapon = weaponList[weaponListPosition];
 
-        weaponFiringDamage =weapon.weaponFiringDamage;
+        weaponFiringDamage = weapon.weaponFiringDamage;
         weaponFiringDistance = weapon.weaponFiringDistance;
         weaponFireRate = weapon.weaponFireRate;
 
-        if(weaponModel != null && weapon.weaponModel != null)
+        if (currentWeaponInstance)
+            Destroy(currentWeaponInstance.gameObject);
+
+        foreach (Transform child in weaponModel.transform)
+            Destroy(child.gameObject);
+
+        if (weapon.weaponModel)
         {
-            MeshFilter sourceMeshFilter = weapon.weaponModel ? weapon.weaponModel.GetComponentInChildren<MeshFilter>() : null;
-            MeshRenderer sourceMeshRenderer = weapon.weaponModel ? weapon.weaponModel.GetComponentInChildren<MeshRenderer>() : null;
+            GameObject go = Instantiate(weapon.weaponModel, weaponModel.transform);
+            currentWeaponInstance = go.transform;
 
-            MeshFilter destinationMeshFilter = weaponModel.GetComponent<MeshFilter>();
-            MeshRenderer destinationMeshRenderer = weaponModel.GetComponent<MeshRenderer>();
+            SetLayer(currentWeaponInstance, weaponModel.gameObject.layer);
 
-            if(sourceMeshFilter && destinationMeshFilter)
-                destinationMeshFilter.sharedMesh = sourceMeshFilter.sharedMesh;
-
-            if(sourceMeshRenderer && destinationMeshRenderer)
-                destinationMeshRenderer.sharedMaterial = sourceMeshRenderer.sharedMaterial;
+            Transform muzzle = currentWeaponInstance.Find("Muzzle");
+            firePoint = muzzle ? muzzle : currentWeaponInstance;
         }
 
         GameManager.instance?.UpdatePlayerUI();
