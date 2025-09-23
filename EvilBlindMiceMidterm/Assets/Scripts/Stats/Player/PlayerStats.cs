@@ -164,6 +164,11 @@ public class PlayerStats : MonoBehaviour
         distanceTraveled += _distanceTravel;
     }
 
+    public void AddInitialDashCount(int _modifier)
+    {
+        initialDashCount += _modifier;
+    }
+
     public void AddDashCount(int _modifier)
     {
         int before = dashCount;
