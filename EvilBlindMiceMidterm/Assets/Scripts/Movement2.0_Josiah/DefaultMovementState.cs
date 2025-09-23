@@ -75,7 +75,7 @@ public class DefaultMovementState : MovementState, IDebug
         { // off of the ground
 
             // trigger dash
-            if (_input.jumpPressedThisFrame && playerMovement.isUpright)
+            if (_input.jumpPressedThisFrame && playerMovement.rotHandle.isUpright)
             {
                 if (playerMovement.currentIntersection)
                 {
@@ -93,7 +93,7 @@ public class DefaultMovementState : MovementState, IDebug
             if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
             // if the player reorients mid-air, the up direction is inverted
-            if (_input.shiftPressed && playerMovement.isUpright)
+            if (_input.shiftPressed && playerMovement.rotHandle.isUpright)
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.forward, -playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity(720);
@@ -305,7 +305,7 @@ public class DefaultMovementState : MovementState, IDebug
 
     IEnumerator RotateAfterUprightCoroutine()
     {
-        if (!playerMovement.isUpright) yield return new WaitForEndOfFrame();
+        if (!playerMovement.rotHandle.isUpright) yield return new WaitForEndOfFrame();
         playerMovement.RotateUprightWithGravity(rotationSpeedEquation);
     }
 

@@ -8,13 +8,11 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
     [SerializeField] int gameOverDamage;
     [SerializeField] float impactDistance = .75f;
 
-    Transform gravityReference;
     PlayerStats playerStats;
 
     void Start()
     {
         playerStats = PlayerStats.instance;
-        gravityReference = PlayerMovement.instance.gravityReference;
     }
 
     public void TakeDamage(int _amount)
@@ -32,8 +30,8 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
 
     private void Update()
     {
-        Debug.DrawRay(transform.position + transform.up * crashCastOffset, gravityReference.forward * impactDistance, Color.red);
-        if (Physics.Raycast(transform.position + transform.up * crashCastOffset, gravityReference.forward, impactDistance, groundLayer))
+        Debug.DrawRay(transform.position + transform.up * crashCastOffset, transform.forward * impactDistance, Color.red);
+        if (Physics.Raycast(transform.position + transform.up * crashCastOffset, transform.forward, impactDistance, groundLayer))
         { // ran face first into a wall
             TakeDamage(gameOverDamage);
         }
