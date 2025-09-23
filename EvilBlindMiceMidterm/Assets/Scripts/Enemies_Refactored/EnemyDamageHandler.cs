@@ -8,6 +8,9 @@ public class EnemyDamageHandler : MonoBehaviour, IDamage
     {
         stats.ModifyHealth(-_amount);
         if (stats.GetHealth() <= 0)
+        {
+            GameManager.instance.UpdateScore(stats.pointValue);
             Destroy(stats.gameObject);
+        }
     }
 }

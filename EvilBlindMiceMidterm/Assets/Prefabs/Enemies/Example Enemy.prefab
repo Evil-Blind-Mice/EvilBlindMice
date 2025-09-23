@@ -226,8 +226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c3cb98cc97c6c4c8d5b4c13293bb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
-  body: {fileID: 0}
-  startingHealth: 3
+  pointValue: 1
+  startingHealth: 1
 --- !u!1 &5613471604437241380
 GameObject:
   m_ObjectHideFlags: 0
