@@ -4,25 +4,33 @@ public class TripObstacle : MonoBehaviour
 {
     [SerializeField] bool tripObstacle;
     [SerializeField] bool killObstacle;
+    [SerializeField] bool spaceWorm; 
     public GameObject player;
-    public PlayerStats PlayerStats;
+    public PlayerStats playerStats;
+    public float wormDamage = 0.25f;
     void Start()
     {
+        
         player = GameObject.FindWithTag("Player");
-        PlayerStats = player.GetComponent<PlayerStats>();
+        playerStats = PlayerStats.instance;
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && tripObstacle)
         {
-            PlayerStats.tripCounter++;
-            PlayerStats.runSpeed = PlayerStats.runSpeed / 2;
-            StartCoroutine(resetStats());
-            if (PlayerStats.tripCounter > 1)
+            playerStats.tripCounter++;
+            playerStats.runSpeed = playerStats.runSpeed / 2;
+            if(spaceWorm == true)
             {
-                PlayerStats.runSpeed = 0;
-                PlayerStats.currentHealth = 0;
+                IDamage damage = other.GetComponent<IDamage>();
+                damage.TakeDamage((int)(wormDamage * playerStats.maxHealth));
+            }
+            StartCoroutine(resetStats());
+            if (playerStats.tripCounter > 1)
+            {
+                playerStats.runSpeed = 0;
+                playerStats.currentHealth = 0;
                 GameManager.instance.YouLose();
             }
 
@@ -31,8 +39,8 @@ public class TripObstacle : MonoBehaviour
 
         if (other.CompareTag("Player") && killObstacle)
         {
-            PlayerStats.runSpeed = 0;
-            PlayerStats.currentHealth = 0;
+            playerStats.runSpeed = 0;
+            playerStats.currentHealth = 0;
             Destroy(gameObject);
             GameManager.instance.YouLose();
         }
@@ -50,6 +58,6 @@ public class TripObstacle : MonoBehaviour
     IEnumerator resetStats()
     {
         yield return new WaitForSeconds(2f);
-        PlayerStats.runSpeed = PlayerStats.initialRunSpeed;
+        playerStats.runSpeed = playerStats.initialRunSpeed;
     }
 }
