@@ -34,8 +34,8 @@ public class HoverStateEnemy : CustomState
 
         // Player Tracking
         Vector3 directionToPlayer = ClampVectorExclude((playerTransform.position + playerScript.gravityReference.up) - body.position, playerScript.gravityReference.forward);
-        targetVelocity = directionToPlayer.normalized * moveSpeed * (directionToPlayer.magnitude < 1 ? directionToPlayer.magnitude : directionToPlayer.magnitude * 2);
-        
+        targetVelocity = directionToPlayer.normalized * moveSpeed * (directionToPlayer.magnitude < 1 ? directionToPlayer.magnitude : 1);
+
         body.linearVelocity = targetVelocity;
 
         if(body.transform.up != playerScript.gravityReference.up && rotHandle.isUpright)
