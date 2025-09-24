@@ -40,7 +40,7 @@ public class WallRunMovementState : MovementState
             playerMovement.ChangeToState(defaultMovementState);
         }
 
-        playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f)));
+        playerMovement.rotHandle.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f)));
         wallNormal = hit.normal;
     }
 
@@ -70,7 +70,7 @@ public class WallRunMovementState : MovementState
         {
             intersectionSpeed = roundingCornerSpeed;
             playerMovement.SetGravityDirection(playerMovement.gravityReference.right * directionMultilplier, playerMovement.gravityReference.up);
-            playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
+            playerMovement.rotHandle.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
         }
         else
         {

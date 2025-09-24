@@ -5,19 +5,17 @@ public class PlayerMovement : MonoBehaviour
 {
    public static PlayerMovement instance;
     [SerializeField] Rigidbody body;
+    public RotationHandler rotHandle;
     public Transform gravityReference;
 
     public int gravityAcceleration = 50;
     public int maxGravity = 50;
-    public float rotationSpeed;
     [HideInInspector] public float uprightRotation;
-    [HideInInspector] public bool isUpright;
     [HideInInspector] public Intersection currentIntersection;
 
     [SerializeField] MovementState defaultMoveState;
     MovementState moveState;
 
-    Coroutine activeRotation;
 
     private void Awake()
     {
@@ -55,37 +53,7 @@ public class PlayerMovement : MonoBehaviour
     {
         
         Quaternion lookRotation = Quaternion.LookRotation(gravityReference.forward, gravityReference.up);
-        RotateSmooth(lookRotation, _rotationSpeed);
-    }
-
-    public void RotateSmooth(Quaternion _lookRotation, float _rotationSpeed = -1) 
-    {
-        if (activeRotation != null) StopCoroutine(activeRotation);
-        if (_rotationSpeed == -1) _rotationSpeed = rotationSpeed;
-        activeRotation = StartCoroutine(RotateSmoothCoroutine(_lookRotation, _rotationSpeed));
-    }
-
-    IEnumerator RotateSmoothCoroutine(Quaternion _lookRotation, float _rotationSpeed)
-    {
-        isUpright = false;
-        float timeCount = 0f;
-        float slerpProgress = 0f;
-        Quaternion startRotation = body.transform.rotation;
-        float totalRotDegrees = Quaternion.Angle(_lookRotation, startRotation);
-
-        while (slerpProgress < 1)
-        {
-            timeCount += Time.deltaTime;
-
-            // rotate by rotationSpeed divided by the total number of degrees of rotation that will occur, multipled by time
-            slerpProgress = (timeCount * _rotationSpeed) / (totalRotDegrees);
-            
-            body.transform.rotation = Quaternion.Slerp(startRotation, _lookRotation, slerpProgress);
-
-            yield return new WaitForEndOfFrame();
-        }
-        body.transform.rotation = _lookRotation;
-        isUpright = true;
+        rotHandle.RotateSmooth(lookRotation, _rotationSpeed);
     }
 
     public void SetGravityDirection(Vector3 _forwardDirection, Vector3 _upDirection)
