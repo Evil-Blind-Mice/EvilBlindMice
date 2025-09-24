@@ -8,6 +8,11 @@ public class RotationHandler : MonoBehaviour
     [SerializeField] Transform body;
     [HideInInspector] public bool isUpright;
 
+    private void Start()
+    {
+        isUpright = true;
+    }
+
     public void RotateSmooth(Quaternion _lookRotation, float _rotationSpeed = -1)
     {
         if (activeRotation != null) StopCoroutine(activeRotation);

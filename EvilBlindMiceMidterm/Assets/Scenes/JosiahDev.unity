@@ -2363,54 +2363,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6065099483994663671, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
-      propertyPath: rotHandle
-      value: 
-      objectReference: {fileID: 725409895}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8741673822585386556, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 725409895}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
---- !u!1 &721733510 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8741673822585386556, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
-  m_PrefabInstance: {fileID: 721733509}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &725409894 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2589811350598675171, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
   m_PrefabInstance: {fileID: 721733509}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 721733510}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb78ca2f7753fe84c8e1a56e37569760, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultMovementState
---- !u!114 &725409895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 721733510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 667a9e6e211de0a438196966d9b14cf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RotationHandler
-  rotationSpeed: 360
-  body: {fileID: 725409903}
-  isUpright: 0
---- !u!4 &725409903 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6636671874062815310, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
-  m_PrefabInstance: {fileID: 721733509}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &866705293
 GameObject:
   m_ObjectHideFlags: 0
@@ -2992,9 +2960,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HoverStateEnemy
   machine: {fileID: 8169153711589698316}
   body: {fileID: 8449372722269490470}
-  moveSpeed: 4
+  moveSpeed: 30
   stoppingDistance: 1
   rotHandle: {fileID: 985371441}
+  avoidanceRadius: 2
+  avoidLayers:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &1033276664
 GameObject:
   m_ObjectHideFlags: 0
@@ -5563,7 +5535,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6974331050056248482}
-  - {fileID: 5498563451792203274}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &5498563451792203274
@@ -5574,14 +5545,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5787796586336603494}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4314629315206567245}
   - {fileID: 985371440}
-  m_Father: {fileID: 5429873632128866660}
+  m_Father: {fileID: 6974331050056248482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5613471604758638327
 GameObject:
@@ -5598,7 +5569,7 @@ GameObject:
   - component: {fileID: 2931602496209117256}
   - component: {fileID: 8449372722269490470}
   m_Layer: 6
-  m_Name: Mesh / Collider
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5645,11 +5616,12 @@ Transform:
   m_GameObject: {fileID: 5613471604758638327}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: -2.47, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3694881799258068569}
+  - {fileID: 5498563451792203274}
   m_Father: {fileID: 5429873632128866660}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7630338003657320868
@@ -5796,7 +5768,7 @@ Rigidbody:
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
