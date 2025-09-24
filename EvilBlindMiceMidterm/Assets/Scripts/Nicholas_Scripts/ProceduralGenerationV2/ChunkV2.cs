@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ChunkV2 : MonoBehaviour
 {
-    int iteration = 0;
+    public int iteration = 0;
     [SerializeField] List<ChunkConnectionPoint> connectionPoints;
     [SerializeField] LayerMask floorLayer;
     List<ChunkV2> childChunkList = new();

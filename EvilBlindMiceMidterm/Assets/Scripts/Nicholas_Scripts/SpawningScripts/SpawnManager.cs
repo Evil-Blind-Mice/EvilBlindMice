@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class ObstacleSpawnManager : MonoBehaviour
+public class SpawnManager : MonoBehaviour
 {
-    public static ObstacleSpawnManager Instance { get; private set; }
+    public static SpawnManager Instance { get; private set; }
 
     PlayerStats stats;
 
@@ -10,7 +10,7 @@ public class ObstacleSpawnManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null && Instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
         }
@@ -18,13 +18,11 @@ public class ObstacleSpawnManager : MonoBehaviour
         {
             Instance = this;
         }
-
-        stats = PlayerStats.instance;
     }
 
     public bool SpawnWallObstacle(GameObject _parent, int section, ChunkSectionSubSection _subSection)
     {
-        if (GetCanSpawn(section))
+        if (GetCanSpawn(_parent, section))
         {
             switch (_subSection)
             {
@@ -51,11 +49,11 @@ public class ObstacleSpawnManager : MonoBehaviour
         }
     }
 
-    public bool SpawnEnemy(GameObject _parent, int _section, ChunkSectionSubSection _subSection)
+    public bool SpawnEnemyOrObstacle(GameObject _parent, int _section, ChunkSectionSubSection _subSection)
     {
         if (!HasWallObstacleSpawned(_parent, _subSection))
         {
-            if (GetCanSpawn(_section))
+            if (GetCanSpawn(_parent, _section))
             {
                 return true;
             }
@@ -70,22 +68,29 @@ public class ObstacleSpawnManager : MonoBehaviour
         }
     }
 
-    bool GetCanSpawn(int _section)
+    bool GetCanSpawn(GameObject _parent, int _section)
     {
-        if (_section < 0 || _section > 8)
+        if (_parent.transform.parent.gameObject.GetComponent<ChunkV2>().iteration == 0)
         {
             return false;
         }
 
-        int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15, 15 };
+        if (_section < 0 || _section > 7)
+        {
+            return false;
+        }
+
+        int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15};
+
+        stats = PlayerStats.instance;
 
         float chanceScalar = stats.distanceTraveled / distanceToTravel;
 
-        Mathf.Clamp(chanceScalar, 0.0f, 10);
+        Mathf.Clamp(chanceScalar, 0.0f, 5);
 
         float spawnChance = chanceScalar * sectionBaseChance[_section];
 
-        int check = Random.Range(0, 240);
+        int check = Random.Range(0, 200);
 
         if (spawnChance <= check)
         {
