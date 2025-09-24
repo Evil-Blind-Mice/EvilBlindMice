@@ -140,6 +140,16 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         LaserProjectile laser = go.GetComponent<LaserProjectile>();
         if (laser)
             laser.Init(direction, projectileSpeed, life, weaponFiringDamage, gameObject, weapon);
+
+        if (weapon.shootingSound != null && weapon.shootingSound.Length > 0)
+        {
+            AudioClip clip = weapon.shootingSound[Random.Range(0, weapon.shootingSound.Length)];
+            if (clip)
+            {
+                Vector3 muzzle = firePoint ? firePoint.position : (Camera.main ? Camera.main.transform.position : transform.position);
+                AudioSource.PlayClipAtPoint(clip, muzzle, Mathf.Clamp01(weapon.shootingSoundVolume));
+            }
+        }
     }
 
     void ReloadWeapon()
