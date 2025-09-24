@@ -827,6 +827,10 @@ PrefabInstance:
       propertyPath: bodyTransform
       value: 
       objectReference: {fileID: 2759264360134429370}
+    - target: {fileID: 6121563026988411232, guid: 07c86b49e1191bd49a7b284327de4a64, type: 3}
+      propertyPath: pauseBeforeFiring
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7890465340119244949, guid: 07c86b49e1191bd49a7b284327de4a64, type: 3}
       propertyPath: m_Name
       value: LaserBeamStateEnemy
