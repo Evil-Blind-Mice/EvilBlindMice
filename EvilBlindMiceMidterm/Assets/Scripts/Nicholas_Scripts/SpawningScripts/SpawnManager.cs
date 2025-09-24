@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null && Instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
         }
@@ -18,8 +18,6 @@ public class SpawnManager : MonoBehaviour
         {
             Instance = this;
         }
-
-        stats = PlayerStats.instance;
     }
 
     public bool SpawnWallObstacle(GameObject _parent, int section, ChunkSectionSubSection _subSection)
@@ -84,13 +82,15 @@ public class SpawnManager : MonoBehaviour
 
         int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15};
 
+        stats = PlayerStats.instance;
+
         float chanceScalar = stats.distanceTraveled / distanceToTravel;
 
-        Mathf.Clamp(chanceScalar, 0.0f, 10);
+        Mathf.Clamp(chanceScalar, 0.0f, 5);
 
         float spawnChance = chanceScalar * sectionBaseChance[_section];
 
-        int check = Random.Range(0, 240);
+        int check = Random.Range(0, 200);
 
         if (spawnChance <= check)
         {

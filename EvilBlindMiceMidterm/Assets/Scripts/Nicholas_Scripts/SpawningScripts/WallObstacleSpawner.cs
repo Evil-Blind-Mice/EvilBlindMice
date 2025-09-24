@@ -4,40 +4,44 @@ public class WallObstacleSpawner : MonoBehaviour
 {
 
     [Range(0, 3)][SerializeField] int FLRC;
+    [SerializeField] GameObject lazerWall;
+    [SerializeField] GameObject parent;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {   
+    {
+        ChunkV2Section chunkSection = parent.GetComponent<ChunkV2Section>();
+
         switch (FLRC)
         {
             case 0:
-                if (SpawnManager.Instance.SpawnWallObstacle(gameObject.transform.parent.gameObject, 
-                    gameObject.transform.parent.gameObject.GetComponent<ChunkV2Section>().SectionNumber, ChunkSectionSubSection.floor))
+                if (SpawnManager.Instance.SpawnWallObstacle(parent,
+                    chunkSection.SectionNumber, ChunkSectionSubSection.floor))
                 {
-                    gameObject.transform.parent.gameObject.GetComponentInChildren<LazerFloor>().transform.gameObject.SetActive(true);
+                    lazerWall.SetActive(true);
                     this.gameObject.SetActive(false);
                 }
                 break;
             case 1:
-                if (SpawnManager.Instance.SpawnWallObstacle(gameObject.transform.parent.gameObject,
-                    gameObject.transform.parent.gameObject.GetComponent<ChunkV2Section>().SectionNumber, ChunkSectionSubSection.leftWall))
+                if (SpawnManager.Instance.SpawnWallObstacle(parent,
+                    chunkSection.SectionNumber, ChunkSectionSubSection.leftWall))
                 {
-                    gameObject.transform.parent.gameObject.GetComponentInChildren<LazerLeftWall>().transform.gameObject.SetActive(true);
+                    lazerWall.SetActive(true);
                     this.gameObject.SetActive(false);
                 }
                 break;
             case 2:
-                if (SpawnManager.Instance.SpawnWallObstacle(gameObject.transform.parent.gameObject,
-                    gameObject.transform.parent.gameObject.GetComponent<ChunkV2Section>().SectionNumber, ChunkSectionSubSection.rightWall))
+                if (SpawnManager.Instance.SpawnWallObstacle(parent.gameObject,
+                    chunkSection.SectionNumber, ChunkSectionSubSection.rightWall))
                 {
-                    gameObject.transform.parent.gameObject.GetComponentInChildren<LazerRightWall>().transform.gameObject.SetActive(true);
+                    lazerWall.gameObject.SetActive(true);
                     this.gameObject.SetActive(false);
                 }
                 break;
             case 3:
-                if (SpawnManager.Instance.SpawnWallObstacle(gameObject.transform.parent.gameObject,
-                    gameObject.transform.parent.gameObject.GetComponent<ChunkV2Section>().SectionNumber, ChunkSectionSubSection.cieling))
+                if (SpawnManager.Instance.SpawnWallObstacle(parent.gameObject,
+                    chunkSection.SectionNumber, ChunkSectionSubSection.cieling))
                 {
-                    gameObject.transform.parent.gameObject.GetComponentInChildren<LazerCieling>().transform.gameObject.SetActive(true);
+                    lazerWall.gameObject.SetActive(true);
                     this.gameObject.SetActive(false);
                 }
                 break;

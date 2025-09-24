@@ -2,5 +2,11 @@ using UnityEngine;
 
 public class LazerRightWall : MonoBehaviour
 {
-    //empty script for attatching
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            GameManager.instance.YouLose();
+        }
+    }
 }
