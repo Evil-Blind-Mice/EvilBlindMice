@@ -24,7 +24,7 @@ public class SpawnManager : MonoBehaviour
 
     public bool SpawnWallObstacle(GameObject _parent, int section, ChunkSectionSubSection _subSection)
     {
-        if (GetCanSpawn(section))
+        if (GetCanSpawn(_parent, section))
         {
             switch (_subSection)
             {
@@ -55,7 +55,7 @@ public class SpawnManager : MonoBehaviour
     {
         if (!HasWallObstacleSpawned(_parent, _subSection))
         {
-            if (GetCanSpawn(_section))
+            if (GetCanSpawn(_parent, _section))
             {
                 return true;
             }
@@ -70,14 +70,19 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    bool GetCanSpawn(int _section)
+    bool GetCanSpawn(GameObject _parent, int _section)
     {
-        if (_section < 0 || _section > 8)
+        if (_parent.transform.parent.gameObject.GetComponent<ChunkV2>().iteration == 0)
         {
             return false;
         }
 
-        int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15, 15 };
+        if (_section < 0 || _section > 7)
+        {
+            return false;
+        }
+
+        int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15};
 
         float chanceScalar = stats.distanceTraveled / distanceToTravel;
 

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 809678592677949284}
   - component: {fileID: 5713727683667832157}
   - component: {fileID: 3665337203894593748}
+  - component: {fileID: 7963845349224354988}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Floor
@@ -125,3 +126,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7963845349224354988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3571185185249311772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24933628ed4d3e4fb911c09df1b20c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallObstacleSpawner
+  FLRC: 0

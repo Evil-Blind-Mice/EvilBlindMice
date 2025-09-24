@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6393154543667315866}
   - component: {fileID: 1452476382922046251}
   - component: {fileID: 5172606135906118044}
+  - component: {fileID: 1329584413543302956}
   m_Layer: 0
   m_Name: RightWall
   m_TagString: Untagged
@@ -125,3 +126,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1329584413543302956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81731642148809436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24933628ed4d3e4fb911c09df1b20c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallObstacleSpawner
+  FLRC: 2

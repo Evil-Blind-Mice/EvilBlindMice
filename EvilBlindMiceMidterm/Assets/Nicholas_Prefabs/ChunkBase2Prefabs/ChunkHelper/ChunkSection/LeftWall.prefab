@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8609291532128083347}
   - component: {fileID: 6110165309893001095}
   - component: {fileID: 2215355448308090760}
+  - component: {fileID: 7588920867862830033}
   m_Layer: 0
   m_Name: LeftWall
   m_TagString: Untagged
@@ -125,3 +126,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7588920867862830033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3341357591868461828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d24933628ed4d3e4fb911c09df1b20c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallObstacleSpawner
+  FLRC: 1
