@@ -9,13 +9,14 @@ public class HoverStateEnemy : CustomState
     [SerializeField] float moveSpeed;
     [SerializeField] float stoppingDistance;
     [SerializeField] RotationHandler rotHandle;
-    [SerializeField] float avoidanceRadius;
-    [SerializeField] LayerMask avoidLayers;
+    [SerializeField] float hoverHeight;
+    [SerializeField] LayerMask groundLayer;
     [SerializeField] float duration;
     [SerializeField] CustomState nextState;
 
     float changeStateTimer;
     Vector3 targetVelocity;
+
     private void Start()
     {
         playerTransform = PlayerMovement.instance.transform;
@@ -31,10 +32,16 @@ public class HoverStateEnemy : CustomState
     {
         // Reset Variables
         targetVelocity = Vector3.zero;
+        float targetOffset = 0;
+
+        // Hover Height
+        RaycastHit hit;
+        Physics.Raycast(body.position, -playerScript.gravityReference.up, out hit, hoverHeight, groundLayer);
+        if (hit.collider != null) targetOffset = hoverHeight - Vector3.Distance(hit.point, body.position);
 
         // Player Tracking
-        Vector3 directionToPlayer = ClampVectorExclude((playerTransform.position + playerScript.gravityReference.up) - body.position, playerScript.gravityReference.forward);
-        targetVelocity = directionToPlayer.normalized * moveSpeed * (directionToPlayer.magnitude < 1 ? directionToPlayer.magnitude : 1);
+        Vector3 directionToTarget = ClampVectorExclude((playerTransform.position + (playerScript.gravityReference.up * targetOffset)) - body.position, playerScript.gravityReference.forward);
+        targetVelocity = directionToTarget.normalized * moveSpeed * (directionToTarget.magnitude < 1 ? directionToTarget.magnitude : 1);
 
         body.linearVelocity = targetVelocity;
 
