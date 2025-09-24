@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Powerup - Speed Boost
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpStats
   type: 1
-  effect: {fileID: 0}
   pickupSound:
   - {fileID: 8300000, guid: e9bc800cb24ffc845bcc77c49ab64d31, type: 3}
-  pickupSoundVolume: 0.5
+  pickupSoundVolume: 0.3
   healAmount: 0
   speedMultiplier: 3
   speedDurationSeconds: 3

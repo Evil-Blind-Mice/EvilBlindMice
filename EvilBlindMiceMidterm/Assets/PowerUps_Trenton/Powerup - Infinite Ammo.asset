@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Powerup - Infinite Ammo
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpStats
   type: 5
-  effect: {fileID: 0}
   pickupSound:
   - {fileID: 8300000, guid: 8ce14858148c08a459f93602337335eb, type: 3}
-  pickupSoundVolume: 0.5
+  pickupSoundVolume: 0.3
   healAmount: 0
   speedMultiplier: 0
   speedDurationSeconds: 0
