@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class ObstacleSpawnManager : MonoBehaviour
+public class SpawnManager : MonoBehaviour
 {
-    public static ObstacleSpawnManager Instance { get; private set; }
+    public static SpawnManager Instance { get; private set; }
 
     PlayerStats stats;
 
@@ -51,7 +51,7 @@ public class ObstacleSpawnManager : MonoBehaviour
         }
     }
 
-    public bool SpawnEnemy(GameObject _parent, int _section, ChunkSectionSubSection _subSection)
+    public bool SpawnEnemyOrObstacle(GameObject _parent, int _section, ChunkSectionSubSection _subSection)
     {
         if (!HasWallObstacleSpawned(_parent, _subSection))
         {
