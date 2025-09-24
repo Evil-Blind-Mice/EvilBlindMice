@@ -703,6 +703,7 @@ GameObject:
   - component: {fileID: 1919897685484680406}
   - component: {fileID: 1290850322841129772}
   - component: {fileID: 8622106737285489853}
+  - component: {fileID: 43636884222537074}
   m_Layer: 3
   m_Name: PlayerBody
   m_TagString: Player
@@ -740,12 +741,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   body: {fileID: 8622106737285489853}
+  rotHandle: {fileID: 43636884222537074}
   gravityReference: {fileID: 4357257064032771830}
   gravityAcceleration: 100
   maxGravity: 50
-  rotationSpeed: 360
   uprightRotation: 0
-  isUpright: 0
   currentIntersection: {fileID: 0}
   defaultMoveState: {fileID: 2589811350598675171}
 --- !u!114 &2589811350598675171
@@ -913,6 +913,21 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &43636884222537074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8741673822585386556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 667a9e6e211de0a438196966d9b14cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotationHandler
+  rotationSpeed: 360
+  body: {fileID: 6636671874062815310}
+  isUpright: 0
 --- !u!1 &8828511379406868612
 GameObject:
   m_ObjectHideFlags: 0
