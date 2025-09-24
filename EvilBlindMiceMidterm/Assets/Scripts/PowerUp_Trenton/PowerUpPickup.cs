@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PowerUpPickup : MonoBehaviour
 {
-    [SerializeField] PowerUpStats powerUp;
+    [SerializeField] PowerUpStats powerup;
 
     private void OnTriggerEnter(Collider _other)
     {
@@ -10,8 +10,22 @@ public class PowerUpPickup : MonoBehaviour
 
         if (pickupable != null)
         {
-            pickupable.GetPowerUpStats(powerUp);
+            pickupable.GetPowerUpStats(powerup);
+            PlayPickupAudio();
             Destroy(gameObject);
+        }
+    }
+
+    void PlayPickupAudio()
+    {
+        if (!powerup) return;
+        Vector3 soundPosition = transform.position;
+
+        if (powerup.pickupSound != null && powerup.pickupSound.Length > 0)
+        {
+            AudioClip clip = powerup.pickupSound[0];
+            if (clip)
+                AudioSource.PlayClipAtPoint(clip, soundPosition, Mathf.Clamp01(powerup.pickupSoundVolume));
         }
     }
 }

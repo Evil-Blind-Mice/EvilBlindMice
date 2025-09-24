@@ -13,12 +13,17 @@ MonoBehaviour:
   m_Name: Powerup - Healing
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpStats
   type: 0
-  sound: []
+  effect: {fileID: 0}
+  pickupSound:
+  - {fileID: 8300000, guid: 13b481262ca11bc4cbfa819b6dfe28cc, type: 3}
+  pickupSoundVolume: 0.5
   healAmount: 5
   speedMultiplier: 0
   speedDurationSeconds: 0
   invincibilityDurationSeconds: 0
   slowScale: 0.05
   slowDurationSeconds: 0
+  dashCharges: 0
+  infiniteAmmoDurationSeconds: 0
   tripSpeedDivider: 0
   tripDurationSeconds: 0
