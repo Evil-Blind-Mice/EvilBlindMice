@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text qLeft;
     public TMP_Text eRight;
     public TMP_Text weaponCurrentAmmo, weaponMaxAmmo;
-
+    public TMP_Text chargesDash;
 
 
     public GameObject player;
@@ -107,6 +107,9 @@ public class GameManager : MonoBehaviour
             if (weaponMaxAmmo)
                 weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
         }
+
+        if (chargesDash)
+            chargesDash.text = (PlayerStats.instance ? PlayerStats.instance.GetDashCount() : 0).ToString();
     }
 
     public void UpdateScoreUI()

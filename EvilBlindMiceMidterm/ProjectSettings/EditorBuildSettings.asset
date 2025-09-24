@@ -9,8 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Game Prototype.unity
-    guid: f95c229e6a1914846bb9372749127202
+    path: Assets/Scenes/Main Menu.unity
+    guid: 30fc536269b12fd438ee29f1979cce18
+  - enabled: 1
+    path: Assets/Scenes/TrentonDev.unity
+    guid: 5d8dbb1c197565a48987eb54a9ebe3ce
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
