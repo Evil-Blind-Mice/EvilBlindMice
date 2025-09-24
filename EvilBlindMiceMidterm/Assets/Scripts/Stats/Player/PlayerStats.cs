@@ -114,7 +114,12 @@ public class PlayerStats : MonoBehaviour
     public void ResetHealthToFull() { currentHealth = maxHealth; }
     public void ResetJumpMax() { jumpMax = initialJumpMax; }
     public void ResetDashForce() { dashForce = initialDashForce; }
-    public void ResetDashCount() { dashCount = initialDashCount; }
+    public void ResetDashCount() 
+    { 
+        dashCount = initialDashCount;
+        OnDashChanged?.Invoke(dashCount);
+        GameManager.instance?.UpdatePlayerUI();
+    }
 
 
 
@@ -176,7 +181,10 @@ public class PlayerStats : MonoBehaviour
         dashCount = Mathf.Max(0, dashCount + _modifier);
 
         if (dashCount != before)
+        {
             OnDashChanged?.Invoke(dashCount);
+            GameManager.instance?.UpdatePlayerUI();
+        }
     }
 
     public bool TrySpendDash()
@@ -186,6 +194,7 @@ public class PlayerStats : MonoBehaviour
 
         dashCount--;
         OnDashChanged?.Invoke(dashCount);
+        GameManager.instance?.UpdatePlayerUI();
         return true;
     }
 

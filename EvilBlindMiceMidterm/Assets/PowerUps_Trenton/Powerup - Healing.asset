@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Powerup - Healing
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpStats
   type: 0
-  effect: {fileID: 0}
   pickupSound:
   - {fileID: 8300000, guid: 13b481262ca11bc4cbfa819b6dfe28cc, type: 3}
-  pickupSoundVolume: 0.5
+  pickupSoundVolume: 0.3
   healAmount: 5
   speedMultiplier: 0
   speedDurationSeconds: 0

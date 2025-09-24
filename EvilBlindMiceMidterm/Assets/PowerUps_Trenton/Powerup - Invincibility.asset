@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Powerup - Invincibility
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpStats
   type: 2
-  effect: {fileID: 0}
   pickupSound:
   - {fileID: 8300000, guid: 7da886a070ddeee4ba6bc0fd415e462c, type: 3}
-  pickupSoundVolume: 0.5
+  pickupSoundVolume: 0.3
   healAmount: 0
   speedMultiplier: 0
   speedDurationSeconds: 0

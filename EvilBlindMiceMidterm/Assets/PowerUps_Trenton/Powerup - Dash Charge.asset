@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: Powerup - Dash Charge
   m_EditorClassIdentifier: Assembly-CSharp::PowerUpStats
   type: 4
-  effect: {fileID: 0}
   pickupSound:
   - {fileID: 8300000, guid: 3c8e1b51a59b6da42b0823020f826bf1, type: 3}
-  pickupSoundVolume: 0.5
+  pickupSoundVolume: 0.3
   healAmount: 0
   speedMultiplier: 0
   speedDurationSeconds: 0

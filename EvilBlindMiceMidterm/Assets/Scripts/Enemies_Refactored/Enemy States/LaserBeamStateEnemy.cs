@@ -3,13 +3,23 @@ using UnityEngine;
 
 public class LaserBeamStateEnemy : CustomState
 {
-    [SerializeField] float duration;
-    [SerializeField] float pauseBeforeFiring;
+    [Header("Laser")]
     [SerializeField] Transform laserTransform;
     [SerializeField] int laserLength = 1000;
     [SerializeField] int extensionSpeed;
+
+    [Header("Other")]
+    [SerializeField] float duration;
+    [SerializeField] float pauseBeforeFiring;
     [SerializeField] Transform bodyTransform;
     [SerializeField] CustomState nextState;
+
+    [Header("Materials (optional)")]
+    [SerializeField] bool swapMaterial;
+    [SerializeField] MeshRenderer renderer;
+    [SerializeField] Material alternateMaterial;
+
+    Material defaultMaterial;
     float changeStateTimer;
     Vector3 initialScale;
 
@@ -24,6 +34,12 @@ public class LaserBeamStateEnemy : CustomState
         laserTransform.localScale = initialScale;
         StartCoroutine(ExtendLaser());
         laserTransform.gameObject.SetActive(true);
+
+        if (swapMaterial)
+        {
+            defaultMaterial = renderer.material;
+            renderer.material = alternateMaterial;
+        }
     }
 
     public override void OnUpdate()
@@ -35,9 +51,12 @@ public class LaserBeamStateEnemy : CustomState
 
     public override void OnExit()
     {
+        changeStateTimer = 0;
         base.OnExit();
+        StopAllCoroutines();
         laserTransform.localScale = initialScale;
         laserTransform.gameObject.SetActive(false);
+        if (swapMaterial) renderer.material = defaultMaterial;
     }
 
 

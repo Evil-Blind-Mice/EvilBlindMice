@@ -305,7 +305,7 @@ public class DefaultMovementState : MovementState, IDebug
 
     IEnumerator RotateAfterUprightCoroutine()
     {
-        if (!playerMovement.rotHandle.isUpright) yield return new WaitForEndOfFrame();
+        while (!playerMovement.rotHandle.isUpright) yield return new WaitForEndOfFrame();
         playerMovement.RotateUprightWithGravity(rotationSpeedEquation);
     }
 

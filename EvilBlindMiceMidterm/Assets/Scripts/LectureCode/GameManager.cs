@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text qLeft;
     public TMP_Text eRight;
     public TMP_Text weaponCurrentAmmo, weaponMaxAmmo;
-
+    public TMP_Text chargesDash;
 
 
     public GameObject player;
@@ -34,7 +34,8 @@ public class GameManager : MonoBehaviour
     int gameGoalCount;
     float currentScore;
 
-    float timeScaleOriginal;
+    //float timeScaleOriginal;
+    float prePauseTimeScale;
 
     TMP_Text lastText;
 
@@ -51,9 +52,8 @@ public class GameManager : MonoBehaviour
         }
         instance = this;
 
-        timeScaleOriginal = Time.timeScale;
-
-        instance = this;
+        Time.timeScale = 1;
+        prePauseTimeScale = 1;
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerStats>();
@@ -107,6 +107,9 @@ public class GameManager : MonoBehaviour
             if (weaponMaxAmmo)
                 weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
         }
+
+        if (chargesDash)
+            chargesDash.text = (PlayerStats.instance ? PlayerStats.instance.GetDashCount() : 0).ToString();
     }
 
     public void UpdateScoreUI()
@@ -134,7 +137,9 @@ public class GameManager : MonoBehaviour
 
     public void StatePause()
     {
-        isPaused = !isPaused;
+        if (isPaused) return;
+        prePauseTimeScale = Time.timeScale;
+        isPaused = true;
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -142,8 +147,9 @@ public class GameManager : MonoBehaviour
 
     public void StateUnpause()
     {
-        isPaused = !isPaused;
-        Time.timeScale = timeScaleOriginal;
+        if (!isPaused) return;
+        isPaused = false;
+        Time.timeScale = prePauseTimeScale;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         menuActive.SetActive(false);
