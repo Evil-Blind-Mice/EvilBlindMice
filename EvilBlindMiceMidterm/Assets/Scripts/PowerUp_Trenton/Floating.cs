@@ -7,6 +7,7 @@ public class Floating : MonoBehaviour
     [SerializeField] float rotateSpeed;
 
     Vector3 startLocalPosition;
+    Vector3 startWorldPosition;
     Transform parent;
     float phase;
 
@@ -15,6 +16,7 @@ public class Floating : MonoBehaviour
     {
         parent = transform.parent;
         startLocalPosition = transform.localPosition;
+        startWorldPosition = transform.position;
         phase = Random.Range(0, Mathf.PI * 2);
     }
 
@@ -22,9 +24,9 @@ public class Floating : MonoBehaviour
     void LateUpdate()
     {
         float newY = Mathf.Sin(Time.time * bobSpeed + phase) * amplitude;
-        Vector3 upInParentSpace = parent ? parent.InverseTransformDirection(transform.up) : transform.up;
+        Vector3 anchor = parent ? parent.TransformPoint(startLocalPosition) : startWorldPosition;
 
-        transform.localPosition = startLocalPosition + upInParentSpace * newY;
-        transform.Rotate(transform.up, rotateSpeed * Time.deltaTime, Space.World);
+        transform.position = anchor + transform.up * newY;
+        transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime, Space.Self);
     }
 }

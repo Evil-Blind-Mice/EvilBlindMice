@@ -102,7 +102,13 @@ public class PowerupSpawner : MonoBehaviour
 
         if (alignToSurface)
         {
+            Vector3 surfaceUp = surfaceNormal;
+            Vector3 surfaceforward = Vector3.ProjectOnPlane(anchor.forward, surfaceUp).normalized;
+            if (surfaceforward.sqrMagnitude < 1e-4f)
+                surfaceforward = Vector3.ProjectOnPlane(anchor.right, surfaceUp).normalized;
+
             Quaternion alignRotation = Quaternion.FromToRotation(instance.transform.up, surfaceNormal);
+            instance.transform.rotation = alignRotation * instance.transform.rotation;
             instance.transform.Rotate(surfaceNormal, powerupRotation, Space.World);
         }
 
