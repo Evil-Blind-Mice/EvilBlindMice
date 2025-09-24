@@ -10,10 +10,18 @@ public class ButtonFunctions : MonoBehaviour
 
     public void Restart()
     {
+        Time.timeScale = 1;
         TimeSlowService.Reset();
         PlayerStats.instance.ResetAllPowerUpEffects();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        GameManager.instance.StateUnpause();
+    }
+
+    public void MainMenu()
+    {
+        Time.timeScale = 1;
+        TimeSlowService.Reset();
+        PlayerStats.instance.ResetAllPowerUpEffects();
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void Exit()
