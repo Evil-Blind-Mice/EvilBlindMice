@@ -1397,7 +1397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4712746115955927126, guid: 5f94ce6523f38f143aeaaef31547276f, type: 3}
       propertyPath: objectsEnabledDuringState.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4712746115955927126, guid: 5f94ce6523f38f143aeaaef31547276f, type: 3}
       propertyPath: 'objectsEnabledDuringState.Array.data[0]'
