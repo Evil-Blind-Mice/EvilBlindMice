@@ -7,7 +7,8 @@ public class PowerUpStats : ScriptableObject
 {
     [Header("Type")]
     public PowerUpType type;
-    public AudioClip[] sound;
+    public AudioClip[] pickupSound;
+    [Range(0, 1)] public float pickupSoundVolume;
 
     [Header("Heal")]
     public int healAmount;
