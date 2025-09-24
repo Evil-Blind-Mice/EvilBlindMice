@@ -4952,21 +4952,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2691701343522750318, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 2780610013218865159, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
       propertyPath: m_Name
       value: Drone Enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 3386504429986300577, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4235243347852167523, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6030633465968887883, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5006,18 +4994,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6030633465968887883, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6720282264665993036, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6720282264665993036, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.88
-      objectReference: {fileID: 0}
-    - target: {fileID: 7131135680717914286, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
