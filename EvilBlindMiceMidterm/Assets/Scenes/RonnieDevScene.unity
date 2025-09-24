@@ -296,14 +296,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4305591304528334159, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436849660290356789, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 3069623563445337454, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 841123700}
+    - target: {fileID: 4157701637194115870, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
+      propertyPath: playerCamera
+      value: 
+      objectReference: {fileID: 841123700}
     - target: {fileID: 6503295396093198170, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
       propertyPath: m_Name
       value: UI
@@ -388,15 +388,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8917585703119372839, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
+--- !u!20 &841123700 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2161655151675397670, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
+  m_PrefabInstance: {fileID: 308362441}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
