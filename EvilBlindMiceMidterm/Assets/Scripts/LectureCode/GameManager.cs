@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject menuOptions;
     [SerializeField] GameObject menuUpgrades;
+    [SerializeField] TMP_Text scoreText;
 
     public Image playerHealthBar;
     public GameObject playerDamageFlash;
@@ -20,18 +21,24 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpeedBoostFlash;
     public TMP_Text qLeft;
     public TMP_Text eRight;
-    [SerializeField] TMP_Text distanceTraveledText;
+    public TMP_Text weaponCurrentAmmo, weaponMaxAmmo;
+    public TMP_Text chargesDash;
 
-
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip[] audDeath;
+    [Range(0, 1)][SerializeField] float audDeathVol;
 
     public GameObject player;
     public PlayerStats playerScript;
+    public PlayerShooting playerAttackScript;
 
     public bool isPaused;
 
     int gameGoalCount;
+    float currentScore;
 
-    float timeScaleOriginal;
+    //float timeScaleOriginal;
+    float prePauseTimeScale;
 
     TMP_Text lastText;
 
@@ -41,19 +48,27 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
 
-        if (instance != null && instance != this) {
-            Destroy(gameObject);
-        } else
+        if (instance != null && instance != this) 
         {
-            instance = this;
+            Destroy(gameObject);
+            return;
         }
-        timeScaleOriginal = Time.timeScale;
-
         instance = this;
+
+        Time.timeScale = 1;
+        prePauseTimeScale = 1;
 
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerStats>();
+        playerAttackScript = player.GetComponent<PlayerShooting>();
 
+    }
+
+    void Start()
+    {
+        isPaused = false;
+        TimeSlowService.Reset();
+        //PlayerStats.instance.ResetAllPowerUpEffects();
     }
 
     // Update is called once per frame
@@ -84,8 +99,26 @@ public class GameManager : MonoBehaviour
             playerHealthBar.fillAmount = currentHealth / maxHealth;
         }
 
-        if(distanceTraveledText != null && PlayerStats.instance != null)
-            distanceTraveledText.text = PlayerStats.instance.GetDistanceTraveled().ToString("F0");
+        if(playerAttackScript != null && playerAttackScript.weaponList != null && playerAttackScript.weaponList.Count > 0)
+        {
+            int weaponPosition = Mathf.Clamp(playerAttackScript.weaponListPosition, 0, playerAttackScript.weaponList.Count - 1);
+            WeaponStats weapon = playerAttackScript.weaponList[weaponPosition];
+
+            if (weaponCurrentAmmo)
+                weaponCurrentAmmo.text = playerAttackScript.InfiniteAmmoActive ? "INF" : weapon.weaponCurrentAmmo.ToString("F0");
+            
+            if (weaponMaxAmmo)
+                weaponMaxAmmo.text = weapon.weaponMaxAmmo.ToString("F0");
+        }
+
+        if (chargesDash)
+            chargesDash.text = (PlayerStats.instance ? PlayerStats.instance.GetDashCount() : 0).ToString();
+    }
+
+    public void UpdateScoreUI()
+    {
+        if (scoreText != null)
+            scoreText.text = currentScore.ToString("F0");
     }
 
     public void FlashDamage()
@@ -107,7 +140,9 @@ public class GameManager : MonoBehaviour
 
     public void StatePause()
     {
-        isPaused = !isPaused;
+        if (isPaused) return;
+        prePauseTimeScale = Time.timeScale;
+        isPaused = true;
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -115,8 +150,9 @@ public class GameManager : MonoBehaviour
 
     public void StateUnpause()
     {
-        isPaused = !isPaused;
-        Time.timeScale = timeScaleOriginal;
+        if (!isPaused) return;
+        isPaused = false;
+        Time.timeScale = prePauseTimeScale;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         menuActive.SetActive(false);
@@ -127,6 +163,11 @@ public class GameManager : MonoBehaviour
     {
         gameGoalCount += _amount;
 
+        if(_amount == -1)
+        {
+            aud.PlayOneShot(audDeath[UnityEngine.Random.Range(0, audDeath.Length)], audDeathVol);
+        }
+
         if (gameGoalCount <= 0)
         {
             // you won!!!
@@ -134,6 +175,12 @@ public class GameManager : MonoBehaviour
             menuActive = menuWin;
             menuActive.SetActive(true);
         }
+    }
+
+    public void UpdateScore(float _amount)
+    {
+        currentScore += _amount;
+        UpdateScoreUI();
     }
 
     public void YouLose()
@@ -167,13 +214,14 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(true);
     }
 
-    public void IntersectionDirectionPromptLeft()
+    
+    public void IntersectionDirectionPromptLeft(bool _active)
     {
-            StartCoroutine(Flash(qLeft.gameObject, 1.2f)); 
+        qLeft.gameObject.SetActive(_active);
     }
-    public void IntersectionDirectionPromptRight()
+    public void IntersectionDirectionPromptRight(bool _active)
     {
-        StartCoroutine(Flash(eRight.gameObject, 1.2f));
+        eRight.gameObject.SetActive(_active);
     }
     IEnumerator Flash(GameObject _go, float _seconds)
     {

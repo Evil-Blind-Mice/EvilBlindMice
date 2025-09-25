@@ -1,19 +1,14 @@
 using System;
-using System.Linq;
-using TMPro;
+using System.Collections;
 using UnityEngine;
 
 public class DefaultMovementState : MovementState, IDebug
 {
     // Variables
 
+    [SerializeField] MovementState dashState;
     [SerializeField] MovementState wallRunState;
-
-    // [SerializeField] int speed = 15; replaced by player stats
-    // [SerializeField] int jumpForce = 15; replaced by player stats
-    // [SerializeField] int jumpMax = 1; replaced by player stats
-    // [SerializeField] float speedWhileRotating = 30;
-    [SerializeField] int externalForceResistance = 2;
+    [SerializeField] float externalForceResistance = 0.5f;
     [SerializeField] float externalForceThreshold = 1;
     [SerializeField] float groundedDistance = 0.35f;
     [SerializeField] float wallRunDistance = 0.6f;
@@ -25,6 +20,7 @@ public class DefaultMovementState : MovementState, IDebug
     Vector3 leftRightVelocity;
     Vector3 externalForceVelocity;
     int jumpCount;
+    int gravSwitchCount;
     float currentGravityVelocity;
     float wallRunCountdown;
     float distanceToGround;
@@ -34,13 +30,9 @@ public class DefaultMovementState : MovementState, IDebug
     // variables stored for debug
     GameObject currentWall;
     float currentWallAngle;
-    string floorName;
+    float rotationSpeedEquation;
    
 
-    private void Start()
-    {
-        intersectionSpeed = PlayerStats.instance.GetSpeed();
-    }
 
     // Overridden Functions
 
@@ -50,7 +42,7 @@ public class DefaultMovementState : MovementState, IDebug
         playerMovement.RotateUprightWithGravity();
         externalForceVelocity = body.linearVelocity;
         currentGravityVelocity = 0;
-        jumpCount = 1;
+        if(IsGrounded()) jumpCount = 1;
         wallRunCountdown = wallRunCooldown;
     }
 
@@ -58,7 +50,7 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnUpdate(_input);
 
-        float baseSpeed = playerMovement.currentIntersection == null ? PlayerStats.instance.GetSpeed() : intersectionSpeed;
+        baseSpeed = (playerMovement.currentIntersection == null) ? PlayerStats.instance.GetSpeed() : intersectionSpeed;
 
         // calculate playerVelocity
         leftRightVelocity = _input.leftRightAxis * body.transform.right * baseSpeed;
@@ -67,51 +59,58 @@ public class DefaultMovementState : MovementState, IDebug
         // handle gravity and jumping
         if (IsGrounded())
         { // on the ground
-            jumpCount = 0;
-            if (distanceToGround < groundedDistance / 2)
-                currentGravityVelocity = 1;
-            else
-                currentGravityVelocity = 0;
+
+            if (currentGravityVelocity >= 0)
+            {
+                jumpCount = 0;
+                gravSwitchCount = 0;
+
+                if(distanceToGround <= groundedDistance)
+                    currentGravityVelocity = Vector3.Dot(externalForceVelocity, playerMovement.gravityReference.up);
+            }
+
+            // handle jumping
+            if (_input.jumpPressedThisFrame) Jump();
+
         }
         else
         { // off of the ground
+
+            // trigger dash
+            if (_input.jumpPressedThisFrame && playerMovement.rotHandle.isUpright)
+            {
+                if (playerMovement.currentIntersection)
+                {
+                    if (!playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
+                    {
+                        Dash();
+                    }
+                }
+                else Dash();
+
+            }
 
             // add gravity/second to velocity
             currentGravityVelocity += playerMovement.gravityAcceleration * Time.deltaTime;
             if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
             // if the player reorients mid-air, the up direction is inverted
-            if (_input.shiftPressed && playerMovement.isUpright)
+            if (_input.shiftPressed && playerMovement.rotHandle.isUpright && gravSwitchCount < 1)
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.forward, -playerMovement.gravityReference.up);
-                playerMovement.RotateUprightWithGravity();
+                playerMovement.RotateUprightWithGravity(720);
+                gravSwitchCount++;
             }
         }
 
-        // handle jumping
-        if (_input.jumpPressedThisFrame) Jump();
-
-
-        // handle external forces
-
-        // reduce external forces by the resistance percentage of their value
-        externalForceVelocity = new Vector3(
-            externalForceVelocity.x - (externalForceVelocity.x * Time.deltaTime * externalForceResistance),
-            externalForceVelocity.y - (externalForceVelocity.y * Time.deltaTime * externalForceResistance),
-            externalForceVelocity.z - (externalForceVelocity.z * Time.deltaTime * externalForceResistance)
-            );
-
-        // if the external force is small enough, round to zero
-        if (Mathf.Abs(externalForceVelocity.x) < externalForceThreshold) externalForceVelocity.x = 0;
-        if (Mathf.Abs(externalForceVelocity.y) < externalForceThreshold) externalForceVelocity.y = 0;
-        if (Mathf.Abs(externalForceVelocity.z) < externalForceThreshold) externalForceVelocity.z = 0;
+        CalculateExternalForces();
 
 
         // apply all forces (playerVelocity, external forces, and gravity)
         body.linearVelocity = 
             leftRightVelocity // velocity determined by player input
             + externalForceVelocity // velocity from previous states or knockback
-            - playerMovement.gravityReference.up * currentGravityVelocity // velocity from jumping or gravity
+            - playerMovement.gravityReference.up * currentGravityVelocity
             + transform.forward * baseSpeed; // constant forward velocity
 
         // check for change of state conditions
@@ -121,29 +120,27 @@ public class DefaultMovementState : MovementState, IDebug
     public override void OnInsideIntersection()
     {
 
-        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up)) return;
+        if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up) || playerMovement.currentIntersection == null) return;
         
-        intersectionSpeed = PlayerStats.instance.GetSpeed();
-
         if (playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right))
         {
-            GameManager.instance.IntersectionDirectionPromptRight();
             if (Input.GetButtonDown("ChangeDirectionRight"))
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
                 playerMovement.currentIntersection = null;
+                ShowPrompts(false, false);
                 return;
             }
         }
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right))
         {
-            GameManager.instance.IntersectionDirectionPromptLeft();
             if (Input.GetButtonDown("ChangeDirectionLeft"))
             {
                 playerMovement.SetGravityDirection(-playerMovement.gravityReference.right, playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity();
                 playerMovement.currentIntersection = null;
+                ShowPrompts(false, false);
                 return;
             }
         }
@@ -160,13 +157,25 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionEnter(_intersection);
 
-        float speedModifier = 6.5f;
+        float speedModifier = 7f;
+        float statsSpeed = PlayerStats.instance.GetSpeed();
+        intersectionSpeed = statsSpeed;
 
         if (playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.up))
         {
+            currentGravityVelocity = 0;
             intersectionSpeed = (float)(4 * 0.785f * Mathf.Sqrt(distanceToGround) * speedModifier);
+            intersectionSpeed = (intersectionSpeed > statsSpeed ? intersectionSpeed : statsSpeed);
+            body.linearVelocity = transform.forward * intersectionSpeed;
             playerMovement.SetGravityDirection(-playerMovement.gravityReference.up, playerMovement.gravityReference.forward);
-            playerMovement.RotateUprightWithGravity();
+            float arcSegmentLength = (2f * MathF.PI * Mathf.Clamp(distanceToGround, 2.5f, 100)) / 4;
+            rotationSpeedEquation = 90f / (arcSegmentLength / intersectionSpeed); // cached for debugging in the script debugger
+            StartCoroutine(RotateAfterUprightCoroutine());
+        }else 
+        {
+            ShowPrompts(
+                playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right),
+                playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right));
         }
 
     }
@@ -175,8 +184,11 @@ public class DefaultMovementState : MovementState, IDebug
     {
         base.OnIntersectionExit(_intersection, _exitPoint);
 
+        ShowPrompts(false, false);
+
         Vector3 exitDirection = (body.transform.position - _exitPoint).normalized;
 
+        intersectionSpeed = 0;
         
         if (Vector3.Angle(exitDirection, -playerMovement.gravityReference.up) < 5)
         { // player exited intersection going down
@@ -205,16 +217,47 @@ public class DefaultMovementState : MovementState, IDebug
 
     // Unique Functions
 
+    void CalculateExternalForces()
+    {
+        // handle external forces
+        if (playerMovement.currentIntersection != null)
+        {
+            externalForceVelocity = Vector3.zero;
+        }
+
+        // The force of Air Resistance: F = -cv^2. 
+        Vector3 resistance = new Vector3(
+            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.x)),
+            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.y)),
+            Mathf.Clamp((Time.deltaTime * (externalForceResistance)), 0, Mathf.Abs(externalForceVelocity.z)));
+
+        externalForceVelocity = new Vector3(
+            externalForceVelocity.x + (externalForceVelocity.x > 0 ? -resistance.x : resistance.x),
+            externalForceVelocity.y + (externalForceVelocity.y > 0 ? -resistance.y : resistance.y),
+            externalForceVelocity.z + (externalForceVelocity.z > 0 ? -resistance.z : resistance.z));
+
+        // if the external force is small enough, round to zero
+        if (Mathf.Abs(externalForceVelocity.x) < externalForceThreshold) externalForceVelocity.x = 0;
+        if (Mathf.Abs(externalForceVelocity.y) < externalForceThreshold) externalForceVelocity.y = 0;
+        if (Mathf.Abs(externalForceVelocity.z) < externalForceThreshold) externalForceVelocity.z = 0;
+    }
+
+    void ShowPrompts(bool _left, bool _right)
+    {
+        GameManager.instance.IntersectionDirectionPromptLeft(_left);
+        GameManager.instance.IntersectionDirectionPromptRight(_right);
+    }
+
     bool IsGrounded()
     {
+        float checkBuffer = 0.25f;
         RaycastHit hit;
-        if (Physics.Raycast(transform.position - (transform.forward * 0.25f), -playerMovement.gravityReference.up, out hit, 100, groundLayers))
+        if (Physics.Raycast(transform.position - (transform.forward * 0.25f) + (playerMovement.gravityReference.up * 0.1f), -playerMovement.gravityReference.up, out hit, 100, groundLayers))
         {
-            Debug.DrawRay(transform.position - (transform.forward * 0.25f), -playerMovement.gravityReference.up * distanceToGround, Color.blue);
+            Debug.DrawRay(transform.position - (transform.forward * 0.25f) + (playerMovement.gravityReference.up * 0.1f), -playerMovement.gravityReference.up * distanceToGround, Color.blue);
             distanceToGround = Vector3.Distance(transform.position, hit.point);
-            floorName = hit.collider.name;
 
-            if (distanceToGround < groundedDistance && currentGravityVelocity >= 0)
+            if (distanceToGround < groundedDistance + checkBuffer)
                 return true;
             else
                 return false;
@@ -231,6 +274,14 @@ public class DefaultMovementState : MovementState, IDebug
         {
             jumpCount++;
             currentGravityVelocity = -PlayerStats.instance.GetJumpForce();
+        }
+    }
+
+    void Dash()
+    {
+        if(PlayerStats.instance.GetDashCount() > 0)
+        {
+            playerMovement.ChangeToState(dashState);
         }
     }
 
@@ -255,18 +306,24 @@ public class DefaultMovementState : MovementState, IDebug
         Debug.DrawRay(body.transform.position + body.transform.up * wallRunCastOffset, - body.transform.right * wallRunDistance, Color.blue);
     }
 
+    IEnumerator RotateAfterUprightCoroutine()
+    {
+        while (!playerMovement.rotHandle.isUpright) yield return new WaitForEndOfFrame();
+        playerMovement.RotateUprightWithGravity(rotationSpeedEquation);
+    }
+
     public DebugPacket GetDebugPacket()
     {
         return new DebugPacket
         (
-            "Is Current State: " + isCurrentState,
+            "Rotation Speed: " + rotationSpeedEquation,
             "Velocity: " + body.linearVelocity,
             "Is Grounded: " + IsGrounded(),
-            currentWall != null ? "Wall Check hit: " + currentWall.name : "Wall Check hit: " + "nothing",
-            "Angle between wall normal and up: " + currentWallAngle,
+            currentWall != null ? "Wall Check hit: " + currentWall.name : "Wall Check hit: nothing",
+            "Base Speed Applied " + baseSpeed,
             "Distance to ground: " + distanceToGround,
-            "Distance Travelled: " + PlayerStats.instance.GetDistanceTraveled(),
-            "Current Ground Hit: " + floorName
+            "current gravity velocity: " + currentGravityVelocity,
+            "External Force Velocity: " + externalForceVelocity
         );
     }
 }

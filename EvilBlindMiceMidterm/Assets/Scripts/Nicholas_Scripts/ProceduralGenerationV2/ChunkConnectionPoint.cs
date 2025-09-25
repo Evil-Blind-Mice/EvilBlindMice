@@ -31,4 +31,12 @@ public class ChunkConnectionPoint : MonoBehaviour
     {
         child = _child;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+
+        float scaleMuliplier = gameObject.transform.parent.transform.localScale.z;
+        float increment = (15 * scaleMuliplier) + 2;
+    }
 }

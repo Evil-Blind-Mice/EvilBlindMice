@@ -8,6 +8,7 @@ TagManager:
   - Ceiling
   - Floor
   - Intersection
+  - Gun Camera
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - PlayerBullet
   - PlayerTriggers
   - Power Ups
-  - 
+  - ' Guns'
   - 
   - 
   - 

@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class ChunkV2 : MonoBehaviour
 {
-    int iteration = 0;
+    public int iteration = 0;
     [SerializeField] List<ChunkConnectionPoint> connectionPoints;
     [SerializeField] LayerMask floorLayer;
     List<ChunkV2> childChunkList = new();
     ChunkV2 parent;
     List<GameObject> chunkPool;
     int generationIterations;
+
+    private void Update()
+    {
+        if (parent != null)
+        {
+            if (iteration > ProceduralGenerationManagerV2.Instance.generationIterations)
+            {
+                parent.childChunkList.Remove(this);
+                Destroy(gameObject);
+            }
+        }
+    }
 
     public void SetInfo(int _iteration, List<GameObject> _chunkPool, int _generationIterations, ChunkV2 _parent = null)
     {
@@ -22,7 +34,10 @@ public class ChunkV2 : MonoBehaviour
 
     public void CreateChildChunks()
     {
-        
+        if (iteration >= ProceduralGenerationManagerV2.Instance.generationIterations)
+        {
+            return;
+        }
         List<int> safeSpawnIndex = CheckOverlap();
         for (int j = 0; j < safeSpawnIndex.Count; j++)
         {
@@ -55,6 +70,10 @@ public class ChunkV2 : MonoBehaviour
 
     public void AttemptCreateMissingChildren()
     {
+        if (iteration >= ProceduralGenerationManagerV2.Instance.generationIterations)
+        {
+            return;
+        }
         List<int> safeSpawnIndex = CheckOverlap();
         for (int i = 0; i < safeSpawnIndex.Count; i++)
         {
@@ -73,7 +92,8 @@ public class ChunkV2 : MonoBehaviour
     void CreateChunk(int connectionPoint)
     {
         GameObject childChunk = Instantiate(chunkPool[Random.Range(0, chunkPool.Count)],
-                connectionPoints[connectionPoint].position, connectionPoints[connectionPoint].rotation);
+                connectionPoints[connectionPoint].transform.position, connectionPoints[connectionPoint].transform.rotation);
+        childChunk.transform.localScale = connectionPoints[connectionPoint].gameObject.transform.parent.transform.localScale;
         childChunk.GetComponent<ChunkV2>().SetInfo(iteration + 1, chunkPool, generationIterations, this);
         connectionPoints[connectionPoint].SetChild(childChunk.GetComponent<ChunkV2>());
         childChunkList.Add(childChunk.GetComponent<ChunkV2>());
@@ -99,15 +119,16 @@ public class ChunkV2 : MonoBehaviour
         List<int> safeSpawnIndex = new();
         for (int i = 0; i < connectionPoints.Count; i++)
         {
-            float increment = 13f;
+            float scaleMuliplier = connectionPoints[0].gameObject.transform.parent.transform.localScale.z;
+            float increment = (15 * scaleMuliplier) + 2;
             int found = 0;
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < 6; j++)
             {
-                if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.right * increment, 11f).Length > 1)
+                if (Physics.OverlapSphere(connectionPoints[i].transform.position + connectionPoints[i].transform.forward * increment, 7.5f * scaleMuliplier).Length > 0)
                 {
                     found++;
                 }
-                increment += 22f;
+                increment += (15 * scaleMuliplier);
             }
             if (found == 0)
             {

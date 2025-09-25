@@ -45,16 +45,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProceduralGenerationManagerV2
   currentChunk: {fileID: 0}
-  initialChunkPrefab: {fileID: 6744687728859806560, guid: d3ba24c29c86eaa409f13465a2bc9d22, type: 3}
+  initialChunkPrefab: {fileID: 3640469790652650664, guid: 18a49f9b3ac60f14b8b8d94ba5c76617, type: 3}
   availableChunkPool:
-  - {fileID: 4125763818362485781, guid: 0f939092eaff2bd47a2c02b2c1ee8920, type: 3}
-  - {fileID: 6744687728859806560, guid: d3ba24c29c86eaa409f13465a2bc9d22, type: 3}
-  - {fileID: 6633068555621888376, guid: 2d52e5b0f9033594991a59ae4585ce3d, type: 3}
-  - {fileID: 3563026866682210308, guid: f8aa5bc5f159dbf408b1d82e79f6b8cc, type: 3}
-  - {fileID: 4113391028015115096, guid: 55643a9ebb0c52b47b324cff7aaf662f, type: 3}
-  - {fileID: 6633068555621888376, guid: 8d0d4d3d03404784cad52f46cfb2d516, type: 3}
-  - {fileID: 3563026866682210308, guid: 20db173ce9847f84b892ed1049eefa77, type: 3}
-  - {fileID: 4113391028015115096, guid: fcdd4391b00b3f54ca7fb8cc09db6eaf, type: 3}
+  - {fileID: 9090785057509198954, guid: c98f081bfb7862a4799b14010e998ff9, type: 3}
+  - {fileID: 6074503170647825148, guid: dd07d285894178c40933200ca89b39c8, type: 3}
+  - {fileID: 6319404925428461054, guid: 74c697423a4035e46b4c72a1016f8acc, type: 3}
+  - {fileID: 2729506858803596736, guid: 666cb045c75756a478239fd9ce035101, type: 3}
+  - {fileID: 1521472759121801516, guid: f755b9da824298f4a962133b71560a09, type: 3}
+  - {fileID: 6336053551816516222, guid: 4afca3fee0bac1f4caed9036e07f8546, type: 3}
+  - {fileID: 7023461091565986367, guid: 6ca07475f3f4adb489896fd99c960069, type: 3}
+  - {fileID: 4920600426701627137, guid: 891f58f8c73ee6248a87ec140bbe4ba1, type: 3}
+  - {fileID: 3872485696769813687, guid: ef1ef17ef26fecc47825eb250f9fc418, type: 3}
+  - {fileID: 5898471715493174774, guid: 20e5d7e32fb53e847852c8cea6bee9ac, type: 3}
+  - {fileID: 6121792042539462502, guid: 698eabba876610b4780d065b10cd6f48, type: 3}
+  - {fileID: 3640469790652650664, guid: 18a49f9b3ac60f14b8b8d94ba5c76617, type: 3}
+  - {fileID: 8957258054914207574, guid: 5c06f4c26cc39b245b81cc18b15b7fe9, type: 3}
+  - {fileID: 3312297728980123616, guid: 67e124bceb002dc47b4a63b897ab6649, type: 3}
+  - {fileID: 5466826372635655231, guid: 363e9ff8fea56034aa0ab9abba527760, type: 3}
+  - {fileID: 3831723280023070982, guid: e635cf83c316c434b82be27901b687e7, type: 3}
+  - {fileID: 946345314956778999, guid: a0459061f00b03f48b9013e8daa4badb, type: 3}
+  - {fileID: 6729059956106610084, guid: c89b737fe531668468dec46bf1cf9053, type: 3}
   generationStartingPosition: {x: 0, y: 0, z: 0}
-  generationStartingRotation: {x: 0, y: -0.70710677, z: 0, w: 0.70710677}
-  generationIterations: 1
+  generationStartingRotation: {x: 0, y: 0, z: 0, w: 1}
+  generationStartingScale: 2
+  generationIterations: 2

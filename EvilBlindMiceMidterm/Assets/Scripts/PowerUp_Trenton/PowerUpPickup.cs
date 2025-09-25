@@ -1,200 +1,31 @@
 using UnityEngine;
-using System.Collections;
 
 public class PowerUpPickup : MonoBehaviour
 {
-    public static PowerUpPickup instance;
+    [SerializeField] PowerUpStats powerup;
 
-    private void Awake()
+    private void OnTriggerEnter(Collider _other)
     {
-        instance = this;
-    }
-    public enum PickUpType
-    {
-        Heal, TimeSlow, Invincibility, SpeedBoost, Obstacle
-    }
+        IPickupPowerUp pickupable = _other.GetComponent<IPickupPowerUp>();
 
-    [Header("Power Up Type")]
-    [SerializeField] PickUpType type = PickUpType.Heal;
-
-    [Header("Heal")]
-    [SerializeField] int healAmount;
-
-    [Header("Time Slow")]
-    [SerializeField, Range(0.05f, 1f)] float slowScale;
-    [SerializeField] int slowDurationSeconds;
-
-    [Header("Invincibility")]
-    [SerializeField] int invincibilityDurationSeconds;
-
-    [Header("Speed Boost")]
-    [SerializeField, Min(1)] float speedMultiplier;
-    [SerializeField] public float speedDurationSeconds;
-
-    [Header("Obstacle")]
-    [SerializeField] float speedDivider;
-    [SerializeField] int speedDuration;
-
-    static float activeSlowScale = 1f;
-    static float slowRemainingSeconds = 0f;
-    static Coroutine slowRoutine;
-    static MonoBehaviour runner;
-
-    void OnTriggerEnter(Collider _other)
-    {
-        if (_other.isTrigger) return;
-        if (!_other.CompareTag("Player")) return;
-
-        // Fetch player stats
-        PlayerStats stats = PlayerStats.instance;
-        if (stats == null) return;
-
-        if (_other.transform.root != stats.transform.root) return;
-
-        switch (type)
+        if (pickupable != null)
         {
-            case PickUpType.Heal:
-                ApplyHeal(stats, healAmount);
-                break;
-
-            case PickUpType.TimeSlow:
-                ApplyTimeSlow(slowScale, slowDurationSeconds);
-                break;
-
-            case PickUpType.Invincibility:
-                stats.RequestInvincibility(invincibilityDurationSeconds);
-                break;
-
-            case PickUpType.SpeedBoost:
-                stats.RequestSpeedBoost(speedMultiplier, speedDurationSeconds);
-                GameManager.instance?.FlashSpeedBoost(speedDurationSeconds);
-                break;
-
-            case PickUpType.Obstacle:
-                stats.RequestTripState(speedDivider, speedDuration);
-                break;
+            pickupable.GetPowerUpStats(powerup);
+            PlayPickupAudio();
+            Destroy(gameObject);
         }
-
-        Destroy(gameObject);
     }
 
-    // -*-*-*-*-*-*-*- Helper Methods -*-*-*-*-*-*-*-
-
-    public static void ResetAllEffects()
+    void PlayPickupAudio()
     {
-        if (slowRoutine != null)
+        if (!powerup) return;
+        Vector3 soundPosition = transform.position;
+
+        if (powerup.pickupSound != null && powerup.pickupSound.Length > 0)
         {
-            MonoBehaviour runner = GetRunner();
-            if (runner != null)
-                runner.StopCoroutine(slowRoutine);
-            slowRoutine = null;
+            AudioClip clip = powerup.pickupSound[0];
+            if (clip)
+                AudioSource.PlayClipAtPoint(clip, soundPosition, Mathf.Clamp01(powerup.pickupSoundVolume));
         }
-
-        activeSlowScale = 1f;
-        slowRemainingSeconds = 0f;
-        Time.timeScale = 1f;
-
-        if (PlayerStats.instance != null)
-            PlayerStats.instance.ResetAllPowerUpEffects();
-    }
-
-    static void ApplyHeal(PlayerStats _stats, int _amount)
-    {
-        if (_amount <= 0) return;
-
-        int currentHealth = _stats.GetHealth();
-        int maximumHealth = _stats.GetMaxHealth();
-        int healthGain = Mathf.Clamp(_amount, 0, maximumHealth - currentHealth);
-
-        if (healthGain != 0)
-            _stats.AddHealth(healthGain);
-    }
-
-    static bool IsPaused()
-    {
-        return GameManager.instance != null && GameManager.instance.isPaused;
-    }
-
-    // Decrement a real-time countdown only while not paused
-    // (Uses Time.unscaledDeltaTime so Time.timeScale doesn't affect the timer).
-    static void TickUnpaused(ref float _seconds)
-    {
-        if (!IsPaused())
-            _seconds -= Time.unscaledDeltaTime;
-    }
-
-    // Ensure Time.timeScale matches our desired slow target (or 0 if paused).
-    // Avoids jitter if something else changed timeScale externally.
-    static void EnforceActiveScaleIfNeeded()
-    {
-        float target = IsPaused() ? 0f : activeSlowScale;
-        if (!Mathf.Approximately(Time.timeScale, target))
-            Time.timeScale = target;
-    }
-
-    static void SetScaleRespectingPause(float _scale)
-    {
-        Time.timeScale = IsPaused() ? 0f : _scale;
-    }
-
-    // -*-*-*-*-*-*-*- Runner -*-*-*-*-*-*-*-
-    
-    /* We do NOT host the time-slow coroutine on GameManager because it may be
-     * destroyed/reloaded on scene changes. This creates/fetches a small, hidden
-     * object that survives scene loads to keep the coroutine alive. */
-    static MonoBehaviour GetRunner()
-    {
-        if (runner != null) 
-            return runner;
-
-        GameObject go = GameObject.Find("PowerUpRunner");
-        if (go == null)
-        {
-            go = new GameObject("PowerUpRunner");
-            Object.DontDestroyOnLoad(go);
-        }
-
-        runner = go.GetComponent<Runner>();
-        if (runner == null)
-            runner = go.AddComponent<Runner>();
-
-        return runner;
-    }
-    class Runner : MonoBehaviour { }
-
-    // -*-*-*-*-*-*-*- Time Slow -*-*-*-*-*-*-*-
-
-    /* Start or extend a global time slow. Multiple pickups will:
-     * - take the "lowest" slow scale, and
-     * - take the "longest" remaining duration */
-    static void ApplyTimeSlow(float _scale, int _durationSeconds)
-    {
-        _scale = Mathf.Clamp(_scale, 0.01f, 1f);
-        if (_durationSeconds < 0)
-            _durationSeconds = 0;
-
-        activeSlowScale = Mathf.Min(activeSlowScale, _scale);
-        slowRemainingSeconds = Mathf.Max(slowRemainingSeconds, _durationSeconds);
-
-        SetScaleRespectingPause(activeSlowScale);
-
-        if (slowRoutine == null)
-            slowRoutine = GetRunner().StartCoroutine(TimeSlowRoutine());
-    }
-
-    /* While time slow is active, enforce the requested timeScale and
-     * tick down real-time seconds. When finished, restore timeScale to 1. */
-    static IEnumerator TimeSlowRoutine()
-    {
-        while (slowRemainingSeconds > 0f)
-        {
-            EnforceActiveScaleIfNeeded();
-            TickUnpaused(ref slowRemainingSeconds);
-            yield return null;
-        }
-
-        activeSlowScale = 1f;
-        SetScaleRespectingPause(activeSlowScale);
-        slowRoutine = null;
     }
 }

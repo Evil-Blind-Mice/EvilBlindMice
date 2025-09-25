@@ -10,6 +10,7 @@ public class WallRunMovementState : MovementState
     [SerializeField] float wallRunDistance = 2f;
     [SerializeField] int tiltDegree = 30;
     [SerializeField] LayerMask groundLayers;
+    [SerializeField] float jumpForceMultiplier = 1.5f;
 
     Vector3 playerVelocity;
     [HideInInspector] public bool wallIsRight;
@@ -39,7 +40,7 @@ public class WallRunMovementState : MovementState
             playerMovement.ChangeToState(defaultMovementState);
         }
 
-        playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f)));
+        playerMovement.rotHandle.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, hit.normal, tiltDegree / 90f)));
         wallNormal = hit.normal;
     }
 
@@ -69,7 +70,7 @@ public class WallRunMovementState : MovementState
         {
             intersectionSpeed = roundingCornerSpeed;
             playerMovement.SetGravityDirection(playerMovement.gravityReference.right * directionMultilplier, playerMovement.gravityReference.up);
-            playerMovement.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
+            playerMovement.rotHandle.RotateSmooth(Quaternion.LookRotation(playerMovement.gravityReference.forward, Vector3.Slerp(playerMovement.gravityReference.up, leanOutToward, tiltDegree / 90f)));
         }
         else
         {
@@ -94,7 +95,7 @@ public class WallRunMovementState : MovementState
         // if the player jumps off of the wall
         if (_input.jumpPressedThisFrame)
         {
-            body.linearVelocity = Vector3.Normalize(body.transform.up * 2 + wallNormal) * PlayerStats.instance.GetJumpForce() * 2;
+            body.linearVelocity = Vector3.Normalize(body.transform.up * 3 + wallNormal) * PlayerStats.instance.GetJumpForce() * jumpForceMultiplier;
             TriggerDefaultState();
         }
 

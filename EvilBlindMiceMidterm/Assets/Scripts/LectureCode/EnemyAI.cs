@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -7,27 +8,38 @@ using static PlayerController;
 
 public class EnemyAI : MonoBehaviour, IDamage
 {
-
     [SerializeField] NavMeshAgent agent;
+    [SerializeField] Animator anim;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPosition;
     [SerializeField] Transform headPosition;
 
     [SerializeField] int shieldHealth;
     [SerializeField] int health;
-    [SerializeField] int faceTargetSpeed;
     [SerializeField] int FOV;
+    [SerializeField] int animTransSpeed;
 
     [SerializeField] GameObject bullet;
+    [SerializeField] GameObject shield;
     [SerializeField] float shootRate;
+
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip[] audHurt;
+    [Range(0, 1)][SerializeField] float audHurtVol;
+    [SerializeField] AudioClip[] audBreak;
+    [Range(0, 1)][SerializeField] float audBreakVol;
+    [SerializeField] AudioClip[] audShoot;
+    [Range(0, 1)][SerializeField] float audShootVol;
 
     Color originalColor;
 
-    float shootTimer;
+    public int faceTargetSpeed;
+
+    [HideInInspector] public float shootTimer;
 
     float angleToPlayer;
 
-    bool playerInTrigger;
+    public bool playerInTrigger;
 
     bool isBlue;
 
@@ -44,10 +56,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     // Update is called once per frame
     void Update()
     {
-        if (shieldHealth > 0)
-        {
-            EnemyShield();
-        }
+        EnemyShield();
 
         shootTimer += Time.deltaTime;
 
@@ -57,7 +66,16 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
 
     }
-    bool CanSeePlayer()
+
+    void SetAnimationLocotion()
+    {
+        float agentSpeedCur = agent.velocity.normalized.magnitude;
+        float animSpeedCur = anim.GetFloat("Speed");
+
+        anim.SetFloat("Speed", Mathf.Lerp(animSpeedCur, agentSpeedCur, Time.deltaTime * animTransSpeed));
+    }
+
+    public bool CanSeePlayer()
     {
         playerDirection = GameManager.instance.player.transform.position - headPosition.position;
         angleToPlayer = Vector3.Angle(playerDirection, transform.forward);
@@ -68,9 +86,8 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
-                agent.SetDestination(GameManager.instance.player.transform.position);
 
-                if (agent.remainingDistance <= agent.stoppingDistance)
+                if (playerInTrigger)
                 {
                     FaceTarget();
                 }
@@ -87,8 +104,11 @@ public class EnemyAI : MonoBehaviour, IDamage
     }
     void FaceTarget()
     {
-        Quaternion rot = Quaternion.LookRotation(playerDirection);
-        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
+        Vector3 rot = transform.eulerAngles;
+        rot.y = Quaternion.LookRotation(playerDirection).eulerAngles.y;
+
+        Quaternion targetRot = Quaternion.Euler(rot);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * faceTargetSpeed);
     }
 
     private void OnTriggerEnter(Collider _other)
@@ -103,24 +123,34 @@ public class EnemyAI : MonoBehaviour, IDamage
             playerInTrigger = false;
     }
 
+
     void Shoot()
     {
         shootTimer = 0;
-        Instantiate(bullet, shootPosition.position, transform.rotation);
+        aud.PlayOneShot(audShoot[UnityEngine.Random.Range(0, audShoot.Length)], audShootVol);
+        anim.SetTrigger("Shoot");
+    }
+
+    public void CreateBullet()
+    {
+        Instantiate(bullet, shootPosition.position, shootPosition.rotation);
+
     }
 
     public void TakeDamage(int _amount)
     {
-        if (shieldHealth > 0)
+        if (isBlue)
         {
             shieldHealth -= _amount;
+            aud.PlayOneShot(audBreak[UnityEngine.Random.Range(0, audBreak.Length)], audBreakVol);
         }
 
-        if (shieldHealth <= 0)
+        if (!isBlue)
         {
             if (health > 0)
             {
                 health -= _amount;
+                aud.PlayOneShot(audHurt[UnityEngine.Random.Range(0, audHurt.Length)], audHurtVol);
                 StartCoroutine(FlashRed());
             }
         }
@@ -131,17 +161,17 @@ public class EnemyAI : MonoBehaviour, IDamage
             Destroy(gameObject);
         }
     }
-    void EnemyShield()
+    public void EnemyShield()
     {
         if (shieldHealth > 0)
         {
-            model.material.color = Color.lightCyan;
+            shield.SetActive(true);
             isBlue = true;
         }
 
         if (shieldHealth <= 0)
         {
-            model.material.color = originalColor;
+            shield.SetActive(false);
             isBlue = false;
         }
     }
