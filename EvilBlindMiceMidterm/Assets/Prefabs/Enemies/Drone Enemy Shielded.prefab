@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1629617810693125167, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
+      propertyPath: startingHealth
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2634976766435827086, guid: dc8e8a80482e7c248a832a4c64aac5dc, type: 3}
       propertyPath: objectsEnabledDuringState.Array.size
       value: 1
