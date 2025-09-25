@@ -86,11 +86,11 @@ public class SpawnManager : MonoBehaviour
 
         float chanceScalar = stats.distanceTraveled / distanceToTravel;
 
-        Mathf.Clamp(chanceScalar, 0.0f, 5);
+        Mathf.Clamp(chanceScalar, 0.0f, 4);
 
         float spawnChance = chanceScalar * sectionBaseChance[_section] + sectionBaseChance[_section];
 
-        int check = Random.Range(0, 220);
+        int check = Random.Range(0, 200);
 
         if (spawnChance <= check)
         {

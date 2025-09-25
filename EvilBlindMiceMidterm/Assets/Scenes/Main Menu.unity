@@ -3645,6 +3645,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5568586187406185819}
+  - component: {fileID: 7435862882831587735}
   - component: {fileID: 7154269864636420583}
   - component: {fileID: 5467763651425168512}
   m_Layer: 5
@@ -3654,6 +3655,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &7435862882831587735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7435862882831587734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4920310f0909d4b4a8c7db935d6a6b3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeShop
+  shooter: {fileID: 0}
+  stats: {fileID: 0}
+  items: []
 --- !u!1 &7509130101892688804
 GameObject:
   m_ObjectHideFlags: 0

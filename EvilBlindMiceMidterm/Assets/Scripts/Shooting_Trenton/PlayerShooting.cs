@@ -18,6 +18,8 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     [SerializeField] bool infiniteAmmoActive;
 
     [SerializeField] AudioSource audio;
+    [SerializeField] AudioClip[] audioChangeWeapon;
+    [SerializeField, Range(0, 1)] float audioChangeWeaponVolume;
 
     Coroutine reloadRoutine;
 
@@ -140,17 +142,24 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Approximately(scroll, 0)) return;
 
-        if (scroll > 0)
-            weaponListPosition = Mathf.Min(weaponListPosition + 1, weaponList.Count - 1);
-        else
-            weaponListPosition = Mathf.Max(weaponListPosition - 1, 0);
+        int oldIndex = weaponListPosition;
+        int nextIndex = oldIndex + (scroll > 0 ? 1 : -1);
+        nextIndex = Mathf.Clamp(nextIndex, 0, weaponList.Count - 1);
+
+        if (nextIndex == oldIndex) return;
+
+        if (Mathf.Min(weaponListPosition + 1, weaponList.Count - 1) == Mathf.Max(weaponListPosition - 1, 0)) return;
 
         if (isReloading && reloadRoutine != null)
         {
             StopCoroutine(reloadRoutine);
+            reloadRoutine = null;
             isReloading = false;
         }
 
+        weaponListPosition = nextIndex;
+
+        audio.PlayOneShot(audioChangeWeapon[Random.Range(0, audioChangeWeapon.Length)], audioChangeWeaponVolume);
         ChangeWeapon();
     }
 

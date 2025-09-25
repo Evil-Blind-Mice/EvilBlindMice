@@ -887,6 +887,11 @@ MonoBehaviour:
   weaponFiringDistance: 0
   infiniteAmmoActive: 0
   audio: {fileID: 3772830305642369637}
+  audioChangeWeapon:
+  - {fileID: 8300000, guid: 1ce7890406010c443a54576a00835e5a, type: 3}
+  - {fileID: 8300000, guid: 9807aed188be2a3459ced8e23a168765, type: 3}
+  - {fileID: 8300000, guid: b4156ac6286bbf7478ae9be59517bae0, type: 3}
+  audioChangeWeaponVolume: 0.5
   weaponListPosition: 0
 --- !u!136 &1290850322841129772
 CapsuleCollider:
