@@ -57,6 +57,7 @@ public class TripObstacle : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         playerStats.runSpeed *= 2;
+        playerStats.tripCounter = 0;
         Destroy(gameObject);
     }
 }
