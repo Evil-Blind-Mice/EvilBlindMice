@@ -34,7 +34,10 @@ public class ChunkV2 : MonoBehaviour
 
     public void CreateChildChunks()
     {
-        
+        if (iteration >= ProceduralGenerationManagerV2.Instance.generationIterations)
+        {
+            return;
+        }
         List<int> safeSpawnIndex = CheckOverlap();
         for (int j = 0; j < safeSpawnIndex.Count; j++)
         {
@@ -67,6 +70,10 @@ public class ChunkV2 : MonoBehaviour
 
     public void AttemptCreateMissingChildren()
     {
+        if (iteration >= ProceduralGenerationManagerV2.Instance.generationIterations)
+        {
+            return;
+        }
         List<int> safeSpawnIndex = CheckOverlap();
         for (int i = 0; i < safeSpawnIndex.Count; i++)
         {

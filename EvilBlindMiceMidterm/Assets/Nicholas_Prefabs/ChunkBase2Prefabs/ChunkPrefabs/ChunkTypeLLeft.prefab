@@ -54,6 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2932026c1066f5d4d8ceab3f24adaa40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChunkV2
+  iteration: 0
   connectionPoints:
   - {fileID: 8619869273670255645}
   floorLayer:
@@ -332,6 +333,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7235129189027462195, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
+      propertyPath: SectionNumber
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8755165566936330948, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_Name
       value: ChunkSection (3)
@@ -394,6 +399,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7235129189027462195, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
+      propertyPath: SectionNumber
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8755165566936330948, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_Name
       value: ChunkSection (1)
@@ -455,6 +464,10 @@ PrefabInstance:
     - target: {fileID: 630288837483610676, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7235129189027462195, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
+      propertyPath: SectionNumber
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8755165566936330948, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_Name
@@ -580,6 +593,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7235129189027462195, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
+      propertyPath: SectionNumber
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8755165566936330948, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_Name
       value: ChunkSection (2)
@@ -642,6 +659,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7235129189027462195, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
+      propertyPath: SectionNumber
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8755165566936330948, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_Name
       value: ChunkSection (4)
@@ -703,6 +724,10 @@ PrefabInstance:
     - target: {fileID: 630288837483610676, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7235129189027462195, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
+      propertyPath: SectionNumber
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8755165566936330948, guid: 0ff28e4001c3e26468552d64667485b9, type: 3}
       propertyPath: m_Name
