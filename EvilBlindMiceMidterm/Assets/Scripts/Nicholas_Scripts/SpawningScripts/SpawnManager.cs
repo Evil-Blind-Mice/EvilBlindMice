@@ -80,15 +80,15 @@ public class SpawnManager : MonoBehaviour
             return false;
         }
 
-        int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15};
+        int[] sectionBaseChance = {0, 8, 9, 10, 12, 13, 14};
 
         stats = PlayerStats.instance;
 
         float chanceScalar = stats.distanceTraveled / distanceToTravel;
 
-        Mathf.Clamp(chanceScalar, 0.0f, 5);
+        Mathf.Clamp(chanceScalar, 0.0f, 4);
 
-        float spawnChance = chanceScalar * sectionBaseChance[_section];
+        float spawnChance = chanceScalar * sectionBaseChance[_section] + sectionBaseChance[_section];
 
         int check = Random.Range(0, 200);
 
