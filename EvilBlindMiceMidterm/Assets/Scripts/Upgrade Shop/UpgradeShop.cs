@@ -68,33 +68,38 @@ public class UpgradeShop : MonoBehaviour
         switch (_item.type)
         {
             case ItemType.IncreaseMaxHealth:
-                if (!stats) return false;
-                stats.AddMaxHealth(_item.amount);
+                if (stats) 
+                    stats.AddMaxHealth(_item.amount);
+                else 
+                    UpgradeBank.maxHealthDelta += _item.amount;
                 return true;
 
             case ItemType.IncreaseHealAmount:
                 if (!_item.healPowerupToBuff || _item.healPowerupToBuff.type != PowerUpType.Heal) return false;
-                _item.healPowerupToBuff.healAmount += _item.amount;
+                if (stats) _item.healPowerupToBuff.healAmount += _item.amount;
+                else UpgradeBank.healAmountDelta += _item.amount;
                 return true;
 
             case ItemType.IncreaseInitialDashCharges:
-                if (!stats) return false;
-                stats.AddInitialDashCount(_item.amount);
+                if (stats) stats.AddInitialDashCount(_item.amount);
+                else UpgradeBank.initialDashDelta += _item.amount;
                 return true;
 
             case ItemType.Weapon:
-                if (!shooter || !_item.weapon) return false;
+                if (!_item.weapon) return false;
 
-                // Already own
-                if (shooter.weaponList.Contains(_item.weapon)) return true;
-
-                // Don't own
-                _item.weapon.weaponCurrentAmmo = _item.weapon.weaponMaxAmmo;
-                shooter.GetWeaponStats(_item.weapon);
+                if (shooter)
+                {
+                    if (shooter.weaponList.Contains(_item.weapon)) return true;
+                    _item.weapon.weaponCurrentAmmo = _item.weapon.weaponMaxAmmo;
+                    shooter.GetWeaponStats(_item.weapon);
+                }
+                else
+                {
+                    UpgradeBank.unlockedWeapons.Add(_item.weapon);
+                }
                 return true;
-
         }
-
         return false;
     }
 

@@ -10,6 +10,8 @@ public struct PowerupChance
 
 public class PowerupSpawner : MonoBehaviour
 {
+    [SerializeField] GameObject parent;
+
     [Header("Spawn Settings")]
     [SerializeField] List<PowerupChance> powerupsToSpawn;
     [SerializeField] int numberToSpawn;
@@ -26,7 +28,6 @@ public class PowerupSpawner : MonoBehaviour
     [SerializeField] LayerMask surface;
     [SerializeField] bool alignToSurface;
 
-    float spawnTimer;
     int spawnCount;
     List<int> availableAnchorIndices;
     HashSet<int> usedPowerupIndices = new();
@@ -48,13 +49,8 @@ public class PowerupSpawner : MonoBehaviour
         if (powerupsToSpawn == null || powerupsToSpawn.Count == 0) return;
         if (spawnCount >= numberToSpawn) return;
 
-        spawnTimer += Time.deltaTime;
-
-        if (spawnTimer >= spawnRate)
-        {
+        if (parent.GetComponent<ChunkV2Section>().SectionNumber == 3 || parent.GetComponent<ChunkV2Section>().SectionNumber == 6)
             SpawnPowerup();
-            spawnTimer = 0;
-        }
     }
 
     void RebuildAvailableAnchors()
@@ -98,7 +94,7 @@ public class PowerupSpawner : MonoBehaviour
         Vector3 spawnPosition = hitInfo.point + surfaceNormal * surfaceGap;
 
         float powerupRotation = powerup.transform.localEulerAngles.z;
-        GameObject instance = Instantiate(powerup, spawnPosition, powerup.transform.rotation);
+        GameObject instance = Instantiate(powerup, spawnPosition, powerup.transform.rotation, parent.transform);
 
         if (alignToSurface)
         {

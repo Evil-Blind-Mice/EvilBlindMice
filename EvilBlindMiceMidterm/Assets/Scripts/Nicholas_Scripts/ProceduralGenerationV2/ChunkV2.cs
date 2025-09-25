@@ -12,6 +12,18 @@ public class ChunkV2 : MonoBehaviour
     List<GameObject> chunkPool;
     int generationIterations;
 
+    private void Update()
+    {
+        if (parent != null)
+        {
+            if (iteration > ProceduralGenerationManagerV2.Instance.generationIterations)
+            {
+                parent.childChunkList.Remove(this);
+                Destroy(gameObject);
+            }
+        }
+    }
+
     public void SetInfo(int _iteration, List<GameObject> _chunkPool, int _generationIterations, ChunkV2 _parent = null)
     {
         iteration = _iteration;
