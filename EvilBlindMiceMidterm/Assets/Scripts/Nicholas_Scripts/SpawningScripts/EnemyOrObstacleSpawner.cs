@@ -17,7 +17,7 @@ public class EnemyOrObstacleSpawner : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         if (SpawnManager.Instance.SpawnEnemyOrObstacle(parent, parent.GetComponent<ChunkV2Section>().SectionNumber, subSection))
         {
-            Instantiate(objectToSpawn, gameObject.transform.position, gameObject.transform.rotation);
+            Instantiate(objectToSpawn, gameObject.transform.position, gameObject.transform.rotation, parent.transform);
         }
         
     }
