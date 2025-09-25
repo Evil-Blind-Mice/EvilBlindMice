@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("TrentonDev");
+        SceneManager.LoadScene("Gameplay");
     }
 
     public void Options()
