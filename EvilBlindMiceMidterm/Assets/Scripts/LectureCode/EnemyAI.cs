@@ -7,17 +7,14 @@ using static PlayerController;
 
 public class EnemyAI : MonoBehaviour, IDamage
 {
-    [SerializeField] NavMeshAgent agent;
-    [SerializeField] Animator anim;
     [SerializeField] Renderer model;
     [SerializeField] Transform shootPosition;
     [SerializeField] Transform headPosition;
 
     [SerializeField] int shieldHealth;
     [SerializeField] int health;
+    [SerializeField] int faceTargetSpeed;
     [SerializeField] int FOV;
-    [SerializeField] int animTransSpeed;
-    [SerializeField] bool ifHeadTurn;
 
     [SerializeField] GameObject bullet;
     [SerializeField] GameObject shield;
@@ -25,13 +22,11 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     Color originalColor;
 
-    public int faceTargetSpeed;
-
-    [HideInInspector] public float shootTimer;
+    float shootTimer;
 
     float angleToPlayer;
 
-    public bool playerInTrigger;
+    bool playerInTrigger;
 
     bool isBlue;
 
@@ -58,16 +53,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
 
     }
-
-    void SetAnimationLocotion()
-    {
-        float agentSpeedCur = agent.velocity.normalized.magnitude;
-        float animSpeedCur = anim.GetFloat("Speed");
-
-        anim.SetFloat("Speed", Mathf.Lerp(animSpeedCur, agentSpeedCur, Time.deltaTime * animTransSpeed));
-    }
-
-    public bool CanSeePlayer()
+    bool CanSeePlayer()
     {
         playerDirection = GameManager.instance.player.transform.position - headPosition.position;
         angleToPlayer = Vector3.Angle(playerDirection, transform.forward);
@@ -96,11 +82,11 @@ public class EnemyAI : MonoBehaviour, IDamage
     }
     void FaceTarget()
     {
-            Vector3 rot = transform.eulerAngles;
-            rot.y = Quaternion.LookRotation(playerDirection).eulerAngles.y;
+        Vector3 rot = transform.eulerAngles;
+        rot.y = Quaternion.LookRotation(playerDirection).eulerAngles.y;
 
-            Quaternion targetRot = Quaternion.Euler(rot);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * faceTargetSpeed);
+        Quaternion targetRot = Quaternion.Euler(rot);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * faceTargetSpeed);
     }
 
     private void OnTriggerEnter(Collider _other)
@@ -115,17 +101,10 @@ public class EnemyAI : MonoBehaviour, IDamage
             playerInTrigger = false;
     }
 
-
     void Shoot()
     {
         shootTimer = 0;
-        anim.SetTrigger("Shoot");
-    }
-
-    public void CreateBullet()
-    {
         Instantiate(bullet, shootPosition.position, transform.rotation);
-
     }
 
     public void TakeDamage(int _amount)
@@ -150,7 +129,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             Destroy(gameObject);
         }
     }
-    public void EnemyShield()
+    void EnemyShield()
     {
         if (shieldHealth > 0)
         {
