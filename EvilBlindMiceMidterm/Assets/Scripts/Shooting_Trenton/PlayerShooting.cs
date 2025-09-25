@@ -16,6 +16,8 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     [SerializeField] int weaponFiringDistance;
     [SerializeField] bool infiniteAmmoActive;
 
+    [SerializeField] AudioSource audio;
+
     public bool InfiniteAmmoActive => infiniteAmmoActive;
 
     float shootTimer;
@@ -91,11 +93,15 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
             weapon.weaponCurrentAmmo--;
         }
 
+        audio.PlayOneShot(weaponList[weaponListPosition].shootingSound[Random.Range(0, weaponList[weaponListPosition].shootingSound.Length)], weaponList[weaponListPosition].shootingSoundVolume);
+
         GameManager.instance?.UpdatePlayerUI();
 
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponFiringDistance, ~ignoreLayers))
         {
+            Instantiate(weaponList[weaponListPosition].hitEffect, hit.point, Quaternion.identity);
+
             IDamage damage = hit.collider.GetComponent<IDamage>();
 
             if (damage != null)
