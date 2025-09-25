@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
@@ -21,6 +22,14 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] GameObject bullet;
     [SerializeField] GameObject shield;
     [SerializeField] float shootRate;
+
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip[] audHurt;
+    [Range(0, 1)][SerializeField] float audHurtVol;
+    [SerializeField] AudioClip[] audBreak;
+    [Range(0, 1)][SerializeField] float audBreakVol;
+    [SerializeField] AudioClip[] audShoot;
+    [Range(0, 1)][SerializeField] float audShootVol;
 
     Color originalColor;
 
@@ -118,6 +127,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     void Shoot()
     {
         shootTimer = 0;
+        aud.PlayOneShot(audShoot[UnityEngine.Random.Range(0, audShoot.Length)], audShootVol);
         anim.SetTrigger("Shoot");
     }
 
@@ -132,6 +142,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (isBlue)
         {
             shieldHealth -= _amount;
+            aud.PlayOneShot(audBreak[UnityEngine.Random.Range(0, audBreak.Length)], audBreakVol);
         }
 
         if (!isBlue)
@@ -139,6 +150,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             if (health > 0)
             {
                 health -= _amount;
+                aud.PlayOneShot(audHurt[UnityEngine.Random.Range(0, audHurt.Length)], audHurtVol);
                 StartCoroutine(FlashRed());
             }
         }
