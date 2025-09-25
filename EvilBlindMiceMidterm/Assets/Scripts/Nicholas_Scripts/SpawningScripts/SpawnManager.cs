@@ -80,7 +80,7 @@ public class SpawnManager : MonoBehaviour
             return false;
         }
 
-        int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15};
+        int[] sectionBaseChance = {0, 8, 9, 10, 12, 13, 14};
 
         stats = PlayerStats.instance;
 

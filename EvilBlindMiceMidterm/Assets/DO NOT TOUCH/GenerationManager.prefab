@@ -68,4 +68,4 @@ MonoBehaviour:
   generationStartingPosition: {x: 0, y: 0, z: 0}
   generationStartingRotation: {x: 0, y: 0, z: 0, w: 1}
   generationStartingScale: 2
-  generationIterations: 3
+  generationIterations: 2
