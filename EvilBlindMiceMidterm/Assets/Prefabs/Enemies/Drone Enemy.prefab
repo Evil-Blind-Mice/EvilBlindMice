@@ -1385,7 +1385,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4712746115955927126, guid: 5f94ce6523f38f143aeaaef31547276f, type: 3}
       propertyPath: durationRange.y
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4712746115955927126, guid: 5f94ce6523f38f143aeaaef31547276f, type: 3}
       propertyPath: groundLayer.m_Bits

@@ -263,11 +263,11 @@ PrefabInstance:
       objectReference: {fileID: 3640469790652650664, guid: 18a49f9b3ac60f14b8b8d94ba5c76617, type: 3}
     - target: {fileID: 2348671236724832168, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
       propertyPath: generationIterations
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2348671236724832168, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
       propertyPath: generationStartingScale
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2348671236724832168, guid: 62fb1389a7071894ca293cdbcccdb2d8, type: 3}
       propertyPath: generationStartingPosition.y
@@ -349,6 +349,10 @@ PrefabInstance:
     - target: {fileID: 2290521153310128053, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
       propertyPath: m_WholeNumbers
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4157701637194115870, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
+      propertyPath: playerCamera
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6503295396093198170, guid: 1220ab617cd7f274d85b4974bdb4f79d, type: 3}
       propertyPath: m_Name

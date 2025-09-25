@@ -80,7 +80,7 @@ public class SpawnManager : MonoBehaviour
             return false;
         }
 
-        int[] sectionBaseChance = { 8, 9, 10, 12, 13, 14, 15};
+        int[] sectionBaseChance = {0, 8, 9, 10, 12, 13, 14};
 
         stats = PlayerStats.instance;
 
@@ -88,9 +88,9 @@ public class SpawnManager : MonoBehaviour
 
         Mathf.Clamp(chanceScalar, 0.0f, 5);
 
-        float spawnChance = chanceScalar * sectionBaseChance[_section];
+        float spawnChance = chanceScalar * sectionBaseChance[_section] + sectionBaseChance[_section];
 
-        int check = Random.Range(0, 200);
+        int check = Random.Range(0, 220);
 
         if (spawnChance <= check)
         {
@@ -104,18 +104,36 @@ public class SpawnManager : MonoBehaviour
 
     bool HasWallObstacleSpawned(GameObject _parent, ChunkSectionSubSection _subSection)
     {
+        bool hasSpawned = false;
         switch (_subSection)
         {
             case ChunkSectionSubSection.floor:
-                return _parent.GetComponentInChildren<Floor>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<Floor>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             case ChunkSectionSubSection.leftWall:
-                return _parent.GetComponentInChildren<LeftWall>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<LeftWall>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             case ChunkSectionSubSection.rightWall:
-                return _parent.GetComponentInChildren<RightWall>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<RightWall>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             case ChunkSectionSubSection.cieling:
-                return _parent.GetComponentInChildren<Cieling>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<Cieling>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             default:
-                return false;
+                break;
         }
+        return hasSpawned;
     }
 }
