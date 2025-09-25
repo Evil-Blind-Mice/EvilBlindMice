@@ -104,18 +104,36 @@ public class SpawnManager : MonoBehaviour
 
     bool HasWallObstacleSpawned(GameObject _parent, ChunkSectionSubSection _subSection)
     {
+        bool hasSpawned = false;
         switch (_subSection)
         {
             case ChunkSectionSubSection.floor:
-                return _parent.GetComponentInChildren<Floor>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<Floor>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             case ChunkSectionSubSection.leftWall:
-                return _parent.GetComponentInChildren<LeftWall>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<LeftWall>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             case ChunkSectionSubSection.rightWall:
-                return _parent.GetComponentInChildren<RightWall>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<RightWall>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             case ChunkSectionSubSection.cieling:
-                return _parent.GetComponentInChildren<Cieling>().hasWallObstacleSpawned;
+                if (_parent.GetComponentInChildren<Cieling>() == null)
+                {
+                    hasSpawned = true;
+                }
+                break;
             default:
-                return false;
+                break;
         }
+        return hasSpawned;
     }
 }

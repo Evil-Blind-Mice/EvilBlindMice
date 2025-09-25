@@ -67,5 +67,5 @@ MonoBehaviour:
   - {fileID: 6729059956106610084, guid: c89b737fe531668468dec46bf1cf9053, type: 3}
   generationStartingPosition: {x: 0, y: 0, z: 0}
   generationStartingRotation: {x: 0, y: 0, z: 0, w: 1}
-  generationStartingScale: {x: 1, y: 1, z: 1}
-  generationIterations: 1
+  generationStartingScale: 2
+  generationIterations: 3

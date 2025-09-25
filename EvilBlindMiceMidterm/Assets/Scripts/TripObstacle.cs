@@ -33,8 +33,6 @@ public class TripObstacle : MonoBehaviour
                 playerStats.currentHealth = 0;
                 GameManager.instance.YouLose();
             }
-
-            Destroy(gameObject);
         }
 
         if (other.CompareTag("Player") && killObstacle)
@@ -58,6 +56,7 @@ public class TripObstacle : MonoBehaviour
     IEnumerator resetStats()
     {
         yield return new WaitForSeconds(2f);
-        playerStats.runSpeed = playerStats.initialRunSpeed;
+        playerStats.runSpeed *= 2;
+        Destroy(gameObject);
     }
 }
