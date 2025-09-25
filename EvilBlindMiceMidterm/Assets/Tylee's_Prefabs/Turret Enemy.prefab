@@ -357,17 +357,27 @@ MonoBehaviour:
   model: {fileID: 4790767673819808964}
   shootPosition: {fileID: 7390905877989111366}
   headPosition: {fileID: 629546214370785694}
-  shieldHealth: 3
+  shieldHealth: 0
   health: 3
   FOV: 90
   animTransSpeed: 0
   bullet: {fileID: 486650950796547754, guid: d3338facf22c4e5448326a69d17fecf2, type: 3}
   shield: {fileID: 7384149937332723377}
   shootRate: 0.4
+  aud: {fileID: 0}
+  audHurt: []
+  audHurtVol: 0
+  audBreak: []
+  audBreakVol: 0
+  audShoot: []
+  audShootVol: 0
+  audDeath: []
+  audDeathVol: 0
   faceTargetSpeed: 2
   shootTimer: 0
   playerInTrigger: 0
   TurretHead: {fileID: 2953812435600490365}
+  ShieldHead: {fileID: 0}
 --- !u!136 &8362040002767673747
 CapsuleCollider:
   m_ObjectHideFlags: 0

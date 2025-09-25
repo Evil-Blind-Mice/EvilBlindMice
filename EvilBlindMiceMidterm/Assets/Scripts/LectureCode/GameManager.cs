@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     public TMP_Text weaponCurrentAmmo, weaponMaxAmmo;
     public TMP_Text chargesDash;
 
+    [SerializeField] AudioSource aud;
+    [SerializeField] AudioClip[] audDeath;
+    [Range(0, 1)][SerializeField] float audDeathVol;
 
     public GameObject player;
     public PlayerStats playerScript;
@@ -159,6 +162,11 @@ public class GameManager : MonoBehaviour
     public void UpdateGameGoal(int _amount)
     {
         gameGoalCount += _amount;
+
+        if(_amount == -1)
+        {
+            aud.PlayOneShot(audDeath[UnityEngine.Random.Range(0, audDeath.Length)], audDeathVol);
+        }
 
         if (gameGoalCount <= 0)
         {
