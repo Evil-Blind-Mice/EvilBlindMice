@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     {
         isPaused = false;
         TimeSlowService.Reset();
-        PlayerStats.instance.ResetAllPowerUpEffects();
+        //PlayerStats.instance.ResetAllPowerUpEffects();
     }
 
     // Update is called once per frame
