@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
   pointValue: 1
-  startingHealth: 5
+  startingHealth: 3
 --- !u!1 &3502085150791479845
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,6 +430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageOnImpact
   damage: 1
   destroyObject: {fileID: 2780610013218865159}
+  targetType: 0
 --- !u!1 &4180478163919275636
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,6 +629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DamageOnImpact
   damage: 1
   destroyObject: {fileID: 2780610013218865159}
+  targetType: 0
 --- !u!1 &4658497168458677522
 GameObject:
   m_ObjectHideFlags: 0
@@ -1270,9 +1272,13 @@ PrefabInstance:
       propertyPath: playerFoundState
       value: 
       objectReference: {fileID: 2634976766435827086}
+    - target: {fileID: 5875258531571709006, guid: 13f06d92c93fa08448570640b4603f47, type: 3}
+      propertyPath: sightCheckDistance
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 8824861544589225547, guid: 13f06d92c93fa08448570640b4603f47, type: 3}
       propertyPath: m_Radius
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1369,7 +1375,7 @@ PrefabInstance:
       objectReference: {fileID: 4804743376837760669}
     - target: {fileID: 4712746115955927126, guid: 5f94ce6523f38f143aeaaef31547276f, type: 3}
       propertyPath: hoverHeight
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4712746115955927126, guid: 5f94ce6523f38f143aeaaef31547276f, type: 3}
       propertyPath: acceleration
