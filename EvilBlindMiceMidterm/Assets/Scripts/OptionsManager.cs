@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,10 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] Slider fovSlider;
     [SerializeField] private Camera playerCamera;
 
+    private void Awake()
+    {
+        playerCamera = Camera.main;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -32,6 +37,12 @@ public class OptionsManager : MonoBehaviour
         volumeSider.interactable = true;
         fovSlider.interactable = true;
     }
+
+    private Camera FindWithTag(string v)
+    {
+        throw new NotImplementedException();
+    }
+
     private void Update()
     {
        
