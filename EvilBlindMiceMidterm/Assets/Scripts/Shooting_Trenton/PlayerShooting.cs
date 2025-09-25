@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerShooting : MonoBehaviour, IPickupWeapon
@@ -16,16 +17,14 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     [SerializeField] int weaponFiringDistance;
     [SerializeField] bool infiniteAmmoActive;
 
-    [Header("Projectile")]
-    [SerializeField] Transform firePoint;
-    [SerializeField] GameObject projectile;
-    [SerializeField, Min(1)] float projectileSpeed;
-    [SerializeField, Min(0.05f)] float projectileLifeSeconds;
+    [SerializeField] AudioSource audio;
 
-    Transform currentWeaponInstance;
-    Camera shootCamera;
+    Coroutine reloadRoutine;
 
     public bool InfiniteAmmoActive => infiniteAmmoActive;
+
+    bool isReloading;
+    bool isPlayingReload;
 
     float shootTimer;
     float infiniteAmmoRemaining;
@@ -35,7 +34,6 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     private void Awake()
     {
         instance = this;
-        shootCamera = Camera.main;
     }
 
     private void Start()
@@ -88,17 +86,11 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         GameManager.instance?.UpdatePlayerUI();
     }
 
-    static void SetLayer(Transform _transform, int _layer)
-    {
-        _transform.gameObject.layer = _layer;
-        foreach (Transform c in _transform)
-            SetLayer(c, _layer);
-    }
-
     public void Shoot()
     {
         shootTimer = 0;
 
+        if (isReloading) return;
         if (weaponList.Count == 0) return;
         WeaponStats weapon = weaponList[weaponListPosition];
 
@@ -108,63 +100,35 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
             weapon.weaponCurrentAmmo--;
         }
 
+        audio.PlayOneShot(weaponList[weaponListPosition].shootingSound
+            [Random.Range(0, weaponList[weaponListPosition].shootingSound.Length)],
+            weaponList[weaponListPosition].shootingSoundVolume);
+
         GameManager.instance?.UpdatePlayerUI();
 
-        if (!projectile) return;
-        if (!shootCamera) shootCamera = Camera.main;
-
-        Vector3 spawnPosition;
-        Vector3 direction;
-        Quaternion rot;
-
-        if(firePoint)
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponFiringDistance, ~ignoreLayers))
         {
-            spawnPosition = firePoint.position;
-            direction = firePoint.forward;
-            rot = firePoint.rotation;
-        }
-        else
-        {
-            spawnPosition = shootCamera.transform.position + shootCamera.transform.forward * 0.4f;
-            direction = shootCamera.transform.forward;
-            rot = Quaternion.LookRotation(direction);
-        }
+            Instantiate(weaponList[weaponListPosition].hitEffect, hit.point, Quaternion.identity);
 
-        float life = Mathf.Max(projectileLifeSeconds, weaponFiringDistance / Mathf.Max(1, projectileSpeed));
+            IDamage damage = hit.collider.GetComponent<IDamage>();
 
-        GameObject go = Instantiate(projectile, spawnPosition, rot);
-
-        int bulletLayer = LayerMask.NameToLayer("PlayerBullet");
-        SetLayer(go.transform, bulletLayer);
-
-        LaserProjectile laser = go.GetComponent<LaserProjectile>();
-        if (laser)
-            laser.Init(direction, projectileSpeed, life, weaponFiringDamage, gameObject, weapon);
-
-        if (weapon.shootingSound != null && weapon.shootingSound.Length > 0)
-        {
-            AudioClip clip = weapon.shootingSound[Random.Range(0, weapon.shootingSound.Length)];
-            if (clip)
-            {
-                Vector3 muzzle = firePoint ? firePoint.position : (Camera.main ? Camera.main.transform.position : transform.position);
-                AudioSource.PlayClipAtPoint(clip, muzzle, Mathf.Clamp01(weapon.shootingSoundVolume));
-            }
+            if (damage != null)
+                damage.TakeDamage(weaponFiringDamage);
         }
     }
 
     void ReloadWeapon()
     {
         if (weaponList.Count == 0) return;
-
         if (infiniteAmmoActive) return;
 
         if (Input.GetButtonDown("Reload"))
         {
             WeaponStats weapon = weaponList[weaponListPosition];
-            if (weapon.weaponCurrentAmmo < weapon.weaponMaxAmmo)
+            if (weapon.weaponCurrentAmmo < weapon.weaponMaxAmmo && !isReloading)
             {
-                weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
-                GameManager.instance?.UpdatePlayerUI();
+                reloadRoutine = StartCoroutine(PlayReload());
             }
         }
     }
@@ -180,6 +144,12 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
             weaponListPosition = Mathf.Min(weaponListPosition + 1, weaponList.Count - 1);
         else
             weaponListPosition = Mathf.Max(weaponListPosition - 1, 0);
+
+        if (isReloading && reloadRoutine != null)
+        {
+            StopCoroutine(reloadRoutine);
+            isReloading = false;
+        }
 
         ChangeWeapon();
     }
@@ -203,21 +173,19 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
         weaponFiringDistance = weapon.weaponFiringDistance;
         weaponFireRate = weapon.weaponFireRate;
 
-        if (currentWeaponInstance)
-            Destroy(currentWeaponInstance.gameObject);
-
-        foreach (Transform child in weaponModel.transform)
-            Destroy(child.gameObject);
-
-        if (weapon.weaponModel)
+        if (weaponModel != null && weapon.weaponModel != null)
         {
-            GameObject go = Instantiate(weapon.weaponModel, weaponModel.transform);
-            currentWeaponInstance = go.transform;
+            MeshFilter sourceMeshFilter = weapon.weaponModel ? weapon.weaponModel.GetComponentInChildren<MeshFilter>() : null;
+            MeshRenderer sourceMeshRenderer = weapon.weaponModel ? weapon.weaponModel.GetComponentInChildren<MeshRenderer>() : null;
 
-            SetLayer(currentWeaponInstance, weaponModel.gameObject.layer);
+            MeshFilter destinationMeshFilter = weaponModel.GetComponent<MeshFilter>();
+            MeshRenderer destinationMeshRenderer = weaponModel.GetComponent<MeshRenderer>();
 
-            Transform muzzle = currentWeaponInstance.Find("Muzzle");
-            firePoint = muzzle ? muzzle : currentWeaponInstance;
+            if (sourceMeshFilter && destinationMeshFilter)
+                destinationMeshFilter.sharedMesh = sourceMeshFilter.sharedMesh;
+
+            if (sourceMeshRenderer && destinationMeshRenderer)
+                destinationMeshRenderer.sharedMaterial = sourceMeshRenderer.sharedMaterial;
         }
 
         GameManager.instance?.UpdatePlayerUI();
@@ -233,5 +201,23 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
 
         if (weapon)
             weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
+    }
+
+    IEnumerator PlayReload()
+    {
+        isReloading = true;
+
+        WeaponStats weapon = weaponList[weaponListPosition];
+        AudioClip clip = weapon.reloadSound[Random.Range(0, weapon.reloadSound.Length)];
+
+        audio.PlayOneShot(clip, weapon.reloadSoundVolume);
+
+        yield return new WaitForSeconds(clip.length);
+
+        weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
+        GameManager.instance?.UpdatePlayerUI();
+
+        isReloading = false;
+        reloadRoutine = null;
     }
 }

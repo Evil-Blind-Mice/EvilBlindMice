@@ -8,6 +8,10 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
     [SerializeField] int gameOverDamage;
     [SerializeField] float impactDistance = .75f;
 
+    [SerializeField] AudioSource audio;
+    [SerializeField] AudioClip[] audioHurt;
+    [SerializeField, Range(0, 1)] float audioHurtVolume; 
+
     PlayerStats playerStats;
 
     void Start()
@@ -23,6 +27,8 @@ public class PlayerDamageReceiver : MonoBehaviour, IDamage
 
         int currentHealth = playerStats.GetHealth();
         if (currentHealth <= 0) return;
+
+        audio.PlayOneShot(audioHurt[Random.Range(0, audioHurt.Length)], audioHurtVolume);
 
         int newHealth = Mathf.Max(0, currentHealth - _amount);
         playerStats.AddHealth(newHealth - currentHealth);

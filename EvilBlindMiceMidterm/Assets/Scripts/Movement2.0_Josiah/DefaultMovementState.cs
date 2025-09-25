@@ -171,8 +171,8 @@ public class DefaultMovementState : MovementState, IDebug
         }else 
         {
             ShowPrompts(
-                playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right),
-                playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right));
+                playerMovement.currentIntersection.IsDirectionAvailable(-playerMovement.gravityReference.right),
+                playerMovement.currentIntersection.IsDirectionAvailable(playerMovement.gravityReference.right));
         }
 
     }
