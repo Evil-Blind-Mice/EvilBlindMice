@@ -88,9 +88,9 @@ public class SpawnManager : MonoBehaviour
 
         Mathf.Clamp(chanceScalar, 0.0f, 5);
 
-        float spawnChance = chanceScalar * sectionBaseChance[_section];
+        float spawnChance = chanceScalar * sectionBaseChance[_section] + sectionBaseChance[_section];
 
-        int check = Random.Range(0, 200);
+        int check = Random.Range(0, 220);
 
         if (spawnChance <= check)
         {
