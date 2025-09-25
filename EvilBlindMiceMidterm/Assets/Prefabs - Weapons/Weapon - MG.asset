@@ -17,9 +17,12 @@ MonoBehaviour:
   weaponFiringDamage: 2
   weaponFireRate: 0.12
   weaponFiringDistance: 200
-  weaponCurrentAmmo: 41
+  weaponCurrentAmmo: 50
   weaponMaxAmmo: 50
   hitEffect: {fileID: 5396372950321188654, guid: fcb74f28d107e284e80af037bfec14ca, type: 3}
   shootingSound:
   - {fileID: 8300000, guid: afa42e163268d9543b0817633f893518, type: 3}
   shootingSoundVolume: 0.3
+  reloadSound:
+  - {fileID: 8300000, guid: ba62975f58d27ba42b0574ef6a09a210, type: 3}
+  reloadSoundVolume: 0.5
