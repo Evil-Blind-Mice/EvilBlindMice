@@ -123,7 +123,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     public void CreateBullet()
     {
-        Instantiate(bullet, shootPosition.position, transform.rotation);
+        Instantiate(bullet, shootPosition.position, shootPosition.rotation);
 
     }
 
