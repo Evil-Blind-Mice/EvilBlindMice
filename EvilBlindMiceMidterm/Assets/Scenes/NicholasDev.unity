@@ -175,6 +175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4452499209764348850, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
+      propertyPath: initialRunSpeed
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 4840520770824946752, guid: f375892b64b71654c9f21a59c8f2feb7, type: 3}
       propertyPath: m_TagString
       value: Gun Camera
