@@ -49,7 +49,8 @@ public class PowerupSpawner : MonoBehaviour
         if (powerupsToSpawn == null || powerupsToSpawn.Count == 0) return;
         if (spawnCount >= numberToSpawn) return;
 
-        if (parent.GetComponent<ChunkV2Section>().SectionNumber == 3 || parent.GetComponent<ChunkV2Section>().SectionNumber == 6)
+        ChunkV2Section section = GetComponentInParent<ChunkV2Section>();
+        if (section != null && (section.SectionNumber is 3 or 6))
             SpawnPowerup();
     }
 
