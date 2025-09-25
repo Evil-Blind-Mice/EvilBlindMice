@@ -20,6 +20,7 @@ public class DefaultMovementState : MovementState, IDebug
     Vector3 leftRightVelocity;
     Vector3 externalForceVelocity;
     int jumpCount;
+    int gravSwitchCount;
     float currentGravityVelocity;
     float wallRunCountdown;
     float distanceToGround;
@@ -62,6 +63,7 @@ public class DefaultMovementState : MovementState, IDebug
             if (currentGravityVelocity >= 0)
             {
                 jumpCount = 0;
+                gravSwitchCount = 0;
 
                 if(distanceToGround <= groundedDistance)
                     currentGravityVelocity = Vector3.Dot(externalForceVelocity, playerMovement.gravityReference.up);
@@ -93,10 +95,11 @@ public class DefaultMovementState : MovementState, IDebug
             if (currentGravityVelocity > playerMovement.maxGravity) currentGravityVelocity = playerMovement.maxGravity;
 
             // if the player reorients mid-air, the up direction is inverted
-            if (_input.shiftPressed && playerMovement.rotHandle.isUpright)
+            if (_input.shiftPressed && playerMovement.rotHandle.isUpright && gravSwitchCount < 1)
             {
                 playerMovement.SetGravityDirection(playerMovement.gravityReference.forward, -playerMovement.gravityReference.up);
                 playerMovement.RotateUprightWithGravity(720);
+                gravSwitchCount++;
             }
         }
 
