@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerShooting : MonoBehaviour, IPickupWeapon
@@ -18,7 +19,12 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
 
     [SerializeField] AudioSource audio;
 
+    Coroutine reloadRoutine;
+
     public bool InfiniteAmmoActive => infiniteAmmoActive;
+
+    bool isReloading;
+    bool isPlayingReload;
 
     float shootTimer;
     float infiniteAmmoRemaining;
@@ -84,6 +90,7 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     {
         shootTimer = 0;
 
+        if (isReloading) return;
         if (weaponList.Count == 0) return;
         WeaponStats weapon = weaponList[weaponListPosition];
 
@@ -93,7 +100,9 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
             weapon.weaponCurrentAmmo--;
         }
 
-        audio.PlayOneShot(weaponList[weaponListPosition].shootingSound[Random.Range(0, weaponList[weaponListPosition].shootingSound.Length)], weaponList[weaponListPosition].shootingSoundVolume);
+        audio.PlayOneShot(weaponList[weaponListPosition].shootingSound
+            [Random.Range(0, weaponList[weaponListPosition].shootingSound.Length)],
+            weaponList[weaponListPosition].shootingSoundVolume);
 
         GameManager.instance?.UpdatePlayerUI();
 
@@ -112,16 +121,14 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
     void ReloadWeapon()
     {
         if (weaponList.Count == 0) return;
-
         if (infiniteAmmoActive) return;
 
         if (Input.GetButtonDown("Reload"))
         {
             WeaponStats weapon = weaponList[weaponListPosition];
-            if (weapon.weaponCurrentAmmo < weapon.weaponMaxAmmo)
+            if (weapon.weaponCurrentAmmo < weapon.weaponMaxAmmo && !isReloading)
             {
-                weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
-                GameManager.instance?.UpdatePlayerUI();
+                reloadRoutine = StartCoroutine(PlayReload());
             }
         }
     }
@@ -137,6 +144,12 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
             weaponListPosition = Mathf.Min(weaponListPosition + 1, weaponList.Count - 1);
         else
             weaponListPosition = Mathf.Max(weaponListPosition - 1, 0);
+
+        if (isReloading && reloadRoutine != null)
+        {
+            StopCoroutine(reloadRoutine);
+            isReloading = false;
+        }
 
         ChangeWeapon();
     }
@@ -188,5 +201,23 @@ public class PlayerShooting : MonoBehaviour, IPickupWeapon
 
         if (weapon)
             weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
+    }
+
+    IEnumerator PlayReload()
+    {
+        isReloading = true;
+
+        WeaponStats weapon = weaponList[weaponListPosition];
+        AudioClip clip = weapon.reloadSound[Random.Range(0, weapon.reloadSound.Length)];
+
+        audio.PlayOneShot(clip, weapon.reloadSoundVolume);
+
+        yield return new WaitForSeconds(clip.length);
+
+        weapon.weaponCurrentAmmo = weapon.weaponMaxAmmo;
+        GameManager.instance?.UpdatePlayerUI();
+
+        isReloading = false;
+        reloadRoutine = null;
     }
 }
