@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cf727ccd66b4c3458820d48d9bbedaf, type: 3}
   m_Name: Weapon - Pistol
   m_EditorClassIdentifier: Assembly-CSharp::WeaponStats
-  weaponModel: {fileID: 2440906724474284878, guid: 1bdff09e3515c5649a59277a1a9a9676, type: 3}
+  weaponModel: {fileID: 2440906724474284878, guid: 949d47ff98cf54d4e89ed439d4b8670c, type: 3}
   isAutomatic: 0
   weaponFiringDamage: 1
   weaponFireRate: 0.25
