@@ -82,7 +82,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ef6e7e8880c79e2459569f63f6798a53, type: 2}
+  - {fileID: 2100000, guid: c1bf369004c664e408a3c025476bbeb9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -138,4 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d24933628ed4d3e4fb911c09df1b20c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallObstacleSpawner
-  FLRC: 0
+  subsection: 0
+  lazerWall: {fileID: 0}
+  parent: {fileID: 0}
